@@ -1,0 +1,6 @@
+.idea
+lcmall-api/src/main/resources/1488848612_20210819_cert/apiclient_*
+lcmall-api/src/main/resources/application.yml
+lcmall-api/target/
+lcmall-db/target/
+*.iml

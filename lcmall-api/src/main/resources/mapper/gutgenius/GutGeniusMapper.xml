@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.gutgenius.GutGeniusDao">
+
+    <resultMap id="GutGeniusIntroResultMap" type="com.lcsays.gg.models.gutgenius.Intro">
+        <id column="id" property="id" />
+
+        <result column="tab_name" property="tabName" />
+        <result column="image_url" property="imageUrl" />
+        <result column="text" property="text" />
+        <result column="sort" property="sort" />
+    </resultMap>
+
+    <select id="getIntros" resultMap="GutGeniusIntroResultMap">
+        SELECT * FROM gg_intro ORDER BY `sort` DESC LIMIT 20
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.ec.CategoryDao">
+
+    <resultMap id="CategoryResultMap" type="com.lcsays.gg.models.ec.Category">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <association property="wxApp"
+                     javaType="com.lcsays.gg.models.manager.WxApp"
+                     column="wx_app_id"
+                     select="com.lcsays.gg.dao.manager.WxAppDao.getWxAppById">
+        </association>
+    </resultMap>
+
+    <select id="categoryList" resultMap="CategoryResultMap">
+        SELECT * FROM ec_category WHERE wx_app_id=#{wxApp.id} LIMIT 1000
+    </select>
+
+    <select id="getCategoryById" resultMap="CategoryResultMap">
+        SELECT * FROM ec_category WHERE id=#{id} LIMIT 1
+    </select>
+
+    <insert id="createCategory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ec_category(wx_app_id, name) VALUES(#{category.wxApp.id}, #{category.name})
+    </insert>
+
+    <update id="updateCategory">
+        UPDATE ec_category SET wx_app_id=#{category.wxApp.id}, name=#{category.name} WHERE id=#{category.id}
+    </update>
+
+    <delete id="deleteCategoryById">
+        DELETE FROM ec_category WHERE id=#{id}
+    </delete>
+</mapper>

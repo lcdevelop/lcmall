@@ -1,0 +1,32 @@
+version: "3"
+services:
+  mysql57:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    command:
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
+      --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/data:/var/lib/mysql
+      - ./db/init-sql:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: lcmall123456
+      restart: always
+  lcmall:
+    build:
+      context: lcmall
+      dockerfile: Dockerfile
+    container_name: lcmall
+    ports:
+      - "9080:9080"
+    volumes:
+      - /etc/localtime:/etc/localtime
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql57
+    restart: always

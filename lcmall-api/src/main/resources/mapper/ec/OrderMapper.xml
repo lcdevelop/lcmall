@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.ec.OrderDao">
+
+    <resultMap id="OrderResultMap" type="com.lcsays.gg.models.ec.Order">
+        <id column="id" property="id" />
+        <result column="out_trade_no" property="outTradeNo" />
+        <result column="transaction_id" property="transactionId" />
+        <result column="total_fee" property="totalFee" />
+        <result column="status" property="status" />
+        <result column="trade_status" property="tradeStatus" />
+        <result column="express_no" property="expressNo" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="success_time" property="successTime" />
+    </resultMap>
+
+    <resultMap id="OrderWithAffiliateResultMap"
+               type="com.lcsays.gg.models.ec.Order"
+               extends="OrderResultMap">
+        <association property="wxApp"
+                     javaType="com.lcsays.gg.models.manager.WxApp"
+                     column="wx_app_id"
+                     select="com.lcsays.gg.dao.manager.WxAppDao.getWxAppById" />
+        <association property="wxMaUser"
+                     column="wx_ma_user_id"
+                     select="com.lcsays.gg.dao.weixin.WxMaUserDao.getWxMaUserBySimpleId" />
+        <association property="address"
+                     column="address_id"
+                     select="com.lcsays.gg.dao.weixin.AddressDao.getAddressById" />
+        <collection property="affiliateList"
+                    column="id"
+                    select="com.lcsays.gg.dao.ec.OrderDao.getOrderAffiliatesByOrderId" />
+        <collection property="expressType"
+                    column="express_type_id"
+                    select="com.lcsays.gg.dao.ec.ExpressDao.getExpressTypeById" />
+    </resultMap>
+
+    <insert id="createOrder" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ec_order(wx_app_id, wx_ma_user_id, address_id, out_trade_no, `transaction_id`, `total_fee`, `status`)
+        VALUES(#{order.wxApp.id}, #{order.wxMaUser.id}, #{order.address.id}, #{order.outTradeNo}, #{order.transactionId}, #{order.totalFee}, #{order.status})
+    </insert>
+
+    <select id="getOrderByOutTradeNo" parameterType="java.lang.String" resultMap="OrderWithAffiliateResultMap">
+        SELECT * FROM ec_order WHERE out_trade_no=#{outTradeNo} LIMIT 1
+    </select>
+
+    <delete id="delOrderByOutTradeNo">
+        UPDATE ec_order SET is_del=1 WHERE wx_ma_user_id=#{wxMaUser.id} AND out_trade_no=#{outTradeNo}
+    </delete>
+
+    <select id="getOrderById" parameterType="java.lang.Long" resultMap="OrderResultMap">
+        SELECT * FROM ec_order WHERE id=#{id} LIMIT 1
+    </select>
+
+    <select id="orderList" parameterType="com.lcsays.gg.models.weixin.WxMaUser" resultMap="OrderWithAffiliateResultMap">
+        SELECT * FROM ec_order WHERE wx_ma_user_id=#{id} AND is_del=0 ORDER BY create_time DESC LIMIT 1000
+    </select>
+
+    <select id="getOrdersByAppId" resultMap="OrderWithAffiliateResultMap">
+        SELECT * FROM ec_order
+        WHERE wx_app_id=#{wxApp.id} AND is_del=0
+        <if test="outTradeNo != null and outTradeNo != ''">
+            AND out_trade_no = #{outTradeNo}
+        </if>
+        ORDER BY create_time DESC
+        LIMIT 10000
+    </select>
+
+    <update id="updateOrder" parameterType="com.lcsays.gg.models.ec.Order">
+        UPDATE ec_order
+        SET address_id=#{order.address.id}, transaction_id=#{order.transactionId},
+            status=#{order.status}, trade_status=#{order.tradeStatus}, success_time=#{order.successTime},
+            total_fee=#{order.totalFee}, express_type_id=#{order.expressType.id}, express_no=#{order.expressNo}
+        WHERE out_trade_no=#{order.outTradeNo}
+    </update>
+</mapper>

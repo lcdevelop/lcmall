@@ -1,0 +1,58 @@
+logging:
+    level:
+        org.springframework.web: info
+        com.lcsays.gg: debug
+        cn.binarywang.wx.miniapp: debug
+wx:
+    miniapp:
+        configs:
+            -   appid: wxb70*******2a7f77
+                secret: 6b79*******80c5
+                token: lcsayslcsays
+                aesKey: ZlZ*******BK
+                msgDataFormat: JSON
+    mp:
+        useRedis: true
+        redisConfig:
+            host: r-2zeed*******lwqxagpd.redis.rds.aliyuncs.com
+            port: 6379
+            password: j*******u
+            connectionTimeout: 2000
+        configs:
+            -   appId: wxfe*******8e3a5830
+                secret: a3fbf892*******3705d4cb679ff57
+                token: zsenselink
+                aesKey: l*******IMfR2
+    pay:
+        app-id: wxb70*******a7f77
+        mch-id: 148****612
+        mch-key: j93HJd02*******3828h9jLI33
+        apiv3-key: jigo7*******d62937fd62
+        private-key-path: ../conf/1488848612_20210819_cert/apiclient_key.pem
+        private-cert-path: ../conf/1488848612_20210819_cert/apiclient_cert.pem
+
+server:
+    port: 9080
+
+spring:
+    datasource:
+        address: rm-2zes*******0x2udo.mysql.rds.aliyuncs.com:3306
+        database: gg
+        username: username1
+        password: f*******uG
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://${spring.datasource.address}/${spring.datasource.database}?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    redis:
+        host: r-2zee*******lwqxagpd.redis.rds.aliyuncs.com
+        port: 6379
+        password: j*******u
+
+mybatis:
+    mapper-locations: classpath:mapper/*.xml,classpath:mapper/*/*.xml
+
+oss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    keyId: Abv*******sGZP
+    keySecret: r89*******BNBwI
+    bucketName: zsenselink
+    fileHost: lcsays/gg

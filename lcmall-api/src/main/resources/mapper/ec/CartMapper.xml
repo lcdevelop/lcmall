@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.ec.CartDao">
+
+    <resultMap id="CartResultMap"
+               type="com.lcsays.gg.models.ec.Cart">
+        <id column="id" property="id" />
+        <result column="wx_ma_user_id" property="wxMaUserId" />
+        <result column="count" property="count" />
+        <association property="sku"
+                     javaType="com.lcsays.gg.models.ec.Sku"
+                     column="sku_id"
+                     select="com.lcsays.gg.dao.ec.SkuDao.getSkuById">
+        </association>
+    </resultMap>
+
+    <select id="getCartsByUser" parameterType="com.lcsays.gg.models.weixin.WxMaUser" resultMap="CartResultMap">
+        SELECT * FROM ec_cart WHERE wx_ma_user_id=#{wxMaUser.id}
+    </select>
+
+    <insert id="addToCart">
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(*) FROM ec_cart WHERE wx_ma_user_id=#{wxMaUser.id} AND sku_id=#{skuId}
+        </selectKey>
+
+        <if test="count > 0">
+            UPDATE ec_cart SET `count`=`count`+1 WHERE wx_ma_user_id=#{wxMaUser.id} AND sku_id=#{skuId}
+        </if>
+
+        <if test="count == 0">
+            INSERT INTO ec_cart(wx_ma_user_id, sku_id, `count`) VALUES(#{wxMaUser.id}, #{skuId}, 1)
+        </if>
+    </insert>
+
+    <update id="removeFromCart">
+        <selectKey keyProperty="count" resultType="java.lang.Integer" order="BEFORE">
+            SELECT `count` FROM ec_cart WHERE wx_ma_user_id=#{wxMaUser.id} AND sku_id=#{skuId}
+        </selectKey>
+
+        <if test="count != 0">
+            <if test="count != 1">
+                UPDATE ec_cart SET `count`=`count`-1 WHERE wx_ma_user_id=#{wxMaUser.id} AND sku_id=#{skuId}
+            </if>
+            <if test="count == 1">
+                DELETE FROM ec_cart WHERE wx_ma_user_id=#{wxMaUser.id} AND sku_id=#{skuId}
+            </if>
+        </if>
+    </update>
+
+    <select id="getCountInCart" parameterType="com.lcsays.gg.models.weixin.WxMaUser" resultType="java.lang.Integer">
+        SELECT IFNULL(sum(`count`), 0) FROM ec_cart WHERE wx_ma_user_id=#{wxMaUser.id}
+    </select>
+</mapper>

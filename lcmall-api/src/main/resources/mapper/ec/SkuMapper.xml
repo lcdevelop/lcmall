@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.ec.SkuDao">
+
+    <resultMap id="SkuResultMap" type="com.lcsays.gg.models.ec.Sku">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="image" property="image" />
+        <result column="specs" property="specs" />
+    </resultMap>
+
+    <resultMap id="SkuWithProductResultMap"
+               type="com.lcsays.gg.models.ec.Sku"
+               extends="SkuResultMap">
+        <association property="product" javaType="com.lcsays.gg.models.ec.Product" autoMapping="true">
+            <id column="product_id" property="id" />
+            <result column="product_name" property="name" />
+            <result column="product_description" property="description" />
+        </association>
+        <association property="price" javaType="com.lcsays.gg.models.ec.Price" autoMapping="true">
+            <id column="price_id" property="id" />
+            <result column="price_policy" property="policy" />
+            <result column="price_price" property="price" />
+        </association>
+
+<!--        <collection property="specList" column="id" select="com.lcsays.gg.dao.ec.SkuDao.getSpecsBySkuId">-->
+<!--        </collection>-->
+    </resultMap>
+
+    <select id="getSkusByAppId" resultMap="SkuWithProductResultMap">
+        SELECT s.*,
+               p.id AS product_id, p.name AS product_name, p.description AS product_description,
+                pr.id AS price_id, pr.policy AS price_policy, pr.price AS price_price
+        FROM ec_sku s
+            JOIN ec_product p ON s.product_id=p.id
+            JOIN ec_category c ON p.category_id=c.id
+            JOIN ec_price pr ON s.id=pr.sku_id
+        WHERE c.wx_app_id=#{wxApp.id} AND s.is_del=0 AND p.is_del=0
+        <if test="name != null and name != ''">
+            AND s.`name` LIKE '%${name}%'
+        </if>
+    </select>
+
+    <select id="getSkusByCategoryId" resultMap="SkuWithProductResultMap">
+        SELECT s.*,
+               p.id AS product_id, p.name AS product_name, p.description AS product_description,
+               pr.id AS price_id, pr.policy AS price_policy, pr.price AS price_price
+        FROM ec_sku s
+            JOIN ec_product p
+                ON s.product_id=p.id
+            JOIN ec_price pr ON s.id=pr.sku_id
+        WHERE p.category_id=#{categoryId} AND s.is_del=0 AND p.is_del=0
+    </select>
+
+    <select id="getSkuById" resultMap="SkuWithProductResultMap">
+        SELECT s.*,
+               p.id AS product_id, p.name AS product_name, p.description AS product_description,
+               pr.id AS price_id, pr.policy AS price_policy, pr.price AS price_price
+        FROM ec_sku s
+                 JOIN ec_product p
+                      ON s.product_id=p.id
+                 JOIN ec_price pr ON s.id=pr.sku_id
+        WHERE s.id=#{skuId}
+    </select>
+
+    <insert id="createSku" parameterType="com.lcsays.gg.models.ec.Sku" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ec_sku(name, product_id, image, specs) VALUES(#{sku.name}, #{sku.product.id}, #{sku.image}, #{sku.specs})
+    </insert>
+
+    <update id="updateSku" parameterType="com.lcsays.gg.models.ec.Sku">
+        UPDATE ec_sku
+        SET name=#{sku.name}, product_id=#{sku.product.id}, image=#{sku.image}, specs=#{sku.specs}
+        WHERE id=#{sku.id}
+    </update>
+
+    <delete id="deleteSkuById" parameterType="java.lang.Long">
+        UPDATE ec_sku
+        SET is_del=1
+        WHERE id=#{id}
+    </delete>
+</mapper>

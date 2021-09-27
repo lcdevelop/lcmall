@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.manager.WxAppDao">
+
+    <resultMap id="WxAppResultMap" type="com.lcsays.gg.models.manager.WxApp">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="app_id" property="appId" />
+        <result column="image" property="image" />
+        <result column="auth" property="auth" />
+        <result column="wxa_code_url" property="wxaCodeUrl" />
+    </resultMap>
+
+    <select id="apps" resultMap="WxAppResultMap">
+        SELECT * FROM wx_app LIMIT 1000
+    </select>
+
+    <select id="getWxAppByAppId" parameterType="java.lang.String" resultMap="WxAppResultMap">
+        SELECT * FROM wx_app WHERE app_id=#{appId} LIMIT 1
+    </select>
+
+    <select id="getWxAppById" parameterType="java.lang.Long" resultMap="WxAppResultMap">
+        SELECT * FROM wx_app WHERE id=#{id} LIMIT 1
+    </select>
+</mapper>

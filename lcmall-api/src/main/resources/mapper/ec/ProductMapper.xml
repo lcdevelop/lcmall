@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.ec.ProductDao">
+
+    <resultMap id="ProductResultMap" type="com.lcsays.gg.models.ec.Product">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="description" property="description" />
+    </resultMap>
+
+    <resultMap id="ProductWithCategoryResultMap"
+               type="com.lcsays.gg.models.ec.Product"
+               extends="ProductResultMap">
+        <association property="category" javaType="com.lcsays.gg.models.ec.Category" autoMapping="true">
+            <id column="category_id" property="id" />
+            <result column="category_name" property="name" />
+        </association>
+    </resultMap>
+
+    <select id="getProductsByCategoryId" resultMap="ProductResultMap">
+        SELECT * FROM ec_product WHERE category_id=#{id} AND is_del=0 LIMIT 1000
+    </select>
+
+    <select id="getProducts" resultMap="ProductWithCategoryResultMap">
+        SELECT p.*, c.id AS  category_id, c.name AS category_name, c.wx_app_id AS category_wx_app_id
+        FROM ec_product p
+        JOIN ec_category c ON p.category_id=c.id
+        WHERE c.wx_app_id=#{wxApp.id} AND p.is_del=0
+        <if test="name != null and name != ''">
+            AND p.`name` LIKE '%${name}%'
+        </if>
+        <if test="categoryId != null">
+            AND p.`category_id` LIKE '%${categoryId}%'
+        </if>
+    </select>
+
+    <insert id="createProduct" parameterType="com.lcsays.gg.models.ec.Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ec_product(name, description, category_id) VALUES(#{product.name}, #{product.description}, #{product.category.id})
+    </insert>
+
+    <update id="updateProduct" parameterType="com.lcsays.gg.models.ec.Product">
+        UPDATE ec_product
+        SET name=#{product.name}, description=#{product.description}, category_id=#{product.category.id}
+        WHERE id=#{product.id}
+    </update>
+
+    <delete id="deleteProductById" parameterType="java.lang.Long">
+        UPDATE ec_product
+        SET is_del=1
+        WHERE id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.ec.PriceDao">
+
+    <resultMap id="PriceResultMap" type="com.lcsays.gg.models.ec.Price">
+        <id column="id" property="id" />
+        <result column="sku_id" property="skuId" />
+        <result column="policy" property="policy" />
+        <result column="price" property="price" />
+    </resultMap>
+
+    <select id="getPriceBySkuId" parameterType="java.lang.Long" resultMap="PriceResultMap">
+        SELECT * FROM ec_price WHERE sku_id=#{skuId} LIMIT 1
+    </select>
+
+    <insert id="createPrice" parameterType="com.lcsays.gg.models.ec.Price" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ec_price(sku_id, policy, price) VALUES(#{price.skuId}, #{price.policy}, #{price.price})
+    </insert>
+
+    <update id="updatePrice" parameterType="com.lcsays.gg.models.ec.Price">
+        UPDATE ec_price SET policy=#{price.policy}, price=#{price.price} WHERE id=#{price.id}
+    </update>
+</mapper>

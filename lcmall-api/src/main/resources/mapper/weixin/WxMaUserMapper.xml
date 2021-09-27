@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.weixin.WxMaUserDao">
+
+    <resultMap id="WxMaUserResultMap" type="com.lcsays.gg.models.weixin.WxMaUser">
+        <id column="id" property="id" />
+
+        <result column="openid" property="openId" />
+        <result column="unionid" property="unionId" />
+        <result column="session_key" property="sessionKey" />
+        <result column="session_app_id" property="sessionAppId" />
+
+        <result column="nickname" property="nickName" />
+        <result column="avatar_url" property="avatarUrl" />
+        <result column="gender" property="gender" />
+        <result column="country" property="country" />
+        <result column="city" property="city" />
+        <result column="language" property="language" />
+        <result column="role" property="role" />
+
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+
+        <association property="wxApp"
+                     javaType="com.lcsays.gg.models.manager.WxApp"
+                     column="wx_app_id"
+                     select="com.lcsays.gg.dao.manager.WxAppDao.getWxAppById">
+        </association>
+
+        <association property="sessionWxApp"
+                     javaType="com.lcsays.gg.models.manager.WxApp"
+                     column="session_wx_app_id"
+                     select="com.lcsays.gg.dao.manager.WxAppDao.getWxAppById">
+        </association>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.lcsays.gg.models.weixin.WxMaUser"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wx_ma_user(`wx_app_id`, `openid`, `unionid`, `session_key`, `session_wx_app_id`,
+                               `nickname`, `avatar_url`, `gender`, `country`, `city`, `language`)
+                            VALUES(#{wxApp.id}, #{openId}, #{unionId}, #{sessionKey}, #{sessionWxApp.id},
+                                   #{nickName}, #{avatarUrl}, #{gender}, #{country}, #{city}, #{language})
+    </insert>
+
+    <select id="getWxMaUserByOpenid" resultMap="WxMaUserResultMap">
+        SELECT * FROM wx_ma_user WHERE wx_app_id=#{wxApp.id} AND openid=#{openId} LIMIT 1
+    </select>
+
+    <select id="getWxMaUserById" resultMap="WxMaUserResultMap">
+        SELECT * FROM wx_ma_user WHERE wx_app_id=#{wxApp.id} AND id=#{id} LIMIT 1
+    </select>
+
+    <select id="getWxMaUserBySimpleId" resultMap="WxMaUserResultMap">
+        SELECT * FROM wx_ma_user WHERE id=#{id} LIMIT 1
+    </select>
+
+    <select id="getWxMaUserBySessionKey" resultMap="WxMaUserResultMap">
+        SELECT * FROM wx_ma_user WHERE session_key=#{sessionKey} LIMIT 1
+    </select>
+
+    <update id="update" parameterType="com.lcsays.gg.models.weixin.WxMaUser">
+        UPDATE wx_ma_user SET unionid=#{unionId}, session_key=#{sessionKey}, session_wx_app_id=#{sessionWxApp.id},
+                              nickname=#{nickName}, avatar_url=#{avatarUrl}, gender=#{gender}, country=#{country},
+                              city=#{city}, language=#{language}, role=#{role}
+        WHERE openid=#{openId}
+    </update>
+
+    <select id="userList" resultMap="WxMaUserResultMap">
+        SELECT *
+        FROM wx_ma_user
+        <if test="nickName != null and nickName != ''">
+            WHERE `nickname` LIKE '%${nickName}%'
+        </if>
+    </select>
+</mapper>

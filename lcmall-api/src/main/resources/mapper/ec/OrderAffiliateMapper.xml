@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lcsays.gg.dao.ec.OrderDao">
+
+    <resultMap id="OrderAffiliateResultMap" type="com.lcsays.gg.models.ec.OrderAffiliate">
+        <id column="id" property="id" />
+        <result column="count" property="count" />
+        <result column="price" property="price" />
+    </resultMap>
+
+    <resultMap id="OrderAffiliateWithSkuResultMap"
+               type="com.lcsays.gg.models.ec.OrderAffiliate"
+               extends="OrderAffiliateResultMap">
+        <association property="sku"
+                     javaType="com.lcsays.gg.models.ec.Sku"
+                     column="sku_id"
+                     select="com.lcsays.gg.dao.ec.SkuDao.getSkuById">
+        </association>
+    </resultMap>
+
+    <insert id="insertOrderAffiliates" parameterType="java.util.List" useGeneratedKeys="false">
+        INSERT INTO ec_order_affiliate(order_id, sku_id, count, price)
+        VALUES
+               <foreach collection="list" item="item" index="index" separator=",">
+                   (#{item.order.id}, #{item.sku.id}, #{item.count}, #{item.price})
+               </foreach>
+    </insert>
+
+    <select id="getOrderAffiliatesByOrderId" parameterType="java.lang.Long" resultMap="OrderAffiliateWithSkuResultMap">
+        SELECT * FROM ec_order_affiliate WHERE order_id=#{orderId}
+    </select>
+</mapper>
