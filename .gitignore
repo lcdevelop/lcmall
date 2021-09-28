@@ -5,3 +5,4 @@ lcmall-api/target/
 lcmall-db/target/
 *.iml
 /logs/
+/deploy/bin/deploy_tmp.sh

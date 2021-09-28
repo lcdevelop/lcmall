@@ -11,8 +11,8 @@ echo "build admin success"
 rm -rf ${BASE_DIR}/docker/admin/html/dist && cp -r ${BASE_DIR}/lcmall-admin/dist ${BASE_DIR}/docker/admin/html/dist || exit 1
 echo "finish copy admin"
 
-# 确认配置文件已自己编辑好
-[ -f ${BASE_DIR}/lcmall-api/src/main/resources/application.yml ] || exit 1
+# 确认配置文件已自己编辑好，没有就从${BASE_DIR}/lcmall-api/src/main/resources/application_sample.yml拷贝并修改
+[ -f ${BASE_DIR}/docker/lcmall/conf.d/application.yml ] || exit 1
 echo "test application.yml ok"
 
 # 编译后端模块

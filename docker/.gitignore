@@ -5,3 +5,4 @@
 /admin/logs
 /lcmall/logs
 /redis/data/
+/lcmall/conf.d/application.yml

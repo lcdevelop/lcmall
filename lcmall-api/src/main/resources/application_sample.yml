@@ -14,9 +14,9 @@ wx:
     mp:
         useRedis: true
         redisConfig:
-            host: r-2zeed*******lwqxagpd.redis.rds.aliyuncs.com
+            host: redis
             port: 6379
-            password: j*******u
+            password: lcmall123456
             connectionTimeout: 2000
         configs:
             -   appId: wxfe*******8e3a5830
@@ -43,9 +43,9 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
         url: jdbc:mysql://${spring.datasource.address}/${spring.datasource.database}?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     redis:
-        host: r-2zee*******lwqxagpd.redis.rds.aliyuncs.com
+        host: redis
         port: 6379
-        password: j*******u
+        password: lcmall123456
 
 mybatis:
     mapper-locations: classpath:mapper/*.xml,classpath:mapper/*/*.xml
