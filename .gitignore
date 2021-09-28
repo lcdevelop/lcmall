@@ -4,3 +4,4 @@ lcmall-api/src/main/resources/application.yml
 lcmall-api/target/
 lcmall-db/target/
 *.iml
+/logs/

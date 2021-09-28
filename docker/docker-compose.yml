@@ -16,6 +16,17 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: lcmall123456
       restart: always
+  redis:
+    image: redis:6.2.5
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/conf.d/redis.conf:/usr/local/etc/redis/redis.conf:rw
+      - ./redis/data:/data:rw
+    command:
+      /bin/bash -c "redis-server /usr/local/etc/redis/redis.conf "
+    restart: always
   lcmall:
     build:
       context: lcmall
@@ -25,8 +36,20 @@ services:
       - "9080:9080"
     volumes:
       - /etc/localtime:/etc/localtime
+      - ./lcmall/logs:/logs
     environment:
       - TZ=Asia/Shanghai
     depends_on:
       - mysql57
+      - redis
+    restart: always
+  admin:
+    image: nginx:1.21.3
+    container_name: admin
+    ports:
+      - "8080:80"
+    volumes:
+      - ./admin/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./admin/logs:/var/log/nginx
+      - ./admin/html/dist:/data/html
     restart: always

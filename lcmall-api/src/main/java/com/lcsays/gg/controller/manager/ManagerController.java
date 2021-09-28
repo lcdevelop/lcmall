@@ -65,6 +65,7 @@ public class ManagerController {
                 app.setQrCodePictureUrl(url);
             } catch (WxErrorException e) {
                 e.printStackTrace();
+                log.error(e.getMessage());
                 return BaseModel.error(ErrorCode.WX_SERVICE_ERROR);
             }
         }

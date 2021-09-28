@@ -1,3 +1,7 @@
 /lcmall/lcmall.jar
 /db/init-sql/lcmall.sql
 /db/data
+/admin/html/dist/
+/admin/logs
+/lcmall/logs
+/redis/data/
