@@ -1,6 +1,8 @@
 package com.lcsays.gg.utils;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,6 +12,8 @@ import java.util.Date;
  * @Version 1.0
  */
 public class TimeUtils {
+
+    private static final SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+08:00'");
 
     public static Calendar getBeginOfToday() {
         Calendar today = Calendar.getInstance();
@@ -48,5 +52,15 @@ public class TimeUtils {
      */
     public static Timestamp timeStr2Timestamp(String timeStr) {
         return Timestamp.valueOf(timeStr);
+    }
+
+    /**
+     * timeStr必须是2011-05-09 11:49:45这种格式
+     * @param timeStr
+     * @return
+     */
+    public static String timeStr2Rfc3399(String timeStr) {
+        Date d = new Date(Timestamp.valueOf(timeStr).getTime());
+        return format1.format(d);
     }
 }

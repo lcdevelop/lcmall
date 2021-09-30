@@ -10,6 +10,7 @@ declare namespace API {
     image: string;
     wxaCodeUrl: string;
     qrCodePictureUrl: string;
+    type: string;
   }
 
   type WxUser = {

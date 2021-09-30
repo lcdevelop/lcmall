@@ -54,6 +54,10 @@
         </dependency>
         <dependency>
             <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-open</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
             <artifactId>wx-java-pay-spring-boot-starter</artifactId>
         </dependency>
 

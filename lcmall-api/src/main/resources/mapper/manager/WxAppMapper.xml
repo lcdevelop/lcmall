@@ -10,6 +10,8 @@
         <result column="image" property="image" />
         <result column="auth" property="auth" />
         <result column="wxa_code_url" property="wxaCodeUrl" />
+        <result column="type" property="type" />
+        <result column="mch_id" property="mchId" />
     </resultMap>
 
     <select id="apps" resultMap="WxAppResultMap">

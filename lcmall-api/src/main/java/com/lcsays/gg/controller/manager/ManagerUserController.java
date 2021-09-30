@@ -39,7 +39,8 @@ public class ManagerUserController {
         if (null != wxMaUser && null != wxMaUser.getSessionWxApp()) {
             if (wxMaUser.isAdmin()
                 || wxMaUser.getSessionWxApp().getAuth().equals(0)
-                || wxMaUser.getRole().equals(wxMaUser.getSessionWxApp().getName())) {
+                || (null != wxMaUser.getRole() && wxMaUser.getRole().equals(wxMaUser.getSessionWxApp().getName()))
+            ) {
                 SessionUtils.saveUserToSession(session, wxMaUser);
                 wxMaUser.clearSecret();
                 return BaseModel.success(wxMaUser);

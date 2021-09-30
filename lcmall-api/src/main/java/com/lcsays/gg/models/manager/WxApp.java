@@ -18,7 +18,9 @@ public class WxApp implements Serializable {
     private String name;
     private String appId;
     private String image;
-    private Integer auth;
+    private Integer auth; // 是否需要授权才能有操作
     private String wxaCodeUrl;
     private String qrCodePictureUrl;
+    private String type; // 根据不同type确定前端哪些版块可见，比如marketing
+    private String mchId; // 关联的支付商户id
 }

@@ -5,10 +5,10 @@
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>debug</level>
+            <level>info</level>
         </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n
+            <pattern>%d{HH:mm:ss} [%thread] %-5level%logger{36} [%file:%line] - %msg%n
             </pattern>
         </encoder>
     </appender>

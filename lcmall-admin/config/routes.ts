@@ -10,6 +10,7 @@ export default [
   { path: '/welcome', name: '概览', icon: 'home', component: './Welcome' },
   {
     path: '/product',
+    access: 'ec',
     name: '商品管理',
     icon: 'shop',
 
@@ -21,13 +22,26 @@ export default [
   },
   {
     path: '/trade',
+    access: 'ec',
     name: '交易管理',
     icon: 'creditCard',
     routes: [
       { path: '/trade/order', name: '订单管理', icon: 'smile', component: './Trade/order' },
     ],
   },
-  { path: '/users', access: 'canAdmin', name: '用户管理', icon: 'user', component: './user/user' },
+  {
+    path: '/marketing',
+    access: 'marketing',
+    name: '营销管理',
+    icon: 'creditCard',
+    routes: [
+      { path: '/marketing/stock/all', name: '代金券批次(全部)', icon: 'smile', component: './Coupon/stock'},
+      // { path: '/marketing/stock/running', name: '代金券批次(运营中)', icon: 'smile', component: './Coupon/stock'},
+      // { path: '/marketing/stock/unactivated', name: '代金券批次(草稿箱)', icon: 'smile', component: './Coupon/stock'},
+      { path: '/marketing/stock/detail/:stockId', name: '代金券批次详情', icon: 'smile', component: './Coupon/stockDetail', hideInMenu:true},
+    ],
+  },
+  { path: '/users', access: 'canAdmin', name: '用户管理(admin)', icon: 'user', component: './user/user' },
   { path: '/', layout: false, component: './Home' },
   // { path: '/', redirect: '/welcome' },
   { component: './404' },

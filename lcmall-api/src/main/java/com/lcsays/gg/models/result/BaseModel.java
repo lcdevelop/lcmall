@@ -43,6 +43,13 @@ public class BaseModel<T> {
         return res;
     }
 
+    public static <T> BaseModel<T> errorWithMsg(ErrorCode errorCode, String msg) {
+        BaseModel<T> res = new BaseModel<>();
+        res.setCode(errorCode.getCode());
+        res.setMsg(msg);
+        return res;
+    }
+
     public static <T> BaseModel<T> error(ErrorCode errorCode, T data) {
         BaseModel<T> res = new BaseModel<>();
         res.setCode(errorCode.getCode());

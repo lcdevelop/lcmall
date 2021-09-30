@@ -1,8 +1,9 @@
 .idea
-lcmall-api/src/main/resources/1488848612_20210819_cert/apiclient_*
+lcmall-api/src/main/resources/*_cert/
 lcmall-api/src/main/resources/application.yml
 lcmall-api/target/
 lcmall-db/target/
 *.iml
 /logs/
 /deploy/bin/deploy_tmp.sh
+/lcmall-db/src/main/resources/mybatis-generator/datasource.properties

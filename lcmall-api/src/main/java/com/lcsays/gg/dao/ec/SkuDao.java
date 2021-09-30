@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 public interface SkuDao {
-    List<Sku> getSkusByAppId(WxApp wxApp, String name);
+    List<Sku> getSkusByAppId(@Param("wxApp") WxApp wxApp, @Param("name") String name);
     Sku getSkuById(Long skuId);
     List<Sku> getSkusByCategoryId(Long categoryId);
 

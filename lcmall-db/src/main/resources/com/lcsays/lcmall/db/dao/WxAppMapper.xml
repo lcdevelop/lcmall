@@ -8,6 +8,8 @@
     <result column="image" jdbcType="VARCHAR" property="image" />
     <result column="auth" jdbcType="INTEGER" property="auth" />
     <result column="wxa_code_url" jdbcType="VARCHAR" property="wxaCodeUrl" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, app_id, image, auth, wxa_code_url
+    id, name, app_id, image, auth, wxa_code_url, type, mch_id
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxAppExample" resultMap="BaseResultMap">
     select
@@ -95,9 +97,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into wx_app (name, app_id, image, 
-      auth, wxa_code_url)
+      auth, wxa_code_url, type, 
+      mch_id)
     values (#{name,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, 
-      #{auth,jdbcType=INTEGER}, #{wxaCodeUrl,jdbcType=VARCHAR})
+      #{auth,jdbcType=INTEGER}, #{wxaCodeUrl,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{mchId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxApp">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -120,6 +124,12 @@
       <if test="wxaCodeUrl != null">
         wxa_code_url,
       </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="mchId != null">
+        mch_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -136,6 +146,12 @@
       </if>
       <if test="wxaCodeUrl != null">
         #{wxaCodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null">
+        #{mchId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -166,6 +182,12 @@
       <if test="record.wxaCodeUrl != null">
         wxa_code_url = #{record.wxaCodeUrl,jdbcType=VARCHAR},
       </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mchId != null">
+        mch_id = #{record.mchId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -178,7 +200,9 @@
       app_id = #{record.appId,jdbcType=VARCHAR},
       image = #{record.image,jdbcType=VARCHAR},
       auth = #{record.auth,jdbcType=INTEGER},
-      wxa_code_url = #{record.wxaCodeUrl,jdbcType=VARCHAR}
+      wxa_code_url = #{record.wxaCodeUrl,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      mch_id = #{record.mchId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

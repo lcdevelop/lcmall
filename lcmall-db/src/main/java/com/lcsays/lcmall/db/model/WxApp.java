@@ -13,6 +13,10 @@ public class WxApp {
 
     private String wxaCodeUrl;
 
+    private String type;
+
+    private String mchId;
+
     public Integer getId() {
         return id;
     }
@@ -61,6 +65,22 @@ public class WxApp {
         this.wxaCodeUrl = wxaCodeUrl;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -73,6 +93,8 @@ public class WxApp {
         sb.append(", image=").append(image);
         sb.append(", auth=").append(auth);
         sb.append(", wxaCodeUrl=").append(wxaCodeUrl);
+        sb.append(", type=").append(type);
+        sb.append(", mchId=").append(mchId);
         sb.append("]");
         return sb.toString();
     }

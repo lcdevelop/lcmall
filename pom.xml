@@ -76,6 +76,11 @@
             </dependency>
             <dependency>
                 <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-open</artifactId>
+                <version>${weixin-java-mp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
                 <artifactId>wx-java-pay-spring-boot-starter</artifactId>
                 <version>${weixin-java-mp.version}</version>
             </dependency>

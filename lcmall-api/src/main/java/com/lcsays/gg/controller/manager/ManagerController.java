@@ -1,7 +1,9 @@
 package com.lcsays.gg.controller.manager;
 
+import com.lcsays.gg.config.ManagerConfiguration;
 import com.lcsays.gg.config.OSSConfiguration;
 import com.lcsays.gg.enums.ErrorCode;
+import com.lcsays.gg.models.dbwrapper.WxAppEx;
 import com.lcsays.gg.models.manager.WxApp;
 import com.lcsays.gg.models.result.BaseModel;
 import com.lcsays.gg.models.weixin.WxMaUser;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +33,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/manager")
-@EnableConfigurationProperties(OSSConfiguration.class)
+@EnableConfigurationProperties({OSSConfiguration.class, ManagerConfiguration.class})
 public class ManagerController {
 
     @Resource
@@ -44,32 +47,35 @@ public class ManagerController {
 
     private OSSConfiguration ossConfiguration;
 
+    private ManagerConfiguration managerConfiguration;
+
     @GetMapping("/appList")
-    public BaseModel<List<WxApp>> appList(HttpSession session) {
+    public BaseModel<List<WxAppEx>> appList(HttpSession session) {
         String shortSid = SessionUtils.normalizeSessionId(session);
 
         List<com.lcsays.lcmall.db.model.WxApp> apps1 = wxAppService.appList();
+        List<WxAppEx> apps2 = new ArrayList<>();
         log.info(apps1.toString());
-
-        List<WxApp> apps = appService.apps();
-        for (WxApp app: apps) {
+        for (com.lcsays.lcmall.db.model.WxApp app: apps1) {
             try {
                 // 这里形成的sessionId也就是回调的eventKey格式类似：wxfe9faf8c8e3a5830_68822c00-7ca8-4762-9ffc-d1bd455fe49d
                 String sceneStr = SessionUtils.addPrefix(shortSid, app.getAppId());
-                WxMpQrCodeTicket ticket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(
-                    sceneStr,
-                    10000
+                WxMpQrCodeTicket ticket = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId()).getQrcodeService().qrCodeCreateTmpTicket(
+                        sceneStr,
+                        10000
                 );
-                log.info("appList " + app.getName() + " " + sceneStr);
-                String url = wxMpService.getQrcodeService().qrCodePictureUrl(ticket.getTicket());
-                app.setQrCodePictureUrl(url);
+                String url = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId()).getQrcodeService().qrCodePictureUrl(ticket.getTicket());
+                WxAppEx wxAppEx = new WxAppEx();
+                wxAppEx.copyFrom(app);
+                wxAppEx.setQrCodePictureUrl(url);
+                apps2.add(wxAppEx);
             } catch (WxErrorException e) {
                 e.printStackTrace();
                 log.error(e.getMessage());
                 return BaseModel.error(ErrorCode.WX_SERVICE_ERROR);
             }
         }
-        return BaseModel.success(apps);
+        return BaseModel.success(apps2);
     }
 
     @PostMapping("/uploadImage")

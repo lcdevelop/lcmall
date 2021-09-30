@@ -5,5 +5,7 @@ export default function access(initialState: { currentWxUser?: API.WxUser | unde
   const { currentWxUser } = initialState || {};
   return {
     canAdmin: currentWxUser && currentWxUser.role === 'admin',
+    marketing: currentWxUser && currentWxUser.sessionWxApp.type === 'marketing',
+    ec: currentWxUser && currentWxUser.sessionWxApp.type === 'ec',
   };
 }

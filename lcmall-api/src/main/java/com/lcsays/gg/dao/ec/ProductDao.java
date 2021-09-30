@@ -14,9 +14,9 @@ import java.util.List;
 @Mapper
 public interface ProductDao {
     List<Product> getProductsByCategoryId(Long id);
-    List<Product> getProducts(WxApp wxApp,
-                              String name,
-                              Integer categoryId);
+    List<Product> getProducts(@Param("wxApp") WxApp wxApp,
+                              @Param("name") String name,
+                              @Param("categoryId") Integer categoryId);
     int createProduct(@Param("product") Product product);
     int updateProduct(@Param("product") Product product);
     int deleteProductById(Long id);
