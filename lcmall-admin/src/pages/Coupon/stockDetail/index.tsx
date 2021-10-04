@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Button} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Button, message, Popconfirm} from 'antd';
 import ProCard, {StatisticCard} from '@ant-design/pro-card';
-import {stockDetail} from "@/services/manager/marketing/api";
+import {startStock, pauseStock, restartStock, stockDetail} from "@/services/manager/marketing/api";
 const { Statistic } = StatisticCard;
 
 const { Divider } = ProCard;
@@ -13,11 +13,12 @@ export type StockDetailProps = {
 const StockDetail: React.FC<StockDetailProps> = (props) => {
 
   const [stock, setStock] = useState<API.Stock>();
-  const [stockId, setStockId] = useState(null);
 
   useEffect(() => {
-    setStockId(props.match.params.stockId);
+    fetchStockDetail();
+  }, [])
 
+  const fetchStockDetail = () => {
     stockDetail(
       {
         stockId: props.match.params.stockId
@@ -26,10 +27,45 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
         setStock(res.data!);
       }
     })
-  }, [])
+  }
 
-  const activate = () => {
+  const onStartStock = () => {
+    if (undefined !== stock && null !== stock.stockId) {
+      startStock({stockId: stock.stockId}).then(res => {
+        if (res.code === 200) {
+          message.success('成功激活').then();
+          fetchStockDetail();
+        } else {
+          message.error(res.msg).then();
+        }
+      })
+    }
+  }
 
+  const onPauseStock = () => {
+    if (undefined !== stock && null !== stock.stockId) {
+      pauseStock({stockId: stock.stockId}).then(res => {
+        if (res.code === 200) {
+          message.success('成功暂停').then();
+          fetchStockDetail();
+        } else {
+          message.error(res.msg).then();
+        }
+      })
+    }
+  }
+
+  const onRestartStock = () => {
+    if (undefined !== stock && null !== stock.stockId) {
+      restartStock({stockId: stock.stockId}).then(res => {
+        if (res.code === 200) {
+          message.success('成功重启').then();
+          fetchStockDetail();
+        } else {
+          message.error(res.msg).then();
+        }
+      })
+    }
   }
 
   if (undefined === stock) {
@@ -40,7 +76,38 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
 
   return (
     <div>
-      <Button type={"primary"} onClick={activate}>激活</Button>
+      <Popconfirm
+        title="确定要激活?"
+        okText="Yes"
+        cancelText="No"
+        onConfirm={onStartStock}
+        disabled={stock?.status==='paused'||stock?.status==='running'}
+      >
+        <Button type={"primary"} disabled={stock?.status==='paused'||stock?.status==='running'}>激活</Button>
+      </Popconfirm>
+
+      <span style={{marginLeft: '10px'}} />
+
+      <Popconfirm
+        title="确定要暂停?"
+        okText="Yes"
+        cancelText="No"
+        onConfirm={onPauseStock}
+      >
+        <Button type={"primary"}>暂停</Button>
+      </Popconfirm>
+
+      <span style={{marginLeft: '10px'}} />
+
+      <Popconfirm
+        title="确定要重启?"
+        okText="Yes"
+        cancelText="No"
+        onConfirm={onRestartStock}
+      >
+        <Button type={"primary"}>重启</Button>
+      </Popconfirm>
+
       <Divider />
       <ProCard.Group>
         <StatisticCard>
