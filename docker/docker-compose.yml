@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     container_name: lcmall
     ports:
-      - "9080:19080"
+      - "9080:9080"
     volumes:
       - /etc/localtime:/etc/localtime
       - ./lcmall/conf.d/application.yml:/application.yml
