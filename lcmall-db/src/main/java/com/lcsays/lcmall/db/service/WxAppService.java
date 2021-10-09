@@ -24,10 +24,15 @@ public class WxAppService {
         return wxAppMapper.selectByExample(example);
     }
 
-    public List<WxApp> queryByAppId(String appId) {
+    public WxApp queryByAppId(String appId) {
         WxAppExample example = new WxAppExample();
         WxAppExample.Criteria criteria = example.createCriteria();
         criteria.andAppIdEqualTo(appId);
-        return wxAppMapper.selectByExample(example);
+        List<WxApp> ret = wxAppMapper.selectByExample(example);
+        if (ret.size() > 0) {
+            return ret.get(0);
+        } else {
+            return null;
+        }
     }
 }

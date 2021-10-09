@@ -134,6 +134,7 @@ const Stock: React.FC = () => {
           p.stockUseRule = {
             maxCoupons: values['maxCoupons'],
             maxAmount: values['maxAmount'],
+            maxAmountByDay: values['maxAmountByDay'],
             maxCouponsPerUser: values['maxCouponsPerUser'],
             naturalPersonLimit: values['naturalPersonLimit'],
             preventApiAbuse: values['preventApiAbuse'],
@@ -144,7 +145,6 @@ const Stock: React.FC = () => {
               transactionMinimum: 0,
             },
             goodsTag: [],
-            maxAmountByDay: 0,
             tradeType: [],
           }
           p.couponUseRule = {

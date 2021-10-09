@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
 import com.lcsays.gg.models.weixin.WxMaUser;
+import com.lcsays.gg.utils.RequestNo;
 import com.lcsays.gg.utils.SessionUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,13 +50,13 @@ public class ManagerMarketingController {
             try {
                 String curMchId = user.getSessionWxApp().getMchId();
                 FavorStocksQueryRequest request = new FavorStocksQueryRequest();
-                request.setOffset((current-1) * pageSize);
+                request.setOffset(current-1);
                 request.setLimit(pageSize);
                 request.setStockCreatorMchid(curMchId);
                 log.info(request.toString());
                 FavorStocksQueryResult res = wxPayService.switchoverTo(curMchId)
                         .getMarketingFavorService().queryFavorStocksV3(request);
-                return BaseModel.success(res.getData());
+                return BaseModel.success(res.getData(), res.getTotalCount());
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error(e.getMessage());
@@ -80,6 +81,7 @@ public class ManagerMarketingController {
                 request.setStockType(StockTypeEnum.NORMAL);
                 request.setAvailableBeginTime(timeStr2Rfc3399(request.getAvailableBeginTime()));
                 request.setAvailableEndTime(timeStr2Rfc3399(request.getAvailableEndTime()));
+                request.setOutRequestNo(RequestNo.randomWithCurTime("cs"));
                 FavorStocksCreateResult res = wxPayService.switchoverTo(curMchId).getMarketingFavorService().createFavorStocksV3(request);
                 return BaseModel.success(res.getStockId());
             } catch (WxPayException e) {

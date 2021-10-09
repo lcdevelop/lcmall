@@ -4,7 +4,6 @@ import com.lcsays.gg.config.ManagerConfiguration;
 import com.lcsays.gg.config.OSSConfiguration;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.dbwrapper.WxAppEx;
-import com.lcsays.gg.models.manager.WxApp;
 import com.lcsays.gg.models.result.BaseModel;
 import com.lcsays.gg.models.weixin.WxMaUser;
 import com.lcsays.gg.service.manager.AppService;

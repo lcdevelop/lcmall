@@ -3,18 +3,27 @@ package com.lcsays.gg.controller.old;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaMessage;
 import cn.binarywang.wx.miniapp.constant.WxMaConstants;
+import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
 import com.lcsays.gg.config.WxMaConfiguration;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/wx/portal/{appid}")
 public class WxMaPortalController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Resource
+    WxMaService wxMaService;
+
+    @Resource
+    WxMaMessageRouter wxMaMessageRouter;
 
     @GetMapping(produces = "text/plain;charset=utf-8")
     public String authGet(@PathVariable String appid,
@@ -29,9 +38,7 @@ public class WxMaPortalController {
             throw new IllegalArgumentException("请求参数非法，请核实!");
         }
 
-        final WxMaService wxService = WxMaConfiguration.getMaService(appid);
-
-        if (wxService.checkSignature(timestamp, nonce, signature)) {
+        if (wxMaService.switchoverTo(appid).checkSignature(timestamp, nonce, signature)) {
             return echostr;
         }
 
@@ -50,9 +57,7 @@ public class WxMaPortalController {
                 " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
             msgSignature, encryptType, signature, timestamp, nonce, requestBody);
 
-        final WxMaService wxService = WxMaConfiguration.getMaService(appid);
-
-        final boolean isJson = Objects.equals(wxService.getWxMaConfig().getMsgDataFormat(),
+        final boolean isJson = Objects.equals(wxMaService.switchoverTo(appid).getWxMaConfig().getMsgDataFormat(),
             WxMaConstants.MsgDataFormat.JSON);
         if (StringUtils.isBlank(encryptType)) {
             // 明文传输的消息
@@ -63,7 +68,7 @@ public class WxMaPortalController {
                 inMessage = WxMaMessage.fromXml(requestBody);
             }
 
-            this.route(inMessage, appid);
+            this.route(inMessage);
             return "success";
         }
 
@@ -71,22 +76,22 @@ public class WxMaPortalController {
             // 是aes加密的消息
             WxMaMessage inMessage;
             if (isJson) {
-                inMessage = WxMaMessage.fromEncryptedJson(requestBody, wxService.getWxMaConfig());
+                inMessage = WxMaMessage.fromEncryptedJson(requestBody, wxMaService.switchoverTo(appid).getWxMaConfig());
             } else {//xml
-                inMessage = WxMaMessage.fromEncryptedXml(requestBody, wxService.getWxMaConfig(),
+                inMessage = WxMaMessage.fromEncryptedXml(requestBody, wxMaService.switchoverTo(appid).getWxMaConfig(),
                     timestamp, nonce, msgSignature);
             }
 
-            this.route(inMessage, appid);
+            this.route(inMessage);
             return "success";
         }
 
         throw new RuntimeException("不可识别的加密类型：" + encryptType);
     }
 
-    private void route(WxMaMessage message, String appid) {
+    private void route(WxMaMessage message) {
         try {
-            WxMaConfiguration.getRouter(appid).route(message);
+            this.wxMaMessageRouter.route(message);
         } catch (Exception e) {
             this.logger.error(e.getMessage(), e);
         }

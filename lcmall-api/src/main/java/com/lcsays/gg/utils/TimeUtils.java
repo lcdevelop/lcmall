@@ -63,4 +63,8 @@ public class TimeUtils {
         Date d = new Date(Timestamp.valueOf(timeStr).getTime());
         return format1.format(d);
     }
+
+    public static Long currentTimeStamp() {
+        return new Date().getTime();
+    }
 }
