@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class EcAddress {
+import java.io.Serializable;
+
+public class EcAddress implements Serializable {
     private Integer id;
 
     private Integer wxMaUserId;
@@ -12,6 +14,8 @@ public class EcAddress {
     private String address;
 
     private Integer isDel;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

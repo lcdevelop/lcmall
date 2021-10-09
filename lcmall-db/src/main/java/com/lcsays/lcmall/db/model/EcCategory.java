@@ -1,11 +1,15 @@
 package com.lcsays.lcmall.db.model;
 
-public class EcCategory {
+import java.io.Serializable;
+
+public class EcCategory implements Serializable {
     private Integer id;
 
     private Integer wxAppId;
 
     private String name;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

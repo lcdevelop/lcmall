@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 public class SessionUtils {
     private static final String USER_SESSION_KEY = "user";
+    private static final String WX_USER_SESSION_KEY = "wx_user";
 
     @Data
     public static class RawSessionIdInfo {
@@ -82,5 +83,13 @@ public class SessionUtils {
 
     public static WxMaUser getUserFromSession(HttpSession session) {
         return (WxMaUser)session.getAttribute(USER_SESSION_KEY);
+    }
+
+    public static void saveWxUserToSession(HttpSession session, com.lcsays.lcmall.db.model.WxMaUser wxMaUser) {
+        session.setAttribute(WX_USER_SESSION_KEY, wxMaUser);
+    }
+
+    public static com.lcsays.lcmall.db.model.WxMaUser getWxUserFromSession(HttpSession session) {
+        return (com.lcsays.lcmall.db.model.WxMaUser)session.getAttribute(WX_USER_SESSION_KEY);
     }
 }

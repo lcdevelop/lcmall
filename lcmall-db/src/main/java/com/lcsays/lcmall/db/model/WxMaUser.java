@@ -1,8 +1,9 @@
 package com.lcsays.lcmall.db.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class WxMaUser {
+public class WxMaUser implements Serializable {
     private Integer id;
 
     private Integer wxAppId;
@@ -32,6 +33,10 @@ public class WxMaUser {
     private Date createTime;
 
     private Date updateTime;
+
+    private String phoneNumber;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -153,6 +158,14 @@ public class WxMaUser {
         this.updateTime = updateTime;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -174,6 +187,7 @@ public class WxMaUser {
         sb.append(", role=").append(role);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", phoneNumber=").append(phoneNumber);
         sb.append("]");
         return sb.toString();
     }

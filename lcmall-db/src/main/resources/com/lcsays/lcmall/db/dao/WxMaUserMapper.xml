@@ -17,6 +17,7 @@
     <result column="role" jdbcType="VARCHAR" property="role" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -78,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, wx_app_id, openid, unionid, nickname, avatar_url, gender, language, country, 
-    city, session_key, session_wx_app_id, role, create_time, update_time
+    city, session_key, session_wx_app_id, role, create_time, update_time, phone_number
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMaUserExample" resultMap="BaseResultMap">
     select
@@ -108,12 +109,14 @@
       nickname, avatar_url, gender, 
       language, country, city, 
       session_key, session_wx_app_id, role, 
-      create_time, update_time)
+      create_time, update_time, phone_number
+      )
     values (#{wxAppId,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{unionid,jdbcType=VARCHAR}, 
       #{nickname,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
       #{language,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
       #{sessionKey,jdbcType=VARCHAR}, #{sessionWxAppId,jdbcType=INTEGER}, #{role,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{phoneNumber,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMaUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -163,6 +166,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="phoneNumber != null">
+        phone_number,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="wxAppId != null">
@@ -206,6 +212,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -263,6 +272,9 @@
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.phoneNumber != null">
+        phone_number = #{record.phoneNumber,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -284,7 +296,8 @@
       session_wx_app_id = #{record.sessionWxAppId,jdbcType=INTEGER},
       role = #{record.role,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      phone_number = #{record.phoneNumber,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

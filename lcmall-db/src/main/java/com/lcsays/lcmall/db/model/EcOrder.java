@@ -1,8 +1,9 @@
 package com.lcsays.lcmall.db.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class EcOrder {
+public class EcOrder implements Serializable {
     private Integer id;
 
     private Integer wxAppId;
@@ -32,6 +33,8 @@ public class EcOrder {
     private Date updateTime;
 
     private Date successTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

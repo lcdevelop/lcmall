@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class EcExpressType {
+import java.io.Serializable;
+
+public class EcExpressType implements Serializable {
     private Integer id;
 
     private String name;
@@ -8,6 +10,8 @@ public class EcExpressType {
     private String code;
 
     private Integer level;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

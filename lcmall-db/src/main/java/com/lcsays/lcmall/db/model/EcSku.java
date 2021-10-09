@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class EcSku {
+import java.io.Serializable;
+
+public class EcSku implements Serializable {
     private Integer id;
 
     private Integer productId;
@@ -12,6 +14,8 @@ public class EcSku {
     private String specs;
 
     private Byte isDel;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

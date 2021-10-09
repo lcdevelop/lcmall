@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class EcPrice {
+import java.io.Serializable;
+
+public class EcPrice implements Serializable {
     private Integer id;
 
     private Integer skuId;
@@ -8,6 +10,8 @@ public class EcPrice {
     private Integer policy;
 
     private Integer price;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class EcCart {
+import java.io.Serializable;
+
+public class EcCart implements Serializable {
     private Integer id;
 
     private Integer wxMaUserId;
@@ -8,6 +10,8 @@ public class EcCart {
     private Integer skuId;
 
     private Integer count;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

@@ -1,8 +1,9 @@
 package com.lcsays.lcmall.db.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class EcProduct {
+public class EcProduct implements Serializable {
     private Integer id;
 
     private String name;
@@ -16,6 +17,8 @@ public class EcProduct {
     private Date createTime;
 
     private Date updateTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class GgIntro {
+import java.io.Serializable;
+
+public class GgIntro implements Serializable {
     private Integer id;
 
     private String tabName;
@@ -10,6 +12,8 @@ public class GgIntro {
     private Integer sort;
 
     private String text;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

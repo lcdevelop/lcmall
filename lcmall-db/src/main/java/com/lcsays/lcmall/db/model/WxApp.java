@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class WxApp {
+import java.io.Serializable;
+
+public class WxApp implements Serializable {
     private Integer id;
 
     private String name;
@@ -16,6 +18,8 @@ public class WxApp {
     private String type;
 
     private String mchId;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;

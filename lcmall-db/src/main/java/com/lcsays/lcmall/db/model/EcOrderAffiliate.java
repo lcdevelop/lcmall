@@ -1,6 +1,8 @@
 package com.lcsays.lcmall.db.model;
 
-public class EcOrderAffiliate {
+import java.io.Serializable;
+
+public class EcOrderAffiliate implements Serializable {
     private Integer id;
 
     private Integer orderId;
@@ -10,6 +12,8 @@ public class EcOrderAffiliate {
     private Integer count;
 
     private Integer price;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
