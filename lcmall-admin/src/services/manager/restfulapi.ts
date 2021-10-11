@@ -5,6 +5,7 @@ import { request } from 'umi';
 export type ParamsType = {
   current?: number;
   pageSize?: number;
+  status?: string;
 };
 
 export type OptionsType = {

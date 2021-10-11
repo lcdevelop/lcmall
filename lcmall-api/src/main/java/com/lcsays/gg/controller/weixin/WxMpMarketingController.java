@@ -3,6 +3,7 @@ package com.lcsays.gg.controller.weixin;
 import com.google.common.collect.Lists;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -24,8 +25,16 @@ public class WxMpMarketingController {
     @Resource
     WxMpService wxMpService;
 
+    @Data
+    private static class CreateCardParam {
+        String couponId;
+    }
+
     @PostMapping("/createCard")
-    public BaseModel<WxMpCardCreateResult> createCard(HttpSession session, @PathVariable String appId) {
+    public BaseModel<WxMpCardCreateResult> createCard(HttpSession session,
+                                                      @PathVariable String appId,
+                                                      @RequestBody CreateCardParam createCardParam
+    ) {
         log.info(appId);
         try {
             BaseInfo base = new BaseInfo();
@@ -49,23 +58,15 @@ public class WxMpMarketingController {
             base.setCanShare(true);
             base.setCanGiveFriend(true);
             base.setUseAllLocations(true);
-            base.setCenterTitle("顶部居中按钮");
-            base.setCenterSubTitle("按钮下方的wording");
-            base.setCenterUrl("www.qq.com");
-            base.setCustomUrl("http://www.qq.com");
-            base.setCustomUrlName("立即使用");
-            base.setCustomUrlSubTitle("副标题tip");
-            base.setPromotionUrlName("更多优惠");
-            base.setPromotionUrl("http://www.qq.com");
             base.setLocationIdList(Lists.newArrayList("1234"));
 
             WxMpCardCreateRequest request = new WxMpCardCreateRequest();
-            DiscountCardCreateRequest discountCardCreateRequest = new DiscountCardCreateRequest();
-            DiscountCard discountCard = new DiscountCard();
-            discountCard.setBaseInfo(base);
-            discountCard.setDiscount(30);
-            discountCardCreateRequest.setDiscount(discountCard);
-            request.setCardCreateRequest(discountCardCreateRequest);
+            GeneralCouponCreateRequest generalCouponCreateRequest = new GeneralCouponCreateRequest();
+            GeneralCoupon generalCoupon = new GeneralCoupon();
+            generalCoupon.setBaseInfo(base);
+            generalCoupon.setDefaultDetail("音乐木盒");
+            generalCouponCreateRequest.setGeneralCoupon(generalCoupon);
+            request.setCardCreateRequest(generalCouponCreateRequest);
             WxMpCardCreateResult result = wxMpService.switchoverTo(appId).getCardService().createCard(request);
             return BaseModel.success(result);
         } catch (WxErrorException e) {

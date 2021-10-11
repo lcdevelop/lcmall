@@ -1,41 +1,21 @@
-import { PlusOutlined } from '@ant-design/icons';
-import {Button, message} from 'antd';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import StockForm from "@/pages/Coupon/stock/components/StockForm";
-import {ProFormInstance} from "@ant-design/pro-form";
-import {stock, addStock} from "@/services/manager/marketing/api";
+import {stock} from "@/services/manager/marketing/api";
+import {OptionsType, ParamsType} from "@/services/manager/restfulapi";
 
-const Stock: React.FC = () => {
+type StockProps = {
+  location: any;
+}
 
-  const createFormRef = useRef<ProFormInstance<API.FavorStocksCreateRequest>>();
-  const [createModalVisible, handleCreateModalVisible] = useState<boolean>(false);
+const Stock: React.FC<StockProps> = (props: StockProps) => {
 
-  const handleAdd = async (p: API.FavorStocksCreateRequest) => {
-    const hide = message.loading('正在添加');
+  const [status, setStatus] = useState<string>('none');
 
-    try {
-      const res = await addStock(p);
-      if (res.code === 407) {
-        message.error('您没有权限，请联系管理员').then();
-        return false;
-      }
-      if (res.code !== 200) {
-        message.error(res.msg).then();
-        return false;
-      }
-      hide();
-      message.success('添加成功');
-      return true;
-    } catch (error) {
-      hide();
-      message.error('添加失败请重试！');
-      return false;
-    }
-  };
-
+  useEffect(() => {
+    setStatus(props.location.query.status);
+  }, [])
 
   const columns: ProColumns<API.Stock>[] = [
     {
@@ -71,27 +51,13 @@ const Stock: React.FC = () => {
       title: '已发券数量',
       dataIndex: 'distributedCoupons',
     },
-    {
-      title: '是否无资金流',
-      dataIndex: 'noCash',
-    },
-    {
-      title: '激活批次的时间',
-      dataIndex: 'startTime',
-    },
-    {
-      title: '终止批次的时间',
-      dataIndex: 'stopTime',
-    },
-    {
-      title: '是否单品优惠',
-      dataIndex: 'singleitem',
-    },
-    {
-      title: '批次类型',
-      dataIndex: 'stockType',
-    },
   ];
+
+
+
+  const stockInternal = async (params?: ParamsType, options?: OptionsType) => {
+    return stock({status: status, ...params}, options);
+  }
 
   return (
     <PageContainer>
@@ -101,66 +67,12 @@ const Stock: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              handleCreateModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> 新建
-          </Button>,
-        ]}
-        request={stock}
+        request={stockInternal}
         columns={columns}
         pagination={{
           pageSize: 10
         }}
         scroll={{x: "100%"}}
-      />
-
-      <StockForm
-        isNew={true}
-        title='创建批次'
-        visible={createModalVisible}
-        values={{}}
-        onCancel={() => {
-          handleCreateModalVisible(false);
-          createFormRef.current?.resetFields();
-        }}
-        onSubmit={async (values) => {
-          const p = values as API.FavorStocksCreateRequest;
-          p.stockUseRule = {
-            maxCoupons: values['maxCoupons'],
-            maxAmount: values['maxAmount'],
-            maxAmountByDay: values['maxAmountByDay'],
-            maxCouponsPerUser: values['maxCouponsPerUser'],
-            naturalPersonLimit: values['naturalPersonLimit'],
-            preventApiAbuse: values['preventApiAbuse'],
-            combineUse: false,
-            couponType: "",
-            fixedNormalCoupon: {
-              couponAmount: 0,
-              transactionMinimum: 0,
-            },
-            goodsTag: [],
-            tradeType: [],
-          }
-          p.couponUseRule = {
-            fixedNormalCoupon: {
-              couponAmount: values['couponAmount'],
-              transactionMinimum: values['transactionMinimum']
-            },
-            availableMerchants: ['1488848612']
-          }
-          const success = await handleAdd(p);
-          if (success) {
-            handleCreateModalVisible(false);
-            createFormRef.current?.resetFields();
-          }
-        }}
-        formRef={createFormRef}
       />
 
     </PageContainer>

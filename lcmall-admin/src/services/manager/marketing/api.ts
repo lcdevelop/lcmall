@@ -11,7 +11,6 @@ const startStockApiPath = apiPathPrefix + '/startStock';
 const pauseStockApiPath = apiPathPrefix + '/pauseStock';
 const restartStockApiPath = apiPathPrefix + '/restartStock';
 
-
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
     op<API.Stock>(stockApiPath, OP_GET, undefined, params, options)
@@ -69,6 +68,19 @@ export async function restartStock(params: {
 }, options?: { [key: string]: any }) {
   return request<API.Response<any>>(restartStockApiPath, {
     method: 'POST',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function generateMaLink(params: {
+  appId: string,
+  stockId: string,
+}, options?: { [key: string]: any }) {
+  return request<API.Response<any>>(`/api/wx/ma/${params.appId}/marketing/generateUrlLink`, {
+    method: 'GET',
     params: {
       ...params,
     },

@@ -44,7 +44,8 @@ public class ManagerMarketingController {
     @GetMapping("/stock")
     public BaseModel<List<FavorStocksGetResult>> getStocks(HttpSession session,
                                                            @RequestParam("current") Integer current,
-                                                           @RequestParam("pageSize") Integer pageSize) {
+                                                           @RequestParam("pageSize") Integer pageSize,
+                                                           @RequestParam("status") String status) {
         WxMaUser user = SessionUtils.getUserFromSession(session);
         if (null != user) {
             try {
@@ -53,6 +54,7 @@ public class ManagerMarketingController {
                 request.setOffset(current-1);
                 request.setLimit(pageSize);
                 request.setStockCreatorMchid(curMchId);
+                request.setStatus(status);
                 log.info(request.toString());
                 FavorStocksQueryResult res = wxPayService.switchoverTo(curMchId)
                         .getMarketingFavorService().queryFavorStocksV3(request);

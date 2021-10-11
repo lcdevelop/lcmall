@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Button, message, Popconfirm} from 'antd';
 import ProCard, {StatisticCard} from '@ant-design/pro-card';
-import {startStock, pauseStock, restartStock, stockDetail} from "@/services/manager/marketing/api";
+import {startStock, pauseStock, restartStock, stockDetail, generateMaLink} from "@/services/manager/marketing/api";
+import {useModel} from "@@/plugin-model/useModel";
 const { Statistic } = StatisticCard;
 
 const { Divider } = ProCard;
@@ -12,6 +13,7 @@ export type StockDetailProps = {
 
 const StockDetail: React.FC<StockDetailProps> = (props) => {
 
+  const { initialState } = useModel('@@initialState');
   const [stock, setStock] = useState<API.Stock>();
 
   useEffect(() => {
@@ -68,6 +70,18 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
     }
   }
 
+  const onGenerateMaLink = () => {
+    if (undefined !== stock && null !== stock.stockId) {
+      generateMaLink({appId: initialState?.currentWxUser?.sessionWxApp.appId!, stockId: stock.stockId}).then(res => {
+        if (res.code === 200) {
+          message.success('成功生成').then();
+        } else {
+          message.error(res.msg).then();
+        }
+      })
+    }
+  }
+
   if (undefined === stock) {
     return (
       <div>loading...</div>
@@ -107,6 +121,9 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
       >
         <Button type={"primary"}>重启</Button>
       </Popconfirm>
+
+      <span style={{marginLeft: '10px'}} />
+      <Button type={"primary"} onClick={onGenerateMaLink}>生成链接</Button>
 
       <Divider />
       <ProCard.Group>

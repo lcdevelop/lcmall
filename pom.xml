@@ -15,7 +15,8 @@
 
 
     <properties>
-        <weixin-java-miniapp.version>4.1.0</weixin-java-miniapp.version>
+<!--        <weixin-java-miniapp.version>4.1.0</weixin-java-miniapp.version>-->
+        <weixin-java-miniapp.version>4.1.9.B</weixin-java-miniapp.version>
         <weixin-java-mp.version>4.1.0</weixin-java-mp.version>
         <mybatis.spring.boot.version>2.2.0</mybatis.spring.boot.version>
         <maven.compiler.source>1.8</maven.compiler.source>

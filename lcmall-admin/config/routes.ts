@@ -35,9 +35,8 @@ export default [
     name: '营销管理',
     icon: 'creditCard',
     routes: [
-      { path: '/marketing/stock/all', name: '代金券批次(全部)', icon: 'smile', component: './Coupon/stock'},
-      // { path: '/marketing/stock/running', name: '代金券批次(运营中)', icon: 'smile', component: './Coupon/stock'},
-      // { path: '/marketing/stock/unactivated', name: '代金券批次(草稿箱)', icon: 'smile', component: './Coupon/stock'},
+      { path: '/marketing/stock/list', name: '代金券批次', icon: 'smile', component: './Coupon/stockList'},
+      { path: '/marketing/stock/data', name: '代金券批次(全部)', icon: 'smile', component: './Coupon/stock', hideInMenu: true},
       { path: '/marketing/stock/detail/:stockId', name: '代金券批次详情', icon: 'smile', component: './Coupon/stockDetail', hideInMenu:true},
     ],
   },
