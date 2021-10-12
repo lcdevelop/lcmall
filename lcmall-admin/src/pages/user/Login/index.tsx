@@ -108,6 +108,8 @@ const Login: React.FC = () => {
         :""
       }
 
+      <div>本网站仅支持电脑谷歌Chrome浏览器使用</div>
+
     </div>
   );
 };
