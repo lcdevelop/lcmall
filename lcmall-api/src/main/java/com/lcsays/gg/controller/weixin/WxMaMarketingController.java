@@ -7,7 +7,6 @@ import com.github.binarywang.wxpay.bean.marketing.FavorCouponsCreateResult;
 import com.github.binarywang.wxpay.bean.marketing.FavorCouponsGetResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
-import com.google.common.collect.Lists;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
 import com.lcsays.gg.utils.RequestNo;
@@ -19,9 +18,7 @@ import com.lcsays.lcmall.db.service.WxMarketingCouponService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.card.*;
-import me.chanjar.weixin.open.api.WxOpenMaService;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 import com.lcsays.lcmall.db.service.WxAppService;
 import javax.annotation.Resource;
@@ -35,6 +32,9 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/api/wx/ma/{appId}/marketing")
 public class WxMaMarketingController {
+
+    @Resource
+    Environment environment;
 
     @Resource
     WxPayService wxPayService;
@@ -60,45 +60,46 @@ public class WxMaMarketingController {
 
     @PostMapping("/createCoupon")
     public BaseModel<FavorCouponsCreateResult> createCoupon(HttpSession session,
-                                        @PathVariable String appId,
-                                        @RequestBody CreateCouponParam createCouponParam) {
-        /// mock
-//        FavorCouponsCreateResult r = new FavorCouponsCreateResult();
-//        r.setCouponId("27505904030");
-//        return BaseModel.success(r);
+                                                            @PathVariable String appId,
+                                                            @RequestBody CreateCouponParam createCouponParam) {
+        if ("development".equals(environment.getProperty("env"))) {
+            // 如果是开发环境就返回一个假的couponId
+            FavorCouponsCreateResult r = new FavorCouponsCreateResult();
+            r.setCouponId("27595222804");
+            return BaseModel.success(r);
+        } else {
+            WxApp wxApp = wxAppService.queryByAppId(appId);
+            if (null == wxApp) {
+                return BaseModel.error(ErrorCode.PARAM_ERROR);
+            }
 
-        WxApp wxApp = wxAppService.queryByAppId(appId);
-        if (null == wxApp) {
-            return BaseModel.error(ErrorCode.PARAM_ERROR);
+            WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+
+            try {
+                FavorCouponsCreateRequest request = new FavorCouponsCreateRequest();
+                request.setStockId(createCouponParam.getStockId());
+                String requestNo = RequestNo.randomWithCurTime("cc");
+                request.setOutRequestNo(requestNo);
+                request.setAppid(appId);
+                String mchId = wxApp.getMchId();
+                request.setStockCreatorMchid(mchId);
+                FavorCouponsCreateResult result = wxPayService.switchoverTo(mchId).getMarketingFavorService()
+                        .createFavorCouponsV3(wxMaUser.getOpenid(), request);
+                log.info(result.toString());
+
+                WxMarketingCoupon wxMarketingCoupon = new WxMarketingCoupon();
+                wxMarketingCoupon.setWxAppId(wxApp.getId());
+                wxMarketingCoupon.setWxMaUserId(wxMaUser.getId());
+                wxMarketingCoupon.setStockId(createCouponParam.getStockId());
+                wxMarketingCoupon.setCouponId(result.getCouponId());
+                marketingCouponService.addCoupon(wxMarketingCoupon);
+                return BaseModel.success(result);
+            } catch (WxPayException e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+                return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+            }
         }
-
-        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
-
-        try {
-            FavorCouponsCreateRequest request = new FavorCouponsCreateRequest();
-            request.setStockId(createCouponParam.getStockId());
-            String requestNo = RequestNo.randomWithCurTime("cc");
-            request.setOutRequestNo(requestNo);
-            request.setAppid(appId);
-            String mchId = wxApp.getMchId();
-            request.setStockCreatorMchid(mchId);
-            FavorCouponsCreateResult result = wxPayService.switchoverTo(mchId).getMarketingFavorService()
-                    .createFavorCouponsV3(wxMaUser.getOpenid(), request);
-            log.info(result.toString());
-
-            WxMarketingCoupon wxMarketingCoupon = new WxMarketingCoupon();
-            wxMarketingCoupon.setWxAppId(wxApp.getId());
-            wxMarketingCoupon.setWxMaUserId(wxMaUser.getId());
-            wxMarketingCoupon.setStockId(createCouponParam.getStockId());
-            wxMarketingCoupon.setCouponId(result.getCouponId());
-            marketingCouponService.addCoupon(wxMarketingCoupon);
-            return BaseModel.success(result);
-        } catch (WxPayException e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-            return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
-        }
-
     }
 
     @GetMapping("/coupon")
@@ -131,6 +132,7 @@ public class WxMaMarketingController {
             request.setQuery("?stockId=" + stockId);
             request.setIsExpire(false);
             String result = wxMaService.switchoverTo(appId).getLinkService().generateUrlLink(request);
+            result = result.replaceAll("\"", "");
             log.info(result);
             return BaseModel.success(result);
         } catch (WxErrorException e) {

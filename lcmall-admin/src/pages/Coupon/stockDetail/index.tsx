@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, message, Popconfirm} from 'antd';
+import {Button, message, Popconfirm, Modal} from 'antd';
 import ProCard, {StatisticCard} from '@ant-design/pro-card';
 import {startStock, pauseStock, restartStock, stockDetail, generateMaLink} from "@/services/manager/marketing/api";
 import {useModel} from "@@/plugin-model/useModel";
@@ -74,7 +74,15 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
     if (undefined !== stock && null !== stock.stockId) {
       generateMaLink({appId: initialState?.currentWxUser?.sessionWxApp.appId!, stockId: stock.stockId}).then(res => {
         if (res.code === 200) {
-          message.success('成功生成').then();
+          Modal.info({
+            title: '生成链接成功',
+            content: (
+              <div>
+                <p>如下是此批次专属链接，请保存好，可用于短信发送</p>
+                <p>{res.data}</p>
+              </div>
+            )
+          })
         } else {
           message.error(res.msg).then();
         }

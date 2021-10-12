@@ -37,6 +37,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime
       - ./lcmall/conf.d/application.yml:/application.yml
+      - ./lcmall/conf.d/:/conf
       - ./lcmall/logs:/logs
     environment:
       - TZ=Asia/Shanghai

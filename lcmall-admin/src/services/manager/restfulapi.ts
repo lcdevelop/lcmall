@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
-import { request } from 'umi';
+import {request} from 'umi';
+import {message} from "antd";
 
 export type ParamsType = {
   current?: number;
@@ -25,13 +26,21 @@ export async function op<T>(
   options?: OptionsType,
 ) {
   if (opType === OP_GET) {
-    return request<API.Response<T[]>>(apiPath, {
-      method: 'GET',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
-    });
+    return new Promise<any>((resolve, reject) => {
+      request<API.Response<T[]>>(apiPath, {
+        method: 'GET',
+        params: {
+          ...params,
+        },
+        ...(options || {}),
+      }).then((res) => {
+        if (res.code === 200) {
+          resolve(res);
+        } else {
+          message.error(res.msg).then();
+        }
+      }, (err) => {reject(err);})
+    })
   }
 
   if (opType === OP_ADD) {
