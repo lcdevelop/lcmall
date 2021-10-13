@@ -74,7 +74,7 @@ const Order: React.FC = () => {
       render: (dom, entity) => (
         <Space>
           <Avatar src={entity.wxMaUser.avatarUrl} />
-          {entity.wxMaUser.nickName}
+          {entity.wxMaUser.nickname}
         </Space>
       ),
       hideInSearch: true,

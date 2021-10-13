@@ -113,7 +113,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentWxUser?.nickName,
+      content: initialState?.currentWxUser?.nickname,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {

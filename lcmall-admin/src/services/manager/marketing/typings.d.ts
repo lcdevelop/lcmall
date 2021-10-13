@@ -63,4 +63,9 @@ declare namespace API {
     stockType: string;
     outRequestNo: string;
   }
+
+  type WxMarketingStock = {
+    stockId: string;
+    cardId: string;
+  }
 }

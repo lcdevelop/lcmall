@@ -68,7 +68,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const { currentWxUser } = initialState;
 
-  if (!currentWxUser || !currentWxUser.nickName) {
+  if (!currentWxUser || !currentWxUser.nickname) {
     return loading;
   }
 
@@ -99,7 +99,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} src={currentWxUser.avatarUrl} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentWxUser.nickName}</span>
+        <span className={`${styles.name} anticon`}>{currentWxUser.nickname}</span>
       </span>
     </HeaderDropdown>
   );

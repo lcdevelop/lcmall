@@ -17,7 +17,7 @@ declare namespace API {
     id: number;
     wxApp: WxApp;
     sessionWxApp: WxApp;
-    nickName: string;
+    nickname: string;
     avatarUrl: string;
     gender: string;
     country: string;

@@ -8,9 +8,13 @@ import com.github.binarywang.wxpay.v3.util.RsaCryptoUtil;
 import com.google.gson.annotations.SerializedName;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
-import com.lcsays.gg.models.weixin.WxMaUser;
 import com.lcsays.gg.utils.RequestNo;
 import com.lcsays.gg.utils.SessionUtils;
+import com.lcsays.lcmall.db.model.WxMaUser;
+import com.lcsays.lcmall.db.model.WxMarketingStock;
+import com.lcsays.lcmall.db.service.WxAppService;
+import com.lcsays.lcmall.db.service.WxMarketingStockService;
+import com.lcsays.lcmall.db.util.WxMaUserUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,15 +45,21 @@ public class ManagerMarketingController {
     @Resource
     private WxPayService wxPayService;
 
+    @Resource
+    private WxMarketingStockService wxMarketingStockService;
+
+    @Resource
+    private WxAppService wxAppService;
+
     @GetMapping("/stock")
     public BaseModel<List<FavorStocksGetResult>> getStocks(HttpSession session,
                                                            @RequestParam("current") Integer current,
                                                            @RequestParam("pageSize") Integer pageSize,
                                                            @RequestParam("status") String status) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
             try {
-                String curMchId = user.getSessionWxApp().getMchId();
+                String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
                 FavorStocksQueryRequest request = new FavorStocksQueryRequest();
                 request.setOffset(current-1);
                 request.setLimit(pageSize);
@@ -71,13 +81,13 @@ public class ManagerMarketingController {
 
     @PostMapping("/stock")
     public BaseModel<String> addStock(HttpSession session, @RequestBody FavorStocksCreateRequest request) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
 
-            String curMchId = user.getSessionWxApp().getMchId();
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
             try {
                 request.setBelongMerchant(curMchId);
                 request.setStockType(StockTypeEnum.NORMAL);
@@ -98,9 +108,9 @@ public class ManagerMarketingController {
 
     @GetMapping("/stockDetail")
     public BaseModel<FavorStocksGetResult> stockDetail(HttpSession session, @RequestParam("stockId") String stockId) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            String curMchId = user.getSessionWxApp().getMchId();
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
             try {
                 FavorStocksGetResult res = wxPayService.switchoverTo(curMchId).getMarketingFavorService().getFavorStocksV3(stockId, curMchId);
                 return BaseModel.success(res);
@@ -116,13 +126,13 @@ public class ManagerMarketingController {
 
     @PostMapping("/startStock")
     public BaseModel<FavorStocksStartResult> startStock(HttpSession session, @RequestParam("stockId") String stockId) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
 
-            String curMchId = user.getSessionWxApp().getMchId();
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
             try {
                 FavorStocksSetRequest request = new FavorStocksSetRequest();
                 request.setStockCreatorMchid(curMchId);
@@ -133,6 +143,45 @@ public class ManagerMarketingController {
                 e.printStackTrace();
                 log.error(e.getMessage());
                 return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+            }
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    @PutMapping("/wxMarketingStock")
+    public BaseModel<String> createOrUpdateWxMarketingStock(HttpSession session, @RequestBody WxMarketingStock wxMarketingStock) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            wxMarketingStock.setWxAppId(user.getSessionWxAppId());
+            int ret = wxMarketingStockService.createOrUpdate(wxMarketingStock);
+            if (ret > 0) {
+                return BaseModel.success();
+            } else {
+                return BaseModel.error(ErrorCode.DAO_ERROR);
+            }
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    @GetMapping("/wxMarketingStock")
+    public BaseModel<WxMarketingStock> getWxMarketingStockByStockId(HttpSession session,
+                                                                    @RequestParam("stockId") String stockId) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+            WxMarketingStock wxMarketingStock = wxMarketingStockService.queryByStockId(stockId);
+            if (wxMarketingStock != null) {
+                return BaseModel.success(wxMarketingStock);
+            } else {
+                return BaseModel.error(ErrorCode.DAO_ERROR);
             }
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
@@ -155,13 +204,13 @@ public class ManagerMarketingController {
 
     @PostMapping("/pauseStock")
     public BaseModel<FavorStocksPauseResult> pauseStock(HttpSession session, @RequestParam("stockId") String stockId) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
 
-            String curMchId = user.getSessionWxApp().getMchId();
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
             try {
                 FavorStocksSetRequest request = new FavorStocksSetRequest();
                 request.setStockCreatorMchid(curMchId);
@@ -180,13 +229,13 @@ public class ManagerMarketingController {
 
     @PostMapping("/restartStock")
     public BaseModel<FavorStocksRestartResult> restartStock(HttpSession session, @RequestParam("stockId") String stockId) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
 
-            String curMchId = user.getSessionWxApp().getMchId();
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
             try {
                 FavorStocksSetRequest request = new FavorStocksSetRequest();
                 request.setStockCreatorMchid(curMchId);

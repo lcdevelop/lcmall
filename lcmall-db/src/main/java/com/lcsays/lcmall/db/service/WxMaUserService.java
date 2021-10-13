@@ -67,4 +67,30 @@ public class WxMaUserService {
     public long insert(WxMaUser wxMaUser) {
         return wxMaUserMapper.insert(wxMaUser);
     }
+
+    public WxMaUser getWxMaUserBySessionKey(String shortSid) {
+        WxMaUserExample example = new WxMaUserExample();
+        WxMaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andSessionKeyEqualTo(shortSid);
+        List<WxMaUser> ret = wxMaUserMapper.selectByExample(example);
+        if (ret.size() == 1) {
+            return ret.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public List<WxMaUser> queryUsersByNickName(String nickName) {
+        WxMaUserExample example = new WxMaUserExample();
+        WxMaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andNicknameEqualTo(nickName);
+        return wxMaUserMapper.selectByExample(example);
+    }
+
+    public List<WxMaUser> listUsers() {
+        WxMaUserExample example = new WxMaUserExample();
+        WxMaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        return wxMaUserMapper.selectByExample(example);
+    }
 }

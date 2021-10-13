@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcsays.lcmall.db.dao.WxMarketingStockMapper">
+  <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxMarketingStock">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
+    <result column="stock_id" jdbcType="VARCHAR" property="stockId" />
+    <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, wx_app_id, stock_id, card_id
+  </sql>
+  <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingStockExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wx_marketing_stock
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingStockExample">
+    delete from wx_marketing_stock
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.lcsays.lcmall.db.model.WxMarketingStock">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wx_marketing_stock (wx_app_id, stock_id, card_id
+      )
+    values (#{wxAppId,jdbcType=INTEGER}, #{stockId,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingStock">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wx_marketing_stock
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wxAppId != null">
+        wx_app_id,
+      </if>
+      <if test="stockId != null">
+        stock_id,
+      </if>
+      <if test="cardId != null">
+        card_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wxAppId != null">
+        #{wxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        #{stockId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null">
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingStockExample" resultType="java.lang.Long">
+    select count(*) from wx_marketing_stock
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wx_marketing_stock
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.wxAppId != null">
+        wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="record.stockId != null">
+        stock_id = #{record.stockId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardId != null">
+        card_id = #{record.cardId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wx_marketing_stock
+    set id = #{record.id,jdbcType=INTEGER},
+      wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
+      stock_id = #{record.stockId,jdbcType=VARCHAR},
+      card_id = #{record.cardId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

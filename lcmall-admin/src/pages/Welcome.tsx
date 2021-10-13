@@ -16,7 +16,7 @@ export default (): React.ReactNode => {
     <PageContainer>
       <Card>
         <Alert
-          message={`hi ${currentWxUser?.nickName}, 欢迎来到这里。`}
+          message={`hi ${currentWxUser?.nickname}, 欢迎来到这里。`}
           type="success"
           showIcon
           banner

@@ -1,11 +1,16 @@
 package com.lcsays.gg.controller.manager;
 
 import com.lcsays.gg.enums.ErrorCode;
+import com.lcsays.gg.models.dbwrapper.WxMaUserEx;
 import com.lcsays.gg.models.result.BaseModel;
-import com.lcsays.gg.models.weixin.WxMaUser;
 import com.lcsays.gg.service.weixin.UserService;
 import com.lcsays.gg.utils.ApiUtils;
 import com.lcsays.gg.utils.SessionUtils;
+import com.lcsays.lcmall.db.model.WxApp;
+import com.lcsays.lcmall.db.model.WxMaUser;
+import com.lcsays.lcmall.db.service.WxAppService;
+import com.lcsays.lcmall.db.service.WxMaUserService;
+import com.lcsays.lcmall.db.util.WxMaUserUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -32,21 +37,24 @@ public class ManagerUserController {
     @Resource
     UserService userService;
 
+    @Resource
+    WxMaUserService wxMaUserService;
+
+    @Resource
+    WxAppService wxAppService;
+
     @GetMapping("/checkLogined")
     public BaseModel<WxMaUser> checkLogined(HttpSession session) {
         String shortSid = SessionUtils.normalizeSessionId(session);
-        WxMaUser wxMaUser = userService.getWxMaUserBySessionKey(shortSid);
-        if (null != wxMaUser && null != wxMaUser.getSessionWxApp()) {
-            if (wxMaUser.isAdmin()
-                || wxMaUser.getSessionWxApp().getAuth().equals(0)
-                || (null != wxMaUser.getRole() && wxMaUser.getRole().equals(wxMaUser.getSessionWxApp().getName()))
-            ) {
-                SessionUtils.saveUserToSession(session, wxMaUser);
-                wxMaUser.clearSecret();
+        WxMaUser wxMaUser = wxMaUserService.getWxMaUserBySessionKey(shortSid);
+        if (null != wxMaUser && null != WxMaUserUtil.getSessionWxApp(wxMaUser, wxAppService)) {
+            if (WxMaUserUtil.checkAuthority(wxMaUser, wxAppService)) {
+                SessionUtils.saveWxUserToSession(session, wxMaUser);
+                WxMaUserUtil.clearSecret(wxMaUser);
                 return BaseModel.success(wxMaUser);
             } else {
-                wxMaUser.setSessionWxApp(null);
-                userService.update(wxMaUser);
+                wxMaUser.setSessionWxAppId(null);
+                wxMaUserService.update(wxMaUser);
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
         } else {
@@ -55,12 +63,16 @@ public class ManagerUserController {
     }
 
     @GetMapping("/currentUser")
-    public BaseModel<WxMaUser>  currentUser(HttpServletRequest request) {
+    public BaseModel<WxMaUserEx>  currentUser(HttpServletRequest request) {
         if (request.isRequestedSessionIdValid()) {
-            WxMaUser wxMaUser = SessionUtils.getUserFromSession(request.getSession());
+            WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(request.getSession());
             if (null != wxMaUser) {
-                wxMaUser.clearSecret();
-                return BaseModel.success(wxMaUser);
+                WxMaUserUtil.clearSecret(wxMaUser);
+                WxMaUserEx wxMaUserEx = new WxMaUserEx();
+                wxMaUserEx.copyFrom(wxMaUser);
+                WxApp wxApp = wxAppService.queryById(wxMaUser.getSessionWxAppId());
+                wxMaUserEx.setSessionWxApp(wxApp);
+                return BaseModel.success(wxMaUserEx);
             } else {
                 return BaseModel.error(ErrorCode.NEED_LOGIN);
             }
@@ -76,19 +88,19 @@ public class ManagerUserController {
     }
 
     @PostMapping("/updateRole")
-    public BaseModel<String> updateRole(HttpSession session, Long userId, String role) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<String> updateRole(HttpSession session, Integer userId, String role) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.isAdmin()) {
+            if (!WxMaUserUtil.isAdmin(user)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
 
-            WxMaUser u = userService.getWxMaUserBySimpleId(userId);
+            WxMaUser u = wxMaUserService.getWxMaUserById(userId);
             if (null == u) {
                 return BaseModel.error(ErrorCode.NO_RESULT);
             }
             u.setRole(role);
-            userService.update(u);
+            wxMaUserService.update(u);
             return BaseModel.success();
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
@@ -100,14 +112,20 @@ public class ManagerUserController {
                                           Integer current,
                                           Integer pageSize,
                                           String nickName) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.isAdmin()) {
+            if (!WxMaUserUtil.isAdmin(user)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-            List<WxMaUser> users = userService.userList(nickName);
+//            List<WxMaUser> users = userService.userList(nickName);
+            List<WxMaUser> users = null;
+            if (null != nickName) {
+                users = wxMaUserService.queryUsersByNickName(nickName);
+            } else {
+                users = wxMaUserService.listUsers();
+            }
             for (WxMaUser u: users) {
-                u.clearSecret();
+                WxMaUserUtil.clearSecret(u);
             }
             if (current == null) {
                 current = 1;
