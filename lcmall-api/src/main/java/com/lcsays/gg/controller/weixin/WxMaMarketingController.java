@@ -48,6 +48,9 @@ public class WxMaMarketingController {
     @Resource
     WxMaService wxMaService;
 
+    @Resource
+    WxMarketingCouponService wxMarketingCouponService;
+
     @Data
     private static class CreateCouponParam {
         private String stockId;
@@ -121,6 +124,18 @@ public class WxMaMarketingController {
             e.printStackTrace();
             log.info(e.getMessage());
             return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+        }
+    }
+
+    @GetMapping("/hasGotCoupon")
+    public BaseModel<String> hasGotCoupon(HttpSession session, @RequestParam("stockId") String stockId) {
+        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+
+        WxMarketingCoupon wxMarketingCoupon = wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId);
+        if (null == wxMarketingCoupon) {
+            return BaseModel.error(ErrorCode.NO_RESULT);
+        } else {
+            return BaseModel.success();
         }
     }
 
