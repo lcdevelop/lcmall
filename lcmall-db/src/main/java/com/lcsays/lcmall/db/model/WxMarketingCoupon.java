@@ -1,6 +1,7 @@
 package com.lcsays.lcmall.db.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class WxMarketingCoupon implements Serializable {
     private Integer id;
@@ -14,6 +15,8 @@ public class WxMarketingCoupon implements Serializable {
     private String couponId;
 
     private String status;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -65,6 +68,14 @@ public class WxMarketingCoupon implements Serializable {
         this.status = status;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -77,6 +88,7 @@ public class WxMarketingCoupon implements Serializable {
         sb.append(", stockId=").append(stockId);
         sb.append(", couponId=").append(couponId);
         sb.append(", status=").append(status);
+        sb.append(", createTime=").append(createTime);
         sb.append("]");
         return sb.toString();
     }

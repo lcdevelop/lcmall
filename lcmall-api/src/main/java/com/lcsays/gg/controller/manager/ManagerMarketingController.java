@@ -8,17 +8,21 @@ import com.github.binarywang.wxpay.v3.util.RsaCryptoUtil;
 import com.google.gson.annotations.SerializedName;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
+import com.lcsays.gg.utils.ApiUtils;
 import com.lcsays.gg.utils.RequestNo;
 import com.lcsays.gg.utils.SessionUtils;
 import com.lcsays.lcmall.db.model.WxMaUser;
 import com.lcsays.lcmall.db.model.WxMarketingStock;
+import com.lcsays.lcmall.db.model.WxMarketingWhitelist;
 import com.lcsays.lcmall.db.service.WxAppService;
 import com.lcsays.lcmall.db.service.WxMarketingStockService;
+import com.lcsays.lcmall.db.service.WxMarketingWhitelistService;
 import com.lcsays.lcmall.db.util.WxMaUserUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,6 +54,32 @@ public class ManagerMarketingController {
 
     @Resource
     private WxAppService wxAppService;
+
+    @Resource
+    WxMarketingWhitelistService wxMarketingWhitelistService;
+
+    @GetMapping("/whitelist")
+    public BaseModel<List<WxMarketingWhitelist>> whitelist(HttpSession session,
+                                                           @RequestParam("current") Integer current,
+                                                           @RequestParam("pageSize") Integer pageSize,
+                                                           String phoneNumber) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                List<WxMarketingWhitelist> data;
+                if (!StringUtils.isEmpty(phoneNumber)) {
+                    data = wxMarketingWhitelistService.queryByPhoneNumber(phoneNumber);
+                } else {
+                    data = wxMarketingWhitelistService.queryAll();
+                }
+                return BaseModel.success(ApiUtils.pagination(data, current, pageSize), data.size());
+            } else {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
 
     @GetMapping("/stock")
     public BaseModel<List<FavorStocksGetResult>> getStocks(HttpSession session,

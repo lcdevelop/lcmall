@@ -68,4 +68,9 @@ declare namespace API {
     stockId: string;
     cardId: string;
   }
+
+  type WxMarketingWhitelist = {
+    id: number;
+    phoneNumber: string;
+  }
 }

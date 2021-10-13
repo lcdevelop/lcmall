@@ -15,6 +15,7 @@ import com.lcsays.lcmall.db.model.WxApp;
 import com.lcsays.lcmall.db.model.WxMaUser;
 import com.lcsays.lcmall.db.model.WxMarketingCoupon;
 import com.lcsays.lcmall.db.service.WxMarketingCouponService;
+import com.lcsays.lcmall.db.service.WxMarketingWhitelistService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -51,32 +52,43 @@ public class WxMaMarketingController {
     @Resource
     WxMarketingCouponService wxMarketingCouponService;
 
+    @Resource
+    WxMarketingWhitelistService wxMarketingWhitelistService;
+
     @Data
     private static class CreateCouponParam {
         private String stockId;
-    }
-
-    @Data
-    private static class PostDemoParam {
-        private String param1;
     }
 
     @PostMapping("/createCoupon")
     public BaseModel<FavorCouponsCreateResult> createCoupon(HttpSession session,
                                                             @PathVariable String appId,
                                                             @RequestBody CreateCouponParam createCouponParam) {
+        WxApp wxApp = wxAppService.queryByAppId(appId);
+        if (null == wxApp) {
+            return BaseModel.error(ErrorCode.PARAM_ERROR);
+        }
+
+        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+        // 不在白名单里不允许领券
+        if (!wxMarketingWhitelistService.contains(wxMaUser.getPhoneNumber())) {
+            return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "非工行指定手机号用户无法领取");
+        }
+
         if ("development".equals(environment.getProperty("env"))) {
             // 如果是开发环境就返回一个假的couponId
+            String fakeCouponId = "27595222804";
             FavorCouponsCreateResult r = new FavorCouponsCreateResult();
-            r.setCouponId("27595222804");
+            r.setCouponId(fakeCouponId);
+            WxMarketingCoupon wxMarketingCoupon = new WxMarketingCoupon();
+            wxMarketingCoupon.setWxAppId(wxApp.getId());
+            wxMarketingCoupon.setWxMaUserId(wxMaUser.getId());
+            wxMarketingCoupon.setStockId(createCouponParam.getStockId());
+            wxMarketingCoupon.setCouponId(fakeCouponId);
+            marketingCouponService.addCoupon(wxMarketingCoupon);
             return BaseModel.success(r);
         } else {
-            WxApp wxApp = wxAppService.queryByAppId(appId);
-            if (null == wxApp) {
-                return BaseModel.error(ErrorCode.PARAM_ERROR);
-            }
 
-            WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
 
             try {
                 FavorCouponsCreateRequest request = new FavorCouponsCreateRequest();

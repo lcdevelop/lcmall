@@ -11,6 +11,7 @@ const startStockApiPath = apiPathPrefix + '/startStock';
 const pauseStockApiPath = apiPathPrefix + '/pauseStock';
 const restartStockApiPath = apiPathPrefix + '/restartStock';
 const wxMarketingStockApiPath = apiPathPrefix + '/wxMarketingStock';
+const whitelistApiPath = apiPathPrefix + '/whitelist';
 
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
@@ -106,4 +107,11 @@ export async function getWxMarketingStockByStockId(params: {
     },
     ...(options || {}),
   });
+}
+
+export async function whitelist(params?: ParamsType, options?: OptionsType) {
+  return new Promise<any>((resolve, reject) => {
+    op<API.WxMarketingWhitelist>(whitelistApiPath, OP_GET, undefined, params, options)
+      .then((res) => {resolve(res);}, (err) => {reject(err);})
+  })
 }
