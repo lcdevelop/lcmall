@@ -3,3 +3,4 @@
 (注：项目结构较多参考了 https://github.com/linlinjava/litemall 项目，虽做的不是一类东西，但依然感谢)
 - 部署方式请见deploy/bin/deploy.sh脚本
 - 部署后访问 http://localhost:8080
+- good luck
