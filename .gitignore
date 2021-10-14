@@ -7,3 +7,4 @@ lcmall-db/target/
 /logs/
 /deploy/bin/deploy_tmp.sh
 /lcmall-db/src/main/resources/mybatis-generator/datasource.properties
+docker/lcmall/conf.d/*_cert
