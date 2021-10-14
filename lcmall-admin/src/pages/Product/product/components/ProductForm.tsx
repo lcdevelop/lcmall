@@ -41,7 +41,7 @@ const ProductForm: React.FC<ProductFormProps> = (props) => {
         initialValue={props.values.name}
       />
       <ProFormSelect
-        name='category_id'
+        name='categoryId'
         label='品类'
         request={async () => props.categories.map(value => {
                return {label: value.name, value: value.id}

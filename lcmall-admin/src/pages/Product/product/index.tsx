@@ -40,6 +40,7 @@ const Product: React.FC = () => {
   }, [categories])
 
   const handleAdd = async (p: API.Product) => {
+    console.log(p);
     const hide = message.loading('正在添加');
 
     try {
@@ -190,14 +191,11 @@ const Product: React.FC = () => {
         }}
         onSubmit={async (values) => {
           const p = values as API.Product;
-          if (p.category_id) {
-            p.category = {id: p.category_id, name: "", appId:""};
-            const success = await handleAdd(p);
-            if (success) {
-              actionRef.current?.reload();
-              handleCreateModalVisible(false);
-              createFormRef.current?.resetFields();
-            }
+          const success = await handleAdd(p);
+          if (success) {
+            actionRef.current?.reload();
+            handleCreateModalVisible(false);
+            createFormRef.current?.resetFields();
           }
         }}
         formRef={createFormRef}
@@ -214,14 +212,11 @@ const Product: React.FC = () => {
         }}
         onSubmit={async (values) => {
           const p = values as API.Product;
-          if (p.category_id) {
-            p.category = {id: p.category_id, name: "", appId:""};
-            const success = await handleUpdate(p);
-            if (success) {
-              actionRef.current?.reload();
-              handleUpdateModalVisible(false);
-              setCurrentRow(undefined);
-            }
+          const success = await handleUpdate(p);
+          if (success) {
+            actionRef.current?.reload();
+            handleUpdateModalVisible(false);
+            setCurrentRow(undefined);
           }
         }}
         formRef={updateFormRef}

@@ -1,22 +1,25 @@
 package com.lcsays.gg.controller.manager;
 
 import com.lcsays.gg.enums.ErrorCode;
-import com.lcsays.gg.models.ec.Category;
-import com.lcsays.gg.models.ec.Price;
-import com.lcsays.gg.models.ec.Product;
-import com.lcsays.gg.models.ec.Sku;
+import com.lcsays.gg.enums.ec.PricePolicy;
+import com.lcsays.gg.models.dbwrapper.EcProductEx;
+import com.lcsays.gg.models.dbwrapper.EcSkuEx;
 import com.lcsays.gg.models.result.BaseModel;
-import com.lcsays.gg.models.weixin.WxMaUser;
-import com.lcsays.gg.service.ec.SkuService;
 import com.lcsays.gg.utils.ApiUtils;
 import com.lcsays.gg.utils.SessionUtils;
+import com.lcsays.lcmall.db.model.*;
+import com.lcsays.lcmall.db.service.*;
+import com.lcsays.lcmall.db.util.WxMaUserUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: lichuang
@@ -29,13 +32,25 @@ import java.util.List;
 public class ManagerProductController {
 
     @Resource
-    SkuService skuService;
+    EcCategoryService ecCategoryService;
+
+    @Resource
+    EcProductService ecProductService;
+
+    @Resource
+    EcSkuService ecSkuService;
+
+    @Resource
+    EcPriceService ecPriceService;
+
+    @Resource
+    private WxAppService wxAppService;
 
     @GetMapping("/category")
-    public BaseModel<List<Category>> category(HttpSession session) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<List<EcCategory>> category(HttpSession session) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            List<Category> categories = skuService.categoryList(user.getSessionWxApp());
+            List<EcCategory> categories = ecCategoryService.queryByWxAppId(user.getSessionWxAppId());
             return BaseModel.success(categories);
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
@@ -43,14 +58,16 @@ public class ManagerProductController {
     }
 
     @PostMapping("/category")
-    public BaseModel<Long> addCategory(HttpSession session, @RequestBody Category category) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<Integer> addCategory(HttpSession session, @RequestBody EcCategory category) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-            Category c = new Category(user.getSessionWxApp(), category.getName());
-            if (skuService.createCategory(c) > 0) {
+            EcCategory c = new EcCategory();
+            c.setWxAppId(user.getSessionWxAppId());
+            c.setName(category.getName());
+            if (ecCategoryService.insert(c) > 0) {
                 return BaseModel.success(c.getId());
             } else {
                 return BaseModel.error(ErrorCode.DAO_ERROR);
@@ -61,16 +78,16 @@ public class ManagerProductController {
     }
 
     @PutMapping("/category")
-    public BaseModel<String> updateCategory(HttpSession session, @RequestBody Category category) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<String> updateCategory(HttpSession session, @RequestBody EcCategory category) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-            Category c = skuService.getCategoryById(category.getId());
+            EcCategory c = ecCategoryService.queryById(category.getId());
             if (null != c) {
                 c.setName(category.getName());
-                if (skuService.updateCategory(category) > 0) {
+                if (ecCategoryService.update(c) > 0) {
                     return BaseModel.success();
                 } else {
                     return BaseModel.error(ErrorCode.DAO_ERROR);
@@ -84,17 +101,17 @@ public class ManagerProductController {
     }
 
     @DeleteMapping("/category")
-    public BaseModel<String> deleteCategory(HttpSession session, @RequestBody Category category) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<String> deleteCategory(HttpSession session, @RequestBody EcCategory category) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-            List<Product> products = skuService.getProductsByCategoryId(category.getId());
+            List<EcProduct> products = ecProductService.queryByCategoryId(category.getId());
             if (null != products && products.size() > 0) {
                 return BaseModel.error(ErrorCode.DELETE_FORBIDDEN);
             } else {
-                skuService.deleteCategoryById(category.getId());
+                ecCategoryService.deleteById(category.getId());
                 return BaseModel.success();
             }
         } else {
@@ -103,28 +120,42 @@ public class ManagerProductController {
     }
 
     @GetMapping("/product")
-    public BaseModel<List<Product>> getProduct(HttpSession session,
-                                               @RequestParam("current") Integer current,
-                                               @RequestParam("pageSize") Integer pageSize,
-                                               String name,
-                                               Integer categoryId) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<List<EcProductEx>> getProduct(HttpSession session,
+                                                   @RequestParam("current") Integer current,
+                                                   @RequestParam("pageSize") Integer pageSize,
+                                                   String name,
+                                                   Integer categoryId) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            List<Product> products = skuService.getProducts(user.getSessionWxApp(), name, categoryId);
-            return BaseModel.success(ApiUtils.pagination(products, current, pageSize), products.size());
+            List<EcCategory> categories = ecCategoryService.queryByWxAppId(user.getSessionWxAppId());
+            List<Integer> categoryIds = new ArrayList<>();
+            Map<Integer, EcCategory> catMap = new HashMap<>();
+            for (EcCategory c: categories) {
+                categoryIds.add(c.getId());
+                catMap.put(c.getId(), c);
+            }
+            List<EcProduct> products = ecProductService.queryBy(categoryIds, name, categoryId);
+            List<EcProductEx> data = new ArrayList<>();
+            for (EcProduct p: products) {
+                EcProductEx ecProductEx = new EcProductEx();
+                ecProductEx.copyFrom(p);
+                EcCategory c = catMap.get(p.getCategoryId());
+                ecProductEx.setCategory(c);
+            }
+            return BaseModel.success(ApiUtils.pagination(data, current, pageSize), data.size());
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
     }
 
     @PostMapping("/product")
-    public BaseModel<Long> addProduct(HttpSession session, @RequestBody Product product) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<Integer> addProduct(HttpSession session, @RequestBody EcProduct product) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-            int ret = skuService.createProduct(product);
+            int ret = ecProductService.insert(product);
             if (ret > 0) {
                 return BaseModel.success(product.getId());
             } else {
@@ -136,14 +167,14 @@ public class ManagerProductController {
     }
 
     @PutMapping("/product")
-    public BaseModel<Long> updateProduct(HttpSession session, @RequestBody Product product) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<Integer> updateProduct(HttpSession session, @RequestBody EcProduct product) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
             log.info(product.toString());
-            int ret = skuService.updateProduct(product);
+            int ret = ecProductService.update(product);
             if (ret > 0) {
                 return BaseModel.success(product.getId());
             } else {
@@ -155,14 +186,14 @@ public class ManagerProductController {
     }
 
     @DeleteMapping("/product")
-    public BaseModel<String> deleteProduct(HttpSession session, @RequestBody Product product) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<String> deleteProduct(HttpSession session, @RequestBody EcProduct product) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
             log.info(product.toString());
-            int ret = skuService.deleteProductById(product.getId());
+            int ret = ecProductService.deleteById(product.getId());
             if (ret > 0) {
                 return BaseModel.success();
             } else {
@@ -174,13 +205,23 @@ public class ManagerProductController {
     }
 
     @GetMapping("/sku")
-    public BaseModel<List<Sku>> getSku(HttpSession session,
-                                       @RequestParam("current") Integer current,
-                                       @RequestParam("pageSize") Integer pageSize,
-                                       String name) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<List<EcSku>> getSku(HttpSession session,
+                                         @RequestParam("current") Integer current,
+                                         @RequestParam("pageSize") Integer pageSize,
+                                         String name) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            List<Sku> skus = skuService.getSkusByAppId(user.getSessionWxApp(), name);
+            List<EcCategory> categories = ecCategoryService.queryByWxAppId(user.getSessionWxAppId());
+            List<Integer> categoryIds = new ArrayList<>();
+            for (EcCategory c: categories) {
+                categoryIds.add(c.getId());
+            }
+            List<EcProduct> products = ecProductService.queryBy(categoryIds, null, null);
+            List<Integer> productIds = new ArrayList<>();
+            for (EcProduct p: products) {
+                productIds.add(p.getId());
+            }
+            List<EcSku> skus = ecSkuService.queryBy(productIds, name);
             return BaseModel.success(ApiUtils.pagination(skus, current, pageSize), skus.size());
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
@@ -188,21 +229,24 @@ public class ManagerProductController {
     }
 
     @PostMapping("/sku")
-    public BaseModel<Long> addSku(HttpSession session, @RequestBody Sku sku) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<Integer> addSku(HttpSession session, @RequestBody EcSkuEx sku) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-            Price price = sku.getPrice();
-            log.info(price.toString());
-            log.info(sku.toString());
-            int ret = skuService.createSku(sku);
+
+            EcSku ecSku = new EcSku();
+            sku.copyTo(ecSku);
+            int ret = ecSkuService.insert(ecSku);
             if (ret > 0) {
-                price.setSkuId(sku.getId());
-                int priceRet = skuService.createPrice(price);
+                EcPrice ecPrice = new EcPrice();
+                ecPrice.setPrice(sku.getPriceValue());
+                ecPrice.setPolicy(PricePolicy.PP_RAW.getValue());
+                ecPrice.setSkuId(ecSku.getId());
+                int priceRet = ecPriceService.insert(ecPrice);
                 if (priceRet > 0) {
-                    return BaseModel.success(sku.getId());
+                    return BaseModel.success(ecSku.getId());
                 } else {
                     return BaseModel.error(ErrorCode.DAO_ERROR);
                 }
@@ -215,16 +259,22 @@ public class ManagerProductController {
     }
 
     @PutMapping("/sku")
-    public BaseModel<Long> updateSku(HttpSession session, @RequestBody Sku sku) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<Integer> updateSku(HttpSession session, @RequestBody EcSkuEx sku) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-            Price price = sku.getPrice();
-            int ret1 = skuService.updatePrice(price);
+            EcPrice ecPrice = ecPriceService.queryBySkuId(sku.getId());
+            ecPrice.setPrice(sku.getPriceValue());
+            int ret1 = ecPriceService.update(ecPrice);
             log.info(sku.toString());
-            int ret2 = skuService.updateSku(sku);
+            EcSku ecSku = ecSkuService.queryById(sku.getId());
+            if (null == ecSku) {
+                return BaseModel.error(ErrorCode.NO_RESULT);
+            }
+            sku.copyTo(ecSku);
+            int ret2 = ecSkuService.update(ecSku);
             if (ret1 > 0 && ret2 > 0) {
                 return BaseModel.success(sku.getId());
             } else {
@@ -236,14 +286,14 @@ public class ManagerProductController {
     }
 
     @DeleteMapping("/sku")
-    public BaseModel<String> deleteSku(HttpSession session, @RequestBody Sku sku) {
-        WxMaUser user = SessionUtils.getUserFromSession(session);
+    public BaseModel<String> deleteSku(HttpSession session, @RequestBody EcSku sku) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
-            if (!user.checkAuthority()) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
             log.info(sku.toString());
-            int ret = skuService.deleteSkuById(sku.getId());
+            int ret = ecSkuService.deleteById(sku.getId());
             if (ret > 0) {
                 return BaseModel.success();
             } else {

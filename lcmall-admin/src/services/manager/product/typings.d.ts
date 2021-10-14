@@ -5,7 +5,7 @@ declare namespace API {
   type Category = {
     id: number;
     name: string;
-    appId: string;
+    wxAppId: number;
   }
 
   type Product = {
@@ -13,7 +13,7 @@ declare namespace API {
     name: string;
     description: string;
     category: Category;
-    category_id?: number; // 辅助
+    categoryId?: number; // 辅助
   }
 
   // type SkuSpec = {

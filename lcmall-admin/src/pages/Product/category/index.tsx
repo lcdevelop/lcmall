@@ -112,7 +112,7 @@ const Category: React.FC = () => {
           {
             position: 'bottom',
             creatorButtonText: '新增一个品类',
-            record: {id: -Date.now(), appId:'', name:''},
+            record: {id: -Date.now()/10000, wxAppId:-1, name:''},
           }
         }
         request={category}
