@@ -16,6 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WxMaUserEx extends WxMaUser {
+    private WxApp wxApp;
     private WxApp sessionWxApp;
 
     public void copyFrom(WxMaUser wxMaUser) {

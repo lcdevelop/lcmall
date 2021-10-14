@@ -25,6 +25,9 @@ public class WxAppService {
     }
 
     public WxApp queryById(Integer id) {
+        if (null == id) {
+            return null;
+        }
         WxAppExample example = new WxAppExample();
         WxAppExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(id);

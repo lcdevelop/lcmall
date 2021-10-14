@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -115,7 +116,7 @@ public class ManagerUserController {
     }
 
     @GetMapping("/user")
-    public BaseModel<List<WxMaUser>> user(HttpSession session,
+    public BaseModel<List<WxMaUserEx>> user(HttpSession session,
                                           Integer current,
                                           Integer pageSize,
                                           String nickName) {
@@ -124,15 +125,28 @@ public class ManagerUserController {
             if (!WxMaUserUtil.isAdmin(user)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
-//            List<WxMaUser> users = userService.userList(nickName);
             List<WxMaUser> users = null;
             if (null != nickName) {
                 users = wxMaUserService.queryUsersByNickName(nickName);
             } else {
                 users = wxMaUserService.listUsers();
             }
+
+            List<WxMaUserEx> ret = new ArrayList<>();
             for (WxMaUser u: users) {
                 WxMaUserUtil.clearSecret(u);
+
+                WxMaUserEx wxMaUserEx = new WxMaUserEx();
+                wxMaUserEx.copyFrom(u);
+                if (null != u.getWxAppId()) {
+                    WxApp wxApp = wxAppService.queryById(u.getWxAppId());
+                    wxMaUserEx.setWxApp(wxApp);
+                }
+                if (null != u.getSessionWxAppId()) {
+                    WxApp wxApp = wxAppService.queryById(u.getSessionWxAppId());
+                    wxMaUserEx.setSessionWxApp(wxApp);
+                }
+                ret.add(wxMaUserEx);
             }
             if (current == null) {
                 current = 1;
@@ -140,7 +154,7 @@ public class ManagerUserController {
             if (pageSize == null) {
                 pageSize = 1000;
             }
-            return BaseModel.success(ApiUtils.pagination(users, current, pageSize), users.size());
+            return BaseModel.success(ApiUtils.pagination(ret, current, pageSize), ret.size());
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
