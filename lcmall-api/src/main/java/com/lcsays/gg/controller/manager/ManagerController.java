@@ -51,10 +51,10 @@ public class ManagerController {
     @GetMapping("/appList")
     public BaseModel<List<WxAppEx>> appList(HttpSession session) {
         String shortSid = SessionUtils.normalizeSessionId(session);
-
+        log.info("shortSid: " + shortSid);
         List<com.lcsays.lcmall.db.model.WxApp> apps1 = wxAppService.appList();
+        // WxAppEx比WxApp多了一个QrCodePictureUrl，他是基于sceneStr生成的，用于扫描时作为eventKey回调后校验
         List<WxAppEx> apps2 = new ArrayList<>();
-        log.info(apps1.toString());
         for (com.lcsays.lcmall.db.model.WxApp app: apps1) {
             try {
                 // 这里形成的sessionId也就是回调的eventKey格式类似：wxfe9faf8c8e3a5830_68822c00-7ca8-4762-9ffc-d1bd455fe49d
@@ -74,6 +74,7 @@ public class ManagerController {
                 return BaseModel.error(ErrorCode.WX_SERVICE_ERROR);
             }
         }
+        log.info(apps2.toString());
         return BaseModel.success(apps2);
     }
 

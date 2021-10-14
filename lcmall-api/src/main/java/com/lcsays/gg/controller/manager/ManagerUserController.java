@@ -43,9 +43,16 @@ public class ManagerUserController {
     @Resource
     WxAppService wxAppService;
 
+    @GetMapping("/refreshSession")
+    public BaseModel<String> refreshSession(HttpSession session) {
+        session.invalidate();
+        return BaseModel.success();
+    }
+
     @GetMapping("/checkLogined")
     public BaseModel<WxMaUser> checkLogined(HttpSession session) {
         String shortSid = SessionUtils.normalizeSessionId(session);
+        log.debug("checkLogined shortSid: " + shortSid);
         WxMaUser wxMaUser = wxMaUserService.getWxMaUserBySessionKey(shortSid);
         if (null != wxMaUser && null != WxMaUserUtil.getSessionWxApp(wxMaUser, wxAppService)) {
             if (WxMaUserUtil.checkAuthority(wxMaUser, wxAppService)) {

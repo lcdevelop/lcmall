@@ -23,6 +23,15 @@ export async function checkLogined(
   });
 }
 
+export async function refreshSession(
+  options?: { [key: string]: any },
+) {
+  return request<API.Response<API.WxUser>>('/api/manager/user/refreshSession', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 export async function currentUser(options?: { [key: string]: any }) {
   return request<API.Response<API.WxUser>>('/api/manager/user/currentUser', {
     method: 'GET',

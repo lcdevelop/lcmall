@@ -34,5 +34,4 @@ public class WxMaUserUtil {
         wxMaUser.setUnionid(null);
         wxMaUser.setSessionKey(null);
     }
-
 }

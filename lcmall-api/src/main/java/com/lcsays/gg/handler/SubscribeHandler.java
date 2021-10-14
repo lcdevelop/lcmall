@@ -1,11 +1,9 @@
 package com.lcsays.gg.handler;
 
 import com.lcsays.gg.builder.TextBuilder;
-import com.lcsays.gg.dao.manager.WxAppDao;
-import com.lcsays.gg.dao.weixin.WxMaUserDao;
-import com.lcsays.gg.models.manager.WxApp;
-import com.lcsays.gg.models.weixin.WxMaUser;
 import com.lcsays.gg.utils.SessionUtils;
+import com.lcsays.lcmall.db.service.WxAppService;
+import com.lcsays.lcmall.db.service.WxMaUserService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -23,10 +21,10 @@ import java.util.Map;
 public class SubscribeHandler extends AbstractHandler {
 
     @Resource
-    WxMaUserDao wxMaUserDao;
+    WxAppService wxAppService;
 
     @Resource
-    WxAppDao wxAppDao;
+    WxMaUserService wxMaUserService;
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage,
@@ -42,31 +40,53 @@ public class SubscribeHandler extends AbstractHandler {
                 log.info(userInfo.toString());
 
                 String appId = wxMpService.getWxMpConfigStorage().getAppId();
-                WxApp wxApp = wxAppDao.getWxAppByAppId(appId);
+                com.lcsays.lcmall.db.model.WxApp wxApp = wxAppService.queryByAppId(appId);
                 if (null == wxApp) {
                     return null;
                 }
-
-                WxMaUser wxMaUser = wxMaUserDao.getWxMaUserByOpenid(wxApp, userInfo.getOpenId());
+// 找自己，找到就更新，找不到就创建
+                com.lcsays.lcmall.db.model.WxMaUser wxMaUser = wxMaUserService.getWxMaUserByOpenid(wxApp, userInfo.getOpenId());
                 if (null != wxMaUser) {
+                    // eventKey是在生成扫描二维码时构造的，形如：wx45fad2175569e690_bad2089f-0185-4744-b923-8e596ca3
                     SessionUtils.RawSessionIdInfo info = SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
+                    log.info("RawSessionIdInfo: " + info);
                     wxMaUser.setSessionKey(info.getSessionId());
-                    WxApp sessionWxApp = wxAppDao.getWxAppByAppId(info.getSessionAppId());
-                    wxMaUser.setSessionWxApp(sessionWxApp);
-                    wxMaUser.parseFrom(userInfo);
+                    com.lcsays.lcmall.db.model.WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
+                    wxMaUser.setSessionWxAppId(sessionWxApp.getId());
+
+                    wxMaUser.setOpenid(userInfo.getOpenId());
+                    wxMaUser.setUnionid(userInfo.getUnionId());
+                    wxMaUser.setNickname(userInfo.getNickname());
+                    wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+                    wxMaUser.setGender(userInfo.getSexDesc());
+                    wxMaUser.setCountry(userInfo.getCountry());
+                    wxMaUser.setCity(userInfo.getCity());
+                    wxMaUser.setLanguage(userInfo.getLanguage());
+
                     log.info("ready to update wxMaUser: " + wxMaUser);
 
-                    wxMaUserDao.update(wxMaUser);
+                    wxMaUserService.update(wxMaUser);
                 } else {
-                    wxMaUser = new WxMaUser(wxApp);
+                    wxMaUser = new com.lcsays.lcmall.db.model.WxMaUser();
+                    wxMaUser.setWxAppId(wxApp.getId());
+
                     SessionUtils.RawSessionIdInfo info = SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
                     wxMaUser.setSessionKey(info.getSessionId());
-                    WxApp sessionWxApp = wxAppDao.getWxAppByAppId(info.getSessionAppId());
-                    wxMaUser.setSessionWxApp(sessionWxApp);
-                    wxMaUser.parseFrom(userInfo);
+                    com.lcsays.lcmall.db.model.WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
+                    wxMaUser.setSessionWxAppId(sessionWxApp.getId());
+
+                    wxMaUser.setOpenid(userInfo.getOpenId());
+                    wxMaUser.setUnionid(userInfo.getUnionId());
+                    wxMaUser.setNickname(userInfo.getNickname());
+                    wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+                    wxMaUser.setGender(userInfo.getSexDesc());
+                    wxMaUser.setCountry(userInfo.getCountry());
+                    wxMaUser.setCity(userInfo.getCity());
+                    wxMaUser.setLanguage(userInfo.getLanguage());
+
                     log.info("ready to insert wxMaUser: " + wxMaUser);
 
-                    if (wxMaUserDao.insert(wxMaUser) <= 0) {
+                    if (wxMaUserService.insert(wxMaUser) <= 0) {
                         log.error("wxMaUserDao.insert wxMaUser error: " + wxMaUser);
                     }
                 }

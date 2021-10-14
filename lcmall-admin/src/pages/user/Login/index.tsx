@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {appList, checkLogined} from "@/services/manager/user/api";
+import {appList, checkLogined, refreshSession} from "@/services/manager/user/api";
 import { history } from 'umi';
 import {Col, Row, Image, Card, message, Modal} from "antd";
 import Meta from "antd/es/card/Meta";
@@ -59,6 +59,13 @@ const Login: React.FC = () => {
     });
   }
 
+  const onRefreshSession = () => {
+    refreshSession().then(res => {
+      console.log(res);
+      window.location.reload();
+    });
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.home} >
@@ -104,6 +111,7 @@ const Login: React.FC = () => {
             src={appListState.at(showAppIndexState)?.qrCodePictureUrl}
           />
           <div>扫码关注公众号登录：{appListState.at(showAppIndexState)?.name}</div>
+          <div>登录不上或换微信号，<a onClick={onRefreshSession}>点此刷新</a></div>
         </div>
         :""
       }
