@@ -8,6 +8,7 @@ import com.lcsays.lcmall.db.model.WxMarketingCouponExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ public class WxMarketingCouponService {
     private WxMarketingCouponMapper marketingCouponMapper;
 
     public int addCoupon(WxMarketingCoupon wxMarketingCoupon) {
+        wxMarketingCoupon.setCreateTime(new Date());
         return marketingCouponMapper.insert(wxMarketingCoupon);
     }
     

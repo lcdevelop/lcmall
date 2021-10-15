@@ -1,11 +1,11 @@
 package com.lcsays.lcmall.db.service;
 
-import com.lcsays.lcmall.db.dao.EcAddressMapper;
 import com.lcsays.lcmall.db.dao.WxMaUserMapper;
 import com.lcsays.lcmall.db.model.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,9 +18,6 @@ public class WxMaUserService {
     @Resource
     private WxMaUserMapper wxMaUserMapper;
 
-    @Resource
-    private EcAddressMapper ecAddressMapper;
-
     public int updatePhoneNumber(Integer userId, String phoneNumber) {
         WxMaUserExample example = new WxMaUserExample();
         WxMaUserExample.Criteria criteria = example.createCriteria();
@@ -28,6 +25,7 @@ public class WxMaUserService {
 
         WxMaUser wxMaUser = new WxMaUser();
         wxMaUser.setPhoneNumber(phoneNumber);
+        wxMaUser.setUpdateTime(new Date());
         return wxMaUserMapper.updateByExampleSelective(wxMaUser, example);
     }
 
@@ -61,10 +59,13 @@ public class WxMaUserService {
         WxMaUserExample example = new WxMaUserExample();
         WxMaUserExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(wxMaUser.getId());
+        wxMaUser.setUpdateTime(new Date());
         return wxMaUserMapper.updateByExampleSelective(wxMaUser, example);
     }
 
     public long insert(WxMaUser wxMaUser) {
+        wxMaUser.setCreateTime(new Date());
+        wxMaUser.setUpdateTime(new Date());
         return wxMaUserMapper.insert(wxMaUser);
     }
 

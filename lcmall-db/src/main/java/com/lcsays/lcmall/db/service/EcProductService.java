@@ -7,6 +7,7 @@ import com.lcsays.lcmall.db.model.EcProductExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,8 @@ public class EcProductService {
     }
 
     public int insert(EcProduct product) {
+        product.setCreateTime(new Date());
+        product.setUpdateTime(new Date());
         return ecProductMapper.insert(product);
     }
 
@@ -48,6 +51,7 @@ public class EcProductService {
         EcProductExample example = new EcProductExample();
         EcProductExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(product.getId());
+        product.setUpdateTime(new Date());
         return ecProductMapper.updateByExampleSelective(product, example);
     }
 
