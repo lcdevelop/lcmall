@@ -167,6 +167,7 @@ public class WxMiniappUserController {
             ret.setLanguage(wxMaUser.getLanguage());
             ret.setPhoneNumber(wxMaUser.getPhoneNumber());
             ret.setRole(wxMaUser.getRole());
+            log.debug(ret.toString());
             return BaseModel.success(ret);
         } else {
             return BaseModel.error(ErrorCode.NO_USER);
