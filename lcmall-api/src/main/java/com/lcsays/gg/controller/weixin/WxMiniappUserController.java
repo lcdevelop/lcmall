@@ -59,8 +59,9 @@ public class WxMiniappUserController {
 
         try {
             WxMaJscode2SessionResult sessionInfo = wxMaService.switchoverTo(appId).getUserService().getSessionInfo(code);
-            log.info(sessionInfo.getSessionKey());
-            log.info(sessionInfo.getOpenid());
+            log.debug("SessionKey: " + sessionInfo.getSessionKey());
+            log.debug("Openid: " + sessionInfo.getOpenid());
+            log.debug("Unionid: " + sessionInfo.getUnionid());
             WxApp wxApp = wxAppService.queryByAppId(appId);
             if (null == wxApp) {
                 return BaseModel.error(ErrorCode.PARAM_ERROR);
@@ -69,7 +70,7 @@ public class WxMiniappUserController {
             WxMaUser wxMaUser = wxMaUserService.getWxMaUserByOpenid(wxApp, sessionInfo.getOpenid());
 
             if (null != wxMaUser) {
-                log.info("" + wxMaUser);
+                log.debug("" + wxMaUser);
                 wxMaUser.setOpenid(sessionInfo.getOpenid());
                 wxMaUser.setUnionid(sessionInfo.getUnionid());
                 wxMaUser.setSessionKey(sessionInfo.getSessionKey());
@@ -158,6 +159,9 @@ public class WxMiniappUserController {
             // 需要复查，因为可能有更新
             wxMaUser = wxMaUserService.getWxMaUserById(wxMaUser.getId());
             SessionUtils.saveWxUserToSession(session, wxMaUser);
+
+            log.debug("getUserDisplay: " + wxMaUser);
+
             WxMaUser ret = new WxMaUser();
             ret.setNickname(wxMaUser.getNickname());
             ret.setAvatarUrl(wxMaUser.getAvatarUrl());
@@ -167,7 +171,6 @@ public class WxMiniappUserController {
             ret.setLanguage(wxMaUser.getLanguage());
             ret.setPhoneNumber(wxMaUser.getPhoneNumber());
             ret.setRole(wxMaUser.getRole());
-            log.debug(ret.toString());
             return BaseModel.success(ret);
         } else {
             return BaseModel.error(ErrorCode.NO_USER);
