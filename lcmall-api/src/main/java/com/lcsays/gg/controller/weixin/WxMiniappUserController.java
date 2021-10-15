@@ -126,7 +126,7 @@ public class WxMiniappUserController {
                 return BaseModel.error(ErrorCode.NEED_LOGIN);
             }
         } else {
-            return BaseModel.error(ErrorCode.NO_USER);
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
     }
 
@@ -148,7 +148,7 @@ public class WxMiniappUserController {
             wxMaUserService.updatePhoneNumber(wxMaUser.getId(), phoneNoInfo.getPhoneNumber());
             return BaseModel.success();
         } else {
-            return BaseModel.error(ErrorCode.NO_USER);
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
     }
 
@@ -162,6 +162,10 @@ public class WxMiniappUserController {
 
             log.debug("getUserDisplay: " + wxMaUser);
 
+            if (null == wxMaUser) {
+                return BaseModel.error(ErrorCode.NO_USER);
+            }
+
             WxMaUser ret = new WxMaUser();
             ret.setNickname(wxMaUser.getNickname());
             ret.setAvatarUrl(wxMaUser.getAvatarUrl());
@@ -173,7 +177,7 @@ public class WxMiniappUserController {
             ret.setRole(wxMaUser.getRole());
             return BaseModel.success(ret);
         } else {
-            return BaseModel.error(ErrorCode.NO_USER);
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
     }
 

@@ -20,7 +20,7 @@
         </rollingPolicy>
 
         <encoder>
-            <pattern>%date [%thread] %-5level [%file:%line] - %msg%n
+            <pattern>%date %-5level [%file:%line] - %msg%n
             </pattern>
         </encoder>
     </appender>
