@@ -30,6 +30,7 @@ import com.google.gson.GsonBuilder;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.lcsays.gg.utils.TimeUtils.timeStr2Rfc3399;
@@ -102,7 +103,11 @@ public class ManagerMarketingController {
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error(e.getMessage());
-                return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+                if ("RESOURCE_NOT_EXISTS".equals(e.getErrCode())) {
+                   return BaseModel.success(new ArrayList<>(), 0);
+                } else {
+                    return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+                }
             }
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
