@@ -50,7 +50,8 @@ public class ScanHandler extends AbstractHandler {
 
             wxMaUser.setOpenid(userInfo.getOpenId());
             wxMaUser.setUnionid(userInfo.getUnionId());
-            wxMaUser.setNickname(userInfo.getNickname());
+            String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]","");
+            wxMaUser.setNickname(nickname);
             wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
             wxMaUser.setGender(userInfo.getSexDesc());
             wxMaUser.setCountry(userInfo.getCountry());
@@ -71,7 +72,8 @@ public class ScanHandler extends AbstractHandler {
 
             wxMaUser.setOpenid(userInfo.getOpenId());
             wxMaUser.setUnionid(userInfo.getUnionId());
-            wxMaUser.setNickname(userInfo.getNickname());
+            String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]","");
+            wxMaUser.setNickname(nickname);
             wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
             wxMaUser.setGender(userInfo.getSexDesc());
             wxMaUser.setCountry(userInfo.getCountry());
