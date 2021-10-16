@@ -1,6 +1,8 @@
 package com.lcsays.gg.handler;
 
 import com.lcsays.gg.utils.SessionUtils;
+import com.lcsays.lcmall.db.model.WxApp;
+import com.lcsays.lcmall.db.model.WxMaUser;
 import com.lcsays.lcmall.db.service.WxAppService;
 import com.lcsays.lcmall.db.service.WxMaUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,19 +35,19 @@ public class ScanHandler extends AbstractHandler {
 
         // 获取系统服务号的wxApp
         String appId = wxMpService.getWxMpConfigStorage().getAppId();
-        com.lcsays.lcmall.db.model.WxApp wxApp = wxAppService.queryByAppId(appId);
+        WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null == wxApp) {
             return null;
         }
 
         // 找自己，找到就更新，找不到就创建
-        com.lcsays.lcmall.db.model.WxMaUser wxMaUser = wxMaUserService.getWxMaUserByOpenid(wxApp, userInfo.getOpenId());
+        WxMaUser wxMaUser = wxMaUserService.getWxMaUserByOpenid(wxApp, userInfo.getOpenId());
         if (null != wxMaUser) {
             // eventKey是在生成扫描二维码时构造的，形如：wx45fad2175569e690_bad2089f-0185-4744-b923-8e596ca3
             SessionUtils.RawSessionIdInfo info = SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
             log.info("RawSessionIdInfo: " + info);
             wxMaUser.setSessionKey(info.getSessionId());
-            com.lcsays.lcmall.db.model.WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
+            WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
             wxMaUser.setSessionWxAppId(sessionWxApp.getId());
 
             wxMaUser.setOpenid(userInfo.getOpenId());
@@ -62,12 +64,12 @@ public class ScanHandler extends AbstractHandler {
 
             wxMaUserService.update(wxMaUser);
         } else {
-            wxMaUser = new com.lcsays.lcmall.db.model.WxMaUser();
+            wxMaUser = new WxMaUser();
             wxMaUser.setWxAppId(wxApp.getId());
 
             SessionUtils.RawSessionIdInfo info = SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
             wxMaUser.setSessionKey(info.getSessionId());
-            com.lcsays.lcmall.db.model.WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
+            WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
             wxMaUser.setSessionWxAppId(sessionWxApp.getId());
 
             wxMaUser.setOpenid(userInfo.getOpenId());

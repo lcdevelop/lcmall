@@ -58,6 +58,11 @@ public class WxMaMarketingController {
     @Data
     private static class CreateCouponParam {
         private String stockId;
+
+        /* 为了解决通过小程序schema链接带过来的参数总有？的问题 */
+        public String getStockId() {
+            return stockId.replace("?", "");
+        }
     }
 
     @PostMapping("/createCoupon")
