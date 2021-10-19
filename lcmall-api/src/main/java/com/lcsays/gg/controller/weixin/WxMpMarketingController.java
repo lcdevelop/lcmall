@@ -85,6 +85,10 @@ public class WxMpMarketingController {
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
                             @RequestBody String notifyData) {
+        log.info(timestamp);
+        log.info(nonce);
+        log.info(signature);
+        log.info(serial);
         log.info("优惠券核销回调： " + notifyData);
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
