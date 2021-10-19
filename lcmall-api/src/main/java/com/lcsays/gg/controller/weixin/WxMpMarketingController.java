@@ -87,7 +87,7 @@ public class WxMpMarketingController {
                             @RequestHeader("wechatpay-nonce") String nonce,
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
-                            @RequestBody OriginNotifyResponse originNotifyResponse) {
+                            @RequestBody UseNotifyData originNotifyResponse) {
         log.info(timestamp);
         log.info(nonce);
         log.info(signature);
