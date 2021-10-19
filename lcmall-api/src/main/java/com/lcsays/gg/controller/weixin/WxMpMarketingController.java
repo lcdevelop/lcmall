@@ -87,14 +87,12 @@ public class WxMpMarketingController {
                             @RequestHeader("wechatpay-nonce") String nonce,
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
-                            @RequestBody UseNotifyData data,
                             @RequestBody OriginNotifyResponse originNotifyResponse) {
         log.info(timestamp);
         log.info(nonce);
         log.info(signature);
         log.info(serial);
-        log.info("优惠券核销回调： " + data);
-        log.info("" + originNotifyResponse);
+        log.info("优惠券核销回调： " + originNotifyResponse);
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
             try {
@@ -103,7 +101,7 @@ public class WxMpMarketingController {
                 header.setNonce(nonce);
                 header.setSignature(signature);
                 header.setSerial(serial);
-                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId()).getMarketingFavorService().decryptNotifyDataResource(data);
+//                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId()).getMarketingFavorService().decryptNotifyDataResource(data);
 //                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
 //                        .parseOrderNotifyV3Result(notifyData, header);
 //                String outTradeNo = result.getResult().getOutTradeNo();
@@ -113,10 +111,10 @@ public class WxMpMarketingController {
 
                 log.info("======== begin payNotify ");
                 log.info(wxApp.getMchId());
-                log.info(result.toString());
+//                log.info(result.toString());
                 log.info("======== end payNotify ");
                 return WxResp.success();
-            } catch (WxPayException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 log.error("核销回调处理失败:" + e.getMessage());
                 return WxResp.error("核销回调处理失败:" + e.getMessage());
