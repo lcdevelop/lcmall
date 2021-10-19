@@ -108,6 +108,8 @@ public class WxMpMarketingController {
                 FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId())
                         .getMarketingFavorService().decryptNotifyDataResource(data);
 
+                log.info("优惠券核销事件回调: " + result);
+
                 String stockId = result.getStockId();
                 String couponId = result.getCouponId();
                 String status = result.getStatus();
@@ -127,6 +129,7 @@ public class WxMpMarketingController {
                 if (wxMarketingCouponService.update(wxMarketingCoupon) > 0) {
                     return WxResp.success();
                 } else {
+                    log.error("payNotify更新数据库出错: " + result);
                     return WxResp.error("更新数据库出错");
                 }
             } catch (WxPayException e) {
