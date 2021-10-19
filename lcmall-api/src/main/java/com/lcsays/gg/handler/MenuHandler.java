@@ -58,10 +58,15 @@ public class MenuHandler extends AbstractHandler {
                         return WxMpXmlOutMessage.TEXT().content(result.getCodeUrl())
                                 .fromUser(wxMessage.getToUser()).toUser(wxMessage.getFromUser())
                                 .build();
-                } catch (WxPayException e) {
+                    } catch (WxPayException e) {
                         e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
+                } else {
+                    logger.warn("eventKey not found: " + wxMessage.getEventKey());
                 }
+            } else {
+                logger.warn("OriginalId not found: " + toUser);
             }
             return null;
         }
