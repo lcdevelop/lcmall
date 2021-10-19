@@ -1,9 +1,9 @@
 package com.lcsays.gg.controller.weixin;
 
+import com.github.binarywang.wxpay.bean.ecommerce.SignatureHeader;
 import com.github.binarywang.wxpay.bean.marketing.FavorCouponsUseResult;
 import com.github.binarywang.wxpay.bean.marketing.UseNotifyData;
 import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
-import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
@@ -87,23 +87,12 @@ public class WxMpMarketingController {
                             @RequestHeader("wechatpay-nonce") String nonce,
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
-                            @RequestBody OriginNotifyResponse originNotifyResponse) {
+                            @RequestBody String notifyData) {
         log.info(timestamp);
         log.info(nonce);
         log.info(signature);
         log.info(serial);
-        log.info("优惠券核销回调： " + originNotifyResponse);
-
-        UseNotifyData data = new UseNotifyData();
-        data.setId(originNotifyResponse.getId());
-        data.setSummary(originNotifyResponse.getSummary());
-        UseNotifyData.Resource resource = new UseNotifyData.Resource();
-        resource.setNonce(originNotifyResponse.getResource().getNonce());
-        resource.setAlgorithm(originNotifyResponse.getResource().getAlgorithm());
-        resource.setAssociatedData("");
-        resource.setCipherText(originNotifyResponse.getResource().getCiphertext());
-        resource.setOriginalType(originNotifyResponse.getResource().getOriginalType());
-        data.setResource(resource);
+        log.info(notifyData);
 
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
@@ -111,10 +100,10 @@ public class WxMpMarketingController {
                 SignatureHeader header = new SignatureHeader();
                 header.setTimeStamp(timestamp);
                 header.setNonce(nonce);
-                header.setSignature(signature);
-                header.setSerial(serial);
-                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId())
-                        .getMarketingFavorService().decryptNotifyDataResource(data);
+                header.setSigned(signature);
+                header.setSerialNo(serial);
+                UseNotifyData result = wxPayService.switchoverTo(wxApp.getMchId())
+                        .getMarketingFavorService().parseNotifyData(notifyData, header);
 //                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
 //                        .parseOrderNotifyV3Result(notifyData, header);
 //                String outTradeNo = result.getResult().getOutTradeNo();
