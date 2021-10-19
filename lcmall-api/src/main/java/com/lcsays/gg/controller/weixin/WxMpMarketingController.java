@@ -1,12 +1,18 @@
 package com.lcsays.gg.controller.weixin;
 
 import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
+import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
+import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.WxPayService;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
 import com.lcsays.gg.models.result.WxResp;
 import com.lcsays.gg.utils.SessionUtils;
+import com.lcsays.lcmall.db.model.WxApp;
 import com.lcsays.lcmall.db.model.WxMaUser;
 import com.lcsays.lcmall.db.model.WxMarketingStock;
+import com.lcsays.lcmall.db.service.WxAppService;
 import com.lcsays.lcmall.db.service.WxMarketingStockService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +38,12 @@ public class WxMpMarketingController {
 
     @Resource
     WxMarketingStockService wxMarketingStockService;
+
+    @Resource
+    WxPayService wxPayService;
+
+    @Resource
+    WxAppService wxAppService;
 
     @Data
     private static class CreateCardParam {
@@ -68,10 +80,42 @@ public class WxMpMarketingController {
      * @return
      */
     @PostMapping("/payNotify")
-    public WxResp payNotify(@PathVariable String appId, @RequestBody OriginNotifyResponse originNotifyResponse) {
-        log.info("payNotify");
-        log.info(appId);
-        log.info(originNotifyResponse.toString());
-        return WxResp.success();
+    public WxResp payNotify(@PathVariable String appId, @RequestHeader("wechatpay-timestamp") String timestamp,
+                            @RequestHeader("wechatpay-nonce") String nonce,
+                            @RequestHeader("wechatpay-signature") String signature,
+                            @RequestHeader("wechatpay-serial") String serial,
+                            @RequestBody String notifyData) {
+        log.info("优惠券核销回调： " + notifyData);
+        WxApp wxApp = wxAppService.queryByAppId(appId);
+        if (null != wxApp) {
+            try {
+                SignatureHeader header = new SignatureHeader();
+                header.setTimeStamp(timestamp);
+                header.setNonce(nonce);
+                header.setSignature(signature);
+                header.setSerial(serial);
+                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId()).parseOrderNotifyV3Result(notifyData, header);
+                String outTradeNo = result.getResult().getOutTradeNo();
+                String transactionId = result.getResult().getTransactionId();
+                String tradeState = result.getResult().getTradeState();
+                String successTime = result.getResult().getSuccessTime();
+
+                log.info("======== begin payNotify ");
+                log.info(outTradeNo);
+                log.info(transactionId);
+                log.info(tradeState);
+                log.info(successTime);
+                log.info("======== end payNotify ");
+                return WxResp.success();
+            } catch (WxPayException e) {
+                e.printStackTrace();
+                log.error("核销回调处理失败:" + e.getMessage());
+                return WxResp.error("核销回调处理失败:" + e.getMessage());
+            }
+
+        } else {
+            log.error("核销回调处理失败，appId不存在：" + appId);
+            return WxResp.error("appId不存在");
+        }
     }
 }

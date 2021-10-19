@@ -220,7 +220,7 @@ public class WxPayController {
                               @RequestHeader("wechatpay-signature") String signature,
                               @RequestHeader("wechatpay-serial") String serial,
                               @RequestBody String notifyData) {
-        log.info(notifyData);
+        log.info("支付回调: " + notifyData);
 
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
