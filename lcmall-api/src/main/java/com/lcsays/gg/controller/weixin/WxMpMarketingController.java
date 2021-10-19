@@ -101,10 +101,7 @@ public class WxMpMarketingController {
                 String successTime = result.getResult().getSuccessTime();
 
                 log.info("======== begin payNotify ");
-                log.info(outTradeNo);
-                log.info(transactionId);
-                log.info(tradeState);
-                log.info(successTime);
+                log.info(result.toString());
                 log.info("======== end payNotify ");
                 return WxResp.success();
             } catch (WxPayException e) {
