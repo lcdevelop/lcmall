@@ -24,6 +24,8 @@ import com.lcsays.gg.models.weixin.WxMaUser;
 import com.lcsays.gg.service.ec.OrderService;
 import com.lcsays.gg.service.weixin.UserService;
 import com.lcsays.gg.utils.TimeUtils;
+import com.lcsays.lcmall.db.model.WxApp;
+import com.lcsays.lcmall.db.service.WxAppService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,6 +58,9 @@ public class WxPayController {
 
     @Resource
     UserService userService;
+
+    @Resource
+    WxAppService wxAppService;
 
     @Data
     @AllArgsConstructor
@@ -217,22 +222,29 @@ public class WxPayController {
                               @RequestBody String notifyData) {
         log.info(notifyData);
 
-        try {
-            SignatureHeader header = new SignatureHeader();
-            header.setTimeStamp(timestamp);
-            header.setNonce(nonce);
-            header.setSignature(signature);
-            header.setSerial(serial);
-            WxPayOrderNotifyV3Result result = wxPayService.parseOrderNotifyV3Result(notifyData, header);
-            String outTradeNo = result.getResult().getOutTradeNo();
-            String transactionId = result.getResult().getTransactionId();
-            String tradeState = result.getResult().getTradeState();
-            String successTime = result.getResult().getSuccessTime();
+        WxApp wxApp = wxAppService.queryByAppId(appId);
+        if (null != wxApp) {
 
-            return this.updateOrderStatus(outTradeNo, transactionId, successTime, tradeState);
-        } catch (WxPayException e) {
-            e.printStackTrace();
-            return WxPayNotifyResponse.fail(e.getMessage());
+            try {
+                SignatureHeader header = new SignatureHeader();
+                header.setTimeStamp(timestamp);
+                header.setNonce(nonce);
+                header.setSignature(signature);
+                header.setSerial(serial);
+                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
+                        .parseOrderNotifyV3Result(notifyData, header);
+                String outTradeNo = result.getResult().getOutTradeNo();
+                String transactionId = result.getResult().getTransactionId();
+                String tradeState = result.getResult().getTradeState();
+                String successTime = result.getResult().getSuccessTime();
+
+                return this.updateOrderStatus(outTradeNo, transactionId, successTime, tradeState);
+            } catch (WxPayException e) {
+                e.printStackTrace();
+                return WxPayNotifyResponse.fail(e.getMessage());
+            }
+        } else {
+            return WxPayNotifyResponse.fail("no wxApp: " + appId);
         }
     }
 
@@ -253,8 +265,19 @@ public class WxPayController {
                 return WxPayNotifyResponse.fail("业务订单更新失败");
             }
         } else {
-            log.error("order not exist: " + order);
-            return WxPayNotifyResponse.fail("业务订单不存在");
+            order = new Order();
+            order.setOutTradeNo(outTradeNo);
+            order.setTransactionId(transactionId);
+            order.setSuccessTime(TimeUtils.timeStr2Timestamp(successTime.substring(0, 19).replace('T', ' ')));
+            order.setTradeStatus(tradeState);
+            if (tradeState.equals(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
+                order.setStatus(OrderStatus.OS_PAID.getValue());
+            }
+            if (orderService.createOrder(order) > 0) {
+                return WxPayNotifyResponse.success("成功");
+            } else {
+                return WxPayNotifyResponse.fail("创建业务订单失败");
+            }
         }
     }
 
