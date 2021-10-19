@@ -53,9 +53,9 @@ public class MenuHandler extends AbstractHandler {
                         WxPayUnifiedOrderV3Request.Amount amount = new WxPayUnifiedOrderV3Request.Amount();
                         amount.setTotal(110);
                         request.setAmount(amount);
-                        WxPayUnifiedOrderV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
+                        String result = wxPayService.switchoverTo(wxApp.getMchId())
                                 .createOrderV3(TradeTypeEnum.NATIVE, request);
-                        return WxMpXmlOutMessage.TEXT().content(result.getCodeUrl())
+                        return WxMpXmlOutMessage.TEXT().content(result)
                                 .fromUser(wxMessage.getToUser()).toUser(wxMessage.getFromUser())
                                 .build();
                     } catch (WxPayException e) {
