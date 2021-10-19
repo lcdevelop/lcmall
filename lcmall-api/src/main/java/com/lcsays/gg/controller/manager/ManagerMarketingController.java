@@ -286,6 +286,36 @@ public class ManagerMarketingController {
         }
     }
 
+    @PostMapping("/setCallbacks")
+    public BaseModel<FavorCallbacksSaveResult> setCallbacks(HttpSession session, String notifyUrl) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
+            try {
+                FavorCallbacksSaveRequest request = new FavorCallbacksSaveRequest();
+                request.setMchid(curMchId);
+                request.setNotifyUrl(notifyUrl);
+                request.setSwitchBool(true);
+                FavorCallbacksSaveResult res = wxPayService.switchoverTo(curMchId)
+                        .getMarketingFavorService().saveFavorCallbacksV3(request);
+                return BaseModel.success(res);
+            } catch (WxPayException e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+                return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+            }
+
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+
+
     @NoArgsConstructor
     @Data
     public static class FavorStocksPauseResult implements Serializable {

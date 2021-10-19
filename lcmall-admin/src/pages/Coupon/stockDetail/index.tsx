@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Button, message, Popconfirm, Modal} from 'antd';
 import ProCard, {StatisticCard} from '@ant-design/pro-card';
+import {useModel} from "@@/plugin-model/useModel";
 import {
   startStock,
   pauseStock,
@@ -10,7 +11,6 @@ import {
   updateWxMarketingStock,
   getWxMarketingStockByStockId
 } from "@/services/manager/marketing/api";
-import {useModel} from "@@/plugin-model/useModel";
 import {ModalForm, ProFormInstance, ProFormText} from "@ant-design/pro-form";
 import styles from './index.less';
 

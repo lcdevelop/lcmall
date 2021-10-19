@@ -1,8 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
-
-import {op, OP_ADD, OP_GET, OP_MOD, OptionsType, ParamsType} from "@/services/manager/restfulapi";
 import {request} from "@@/plugin-request/request";
+import {op, OP_ADD, OP_GET, OP_MOD, OptionsType, ParamsType} from "@/services/manager/restfulapi";
 
 const apiPathPrefix = '/api/manager/marketing';
 const stockApiPath = apiPathPrefix + '/stock';
@@ -12,6 +11,7 @@ const pauseStockApiPath = apiPathPrefix + '/pauseStock';
 const restartStockApiPath = apiPathPrefix + '/restartStock';
 const wxMarketingStockApiPath = apiPathPrefix + '/wxMarketingStock';
 const whitelistApiPath = apiPathPrefix + '/whitelist';
+const setCallbacksApiPath = apiPathPrefix +'/setCallbacks';
 
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
@@ -114,4 +114,16 @@ export async function whitelist(params?: ParamsType, options?: OptionsType) {
     op<API.WxMarketingWhitelist>(whitelistApiPath, OP_GET, undefined, params, options)
       .then((res) => {resolve(res);}, (err) => {reject(err);})
   })
+}
+
+export async function setCallbacks(params: {
+  notifyUrl: string,
+}, options?: { [key: string]: any }) {
+  return request<API.Response<API.FavorCallbacksSaveResult>>(setCallbacksApiPath, {
+    method: 'POST',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
 }

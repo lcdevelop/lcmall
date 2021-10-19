@@ -39,6 +39,7 @@ export default [
       { path: '/marketing/stock/data', name: '代金券批次(全部)', icon: 'smile', component: './Coupon/stock', hideInMenu: true},
       { path: '/marketing/stock/detail/:stockId', name: '代金券批次详情', icon: 'smile', component: './Coupon/stockDetail', hideInMenu:true},
       { path: '/marketing/whitelist', name: '白名单管理', icon: 'smile', component: './Coupon/whitelist'},
+      { path: '/marketing/system', name: '系统设置', icon: 'smile', component: './Coupon/system'},
     ],
   },
   { path: '/users', access: 'canAdmin', name: '用户管理(admin)', icon: 'user', component: './user/user' },

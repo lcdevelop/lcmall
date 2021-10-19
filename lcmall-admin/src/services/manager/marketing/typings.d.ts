@@ -73,4 +73,9 @@ declare namespace API {
     id: number;
     phoneNumber: string;
   }
+
+  type FavorCallbacksSaveResult = {
+    updateTime: string;
+    notifyUrl: string;
+  }
 }

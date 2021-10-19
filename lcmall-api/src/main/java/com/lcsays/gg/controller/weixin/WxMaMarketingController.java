@@ -5,10 +5,12 @@ import cn.binarywang.wx.miniapp.bean.urllink.GenerateUrlLinkRequest;
 import com.github.binarywang.wxpay.bean.marketing.FavorCouponsCreateRequest;
 import com.github.binarywang.wxpay.bean.marketing.FavorCouponsCreateResult;
 import com.github.binarywang.wxpay.bean.marketing.FavorCouponsGetResult;
+import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
+import com.lcsays.gg.models.result.WxResp;
 import com.lcsays.gg.utils.RequestNo;
 import com.lcsays.gg.utils.SessionUtils;
 import com.lcsays.lcmall.db.model.WxApp;
@@ -103,6 +105,7 @@ public class WxMaMarketingController {
                 request.setAppid(appId);
                 String mchId = wxApp.getMchId();
                 request.setStockCreatorMchid(mchId);
+                // 这里如果报错“商户号与appid不匹配”，一般是要在支付平台里配appid关联
                 FavorCouponsCreateResult result = wxPayService.switchoverTo(mchId).getMarketingFavorService()
                         .createFavorCouponsV3(wxMaUser.getOpenid(), request);
                 log.info(result.toString());
@@ -172,6 +175,20 @@ public class WxMaMarketingController {
             log.error(e.getMessage());
             return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
         }
+    }
+
+    /**
+     * 优惠券消费核销时回调
+     * 通过setCallbacks设置此回调地址（https://cloud.lcsays.com/api/wx/ma/{appId}/marketing/payNotify）
+     * @param appId
+     * @return
+     */
+    @PostMapping("/payNotify")
+    public WxResp payNotify(@PathVariable String appId, @RequestBody OriginNotifyResponse originNotifyResponse) {
+        log.info("payNotify");
+        log.info(appId);
+        log.info(originNotifyResponse.toString());
+        return WxResp.success();
     }
 
 }
