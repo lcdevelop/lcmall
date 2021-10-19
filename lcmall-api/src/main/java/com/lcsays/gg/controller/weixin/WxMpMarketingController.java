@@ -87,12 +87,24 @@ public class WxMpMarketingController {
                             @RequestHeader("wechatpay-nonce") String nonce,
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
-                            @RequestBody UseNotifyData originNotifyResponse) {
+                            @RequestBody OriginNotifyResponse originNotifyResponse) {
         log.info(timestamp);
         log.info(nonce);
         log.info(signature);
         log.info(serial);
         log.info("优惠券核销回调： " + originNotifyResponse);
+
+        UseNotifyData data = new UseNotifyData();
+        data.setId(originNotifyResponse.getId());
+        data.setSummary(originNotifyResponse.getSummary());
+        UseNotifyData.Resource resource = new UseNotifyData.Resource();
+        resource.setNonce(originNotifyResponse.getResource().getNonce());
+        resource.setAlgorithm(originNotifyResponse.getResource().getAlgorithm());
+        resource.setAssociatedData(originNotifyResponse.getResource().getAssociatedData());
+        resource.setCipherText(originNotifyResponse.getResource().getCiphertext());
+        resource.setOriginalType(originNotifyResponse.getResource().getOriginalType());
+        data.setResource(resource);
+
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
             try {
@@ -101,7 +113,7 @@ public class WxMpMarketingController {
                 header.setNonce(nonce);
                 header.setSignature(signature);
                 header.setSerial(serial);
-//                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId()).getMarketingFavorService().decryptNotifyDataResource(data);
+                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId()).getMarketingFavorService().decryptNotifyDataResource(data);
 //                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
 //                        .parseOrderNotifyV3Result(notifyData, header);
 //                String outTradeNo = result.getResult().getOutTradeNo();
@@ -111,7 +123,7 @@ public class WxMpMarketingController {
 
                 log.info("======== begin payNotify ");
                 log.info(wxApp.getMchId());
-//                log.info(result.toString());
+                log.info(result.toString());
                 log.info("======== end payNotify ");
                 return WxResp.success();
             } catch (Exception e) {
