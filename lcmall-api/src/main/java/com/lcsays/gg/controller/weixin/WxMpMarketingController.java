@@ -102,8 +102,11 @@ public class WxMpMarketingController {
                 header.setNonce(nonce);
                 header.setSigned(signature);
                 header.setSerialNo(serial);
-                UseNotifyData result = wxPayService.switchoverTo(wxApp.getMchId())
+                UseNotifyData data = wxPayService.switchoverTo(wxApp.getMchId())
                         .getMarketingFavorService().parseNotifyData(notifyData, header);
+                log.info(data.toString());
+                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId())
+                        .getMarketingFavorService().decryptNotifyDataResource(data);
 //                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
 //                        .parseOrderNotifyV3Result(notifyData, header);
 //                String outTradeNo = result.getResult().getOutTradeNo();
