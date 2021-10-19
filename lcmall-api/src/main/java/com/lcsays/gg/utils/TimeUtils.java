@@ -15,7 +15,7 @@ import java.util.Date;
 public class TimeUtils {
 
     private static final SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+08:00'");
-    private static final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+08:00'");
 
     public static Calendar getBeginOfToday() {
         Calendar today = Calendar.getInstance();
@@ -68,7 +68,7 @@ public class TimeUtils {
 
     public static Date rfc33992Date(String rfc3399Time) {
         try {
-            return format1.parse(rfc3399Time);
+            return format2.parse(rfc3399Time);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -77,5 +77,10 @@ public class TimeUtils {
 
     public static Long currentTimeStamp() {
         return new Date().getTime();
+    }
+
+    public static void main(String args[]) {
+        String t = "2021-10-20T00:04:33+08:00";
+        System.out.println(TimeUtils.rfc33992Date(t));
     }
 }
