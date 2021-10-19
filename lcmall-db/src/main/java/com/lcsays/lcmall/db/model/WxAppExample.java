@@ -304,6 +304,76 @@ public class WxAppExample {
             return (Criteria) this;
         }
 
+        public Criteria andOriginalIdIsNull() {
+            addCriterion("original_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdIsNotNull() {
+            addCriterion("original_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdEqualTo(String value) {
+            addCriterion("original_id =", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdNotEqualTo(String value) {
+            addCriterion("original_id <>", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdGreaterThan(String value) {
+            addCriterion("original_id >", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdGreaterThanOrEqualTo(String value) {
+            addCriterion("original_id >=", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdLessThan(String value) {
+            addCriterion("original_id <", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdLessThanOrEqualTo(String value) {
+            addCriterion("original_id <=", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdLike(String value) {
+            addCriterion("original_id like", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdNotLike(String value) {
+            addCriterion("original_id not like", value, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdIn(List<String> values) {
+            addCriterion("original_id in", values, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdNotIn(List<String> values) {
+            addCriterion("original_id not in", values, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdBetween(String value1, String value2) {
+            addCriterion("original_id between", value1, value2, "originalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalIdNotBetween(String value1, String value2) {
+            addCriterion("original_id not between", value1, value2, "originalId");
+            return (Criteria) this;
+        }
+
         public Criteria andImageIsNull() {
             addCriterion("image is null");
             return (Criteria) this;

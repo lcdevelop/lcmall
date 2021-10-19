@@ -8,12 +8,11 @@ import {ProFormInstance} from "@ant-design/pro-form";
 const System: React.FC = () => {
 
   const formRef = useRef<ProFormInstance<any>>();
-  const [callbacksUrl, setCallbacksUrl] = useState<string>('');
 
   useEffect(() => {
     getCallbacks().then((res: API.Response<string>) => {
       if (res.code === 200) {
-        setCallbacksUrl(res.data!);
+        formRef.current?.setFieldsValue({'callbacks': res.data!})
       }
     })
   }, [])
@@ -24,6 +23,7 @@ const System: React.FC = () => {
     }).then(res => {
       console.log(res);
       if (res.code === 200) {
+        formRef.current?.setFieldsValue({'callbacks': values.callbacks})
         return true;
       } else {
         message.error(res.msg);
@@ -54,7 +54,7 @@ const System: React.FC = () => {
       >
 
         <ProFormText
-          width="md"
+          width='xl'
           name="callbacks"
           label='核销回调url'
           placeholder='请技术人员配置'

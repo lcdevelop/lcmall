@@ -50,4 +50,16 @@ public class WxAppService {
             return null;
         }
     }
+
+    public WxApp queryByOriginalId(String originalId) {
+        WxAppExample example = new WxAppExample();
+        WxAppExample.Criteria criteria = example.createCriteria();
+        criteria.andOriginalIdEqualTo(originalId);
+        List<WxApp> ret = wxAppMapper.selectByExample(example);
+        if (ret.size() > 0) {
+            return ret.get(0);
+        } else {
+            return null;
+        }
+    }
 }

@@ -5,6 +5,7 @@
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="original_id" jdbcType="VARCHAR" property="originalId" />
     <result column="image" jdbcType="VARCHAR" property="image" />
     <result column="auth" jdbcType="INTEGER" property="auth" />
     <result column="wxa_code_url" jdbcType="VARCHAR" property="wxaCodeUrl" />
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, app_id, image, auth, wxa_code_url, type, mch_id
+    id, name, app_id, original_id, image, auth, wxa_code_url, type, mch_id
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxAppExample" resultMap="BaseResultMap">
     select
@@ -96,12 +97,12 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_app (name, app_id, image, 
-      auth, wxa_code_url, type, 
-      mch_id)
-    values (#{name,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, 
-      #{auth,jdbcType=INTEGER}, #{wxaCodeUrl,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{mchId,jdbcType=VARCHAR})
+    insert into wx_app (name, app_id, original_id, 
+      image, auth, wxa_code_url, 
+      type, mch_id)
+    values (#{name,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{originalId,jdbcType=VARCHAR}, 
+      #{image,jdbcType=VARCHAR}, #{auth,jdbcType=INTEGER}, #{wxaCodeUrl,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxApp">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -114,6 +115,9 @@
       </if>
       <if test="appId != null">
         app_id,
+      </if>
+      <if test="originalId != null">
+        original_id,
       </if>
       <if test="image != null">
         image,
@@ -137,6 +141,9 @@
       </if>
       <if test="appId != null">
         #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="originalId != null">
+        #{originalId,jdbcType=VARCHAR},
       </if>
       <if test="image != null">
         #{image,jdbcType=VARCHAR},
@@ -173,6 +180,9 @@
       <if test="record.appId != null">
         app_id = #{record.appId,jdbcType=VARCHAR},
       </if>
+      <if test="record.originalId != null">
+        original_id = #{record.originalId,jdbcType=VARCHAR},
+      </if>
       <if test="record.image != null">
         image = #{record.image,jdbcType=VARCHAR},
       </if>
@@ -198,6 +208,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       name = #{record.name,jdbcType=VARCHAR},
       app_id = #{record.appId,jdbcType=VARCHAR},
+      original_id = #{record.originalId,jdbcType=VARCHAR},
       image = #{record.image,jdbcType=VARCHAR},
       auth = #{record.auth,jdbcType=INTEGER},
       wxa_code_url = #{record.wxaCodeUrl,jdbcType=VARCHAR},
