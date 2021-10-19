@@ -1,5 +1,7 @@
 package com.lcsays.gg.controller.weixin;
 
+import com.github.binarywang.wxpay.bean.marketing.FavorCouponsUseResult;
+import com.github.binarywang.wxpay.bean.marketing.UseNotifyData;
 import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
@@ -80,16 +82,17 @@ public class WxMpMarketingController {
      * @return
      */
     @PostMapping("/payNotify")
-    public WxResp payNotify(@PathVariable String appId, @RequestHeader("wechatpay-timestamp") String timestamp,
+    public WxResp payNotify(@PathVariable String appId,
+                            @RequestHeader("wechatpay-timestamp") String timestamp,
                             @RequestHeader("wechatpay-nonce") String nonce,
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
-                            @RequestBody String notifyData) {
+                            @RequestBody UseNotifyData data) {
         log.info(timestamp);
         log.info(nonce);
         log.info(signature);
         log.info(serial);
-        log.info("优惠券核销回调： " + notifyData);
+        log.info("优惠券核销回调： " + data);
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
             try {
@@ -98,15 +101,16 @@ public class WxMpMarketingController {
                 header.setNonce(nonce);
                 header.setSignature(signature);
                 header.setSerial(serial);
-                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId()).parseOrderNotifyV3Result(notifyData, header);
-                String outTradeNo = result.getResult().getOutTradeNo();
-                String transactionId = result.getResult().getTransactionId();
-                String tradeState = result.getResult().getTradeState();
-                String successTime = result.getResult().getSuccessTime();
+                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId()).getMarketingFavorService().decryptNotifyDataResource(data);
+//                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
+//                        .parseOrderNotifyV3Result(notifyData, header);
+//                String outTradeNo = result.getResult().getOutTradeNo();
+//                String transactionId = result.getResult().getTransactionId();
+//                String tradeState = result.getResult().getTradeState();
+//                String successTime = result.getResult().getSuccessTime();
 
                 log.info("======== begin payNotify ");
                 log.info(wxApp.getMchId());
-                log.info(header.toString());
                 log.info(result.toString());
                 log.info("======== end payNotify ");
                 return WxResp.success();
