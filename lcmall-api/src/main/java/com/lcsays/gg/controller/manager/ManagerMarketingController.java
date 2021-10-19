@@ -12,9 +12,11 @@ import com.lcsays.gg.utils.ApiUtils;
 import com.lcsays.gg.utils.RequestNo;
 import com.lcsays.gg.utils.SessionUtils;
 import com.lcsays.lcmall.db.model.WxMaUser;
+import com.lcsays.lcmall.db.model.WxMarketingConfig;
 import com.lcsays.lcmall.db.model.WxMarketingStock;
 import com.lcsays.lcmall.db.model.WxMarketingWhitelist;
 import com.lcsays.lcmall.db.service.WxAppService;
+import com.lcsays.lcmall.db.service.WxMarketingConfigService;
 import com.lcsays.lcmall.db.service.WxMarketingStockService;
 import com.lcsays.lcmall.db.service.WxMarketingWhitelistService;
 import com.lcsays.lcmall.db.util.WxMaUserUtil;
@@ -58,6 +60,9 @@ public class ManagerMarketingController {
 
     @Resource
     WxMarketingWhitelistService wxMarketingWhitelistService;
+
+    @Resource
+    WxMarketingConfigService wxMarketingConfigService;
 
     @GetMapping("/whitelist")
     public BaseModel<List<WxMarketingWhitelist>> whitelist(HttpSession session,
@@ -302,6 +307,11 @@ public class ManagerMarketingController {
                 request.setSwitchBool(true);
                 FavorCallbacksSaveResult res = wxPayService.switchoverTo(curMchId)
                         .getMarketingFavorService().saveFavorCallbacksV3(request);
+
+                WxMarketingConfig wxMarketingConfig = new WxMarketingConfig();
+                wxMarketingConfig.setWxAppId(user.getSessionWxAppId());
+                wxMarketingConfig.setCallbacks(notifyUrl);
+                wxMarketingConfigService.createOrUpdate(wxMarketingConfig);
                 return BaseModel.success(res);
             } catch (WxPayException e) {
                 e.printStackTrace();
@@ -315,6 +325,24 @@ public class ManagerMarketingController {
     }
 
 
+    @GetMapping("/getCallbacks")
+    public BaseModel<String> getCallbacks(HttpSession session) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            WxMarketingConfig config = wxMarketingConfigService.query(user.getSessionWxAppId());
+            if (null != config) {
+                return BaseModel.success(config.getCallbacks());
+            } else {
+                return BaseModel.error(ErrorCode.NO_RESULT);
+            }
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
 
     @NoArgsConstructor
     @Data

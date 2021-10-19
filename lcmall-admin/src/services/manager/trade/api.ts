@@ -1,8 +1,8 @@
 // @ts-ignore
 /* eslint-disable */
 
-import {op, OP_GET, OP_MOD, OptionsType, ParamsType} from "@/services/manager/restfulapi";
 import {request} from "@@/plugin-request/request";
+import {op, OP_GET, OP_MOD, OptionsType, ParamsType} from "@/services/manager/restfulapi";
 
 const apiPathPrefix = '/api/manager/trade';
 const orderApiPath = apiPathPrefix + '/order';

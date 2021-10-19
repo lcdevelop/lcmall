@@ -1,13 +1,22 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {PageContainer} from "@ant-design/pro-layout";
 import {Button, Form, Input, message, Popconfirm} from "antd";
 import ProForm, {ModalForm, ProFormSelect, ProFormText, ProFormTextArea} from "@ant-design/pro-form";
-import {setCallbacks} from "@/services/manager/marketing/api";
+import {setCallbacks, getCallbacks} from "@/services/manager/marketing/api";
 import {ProFormInstance} from "@ant-design/pro-form";
 
 const System: React.FC = () => {
 
   const formRef = useRef<ProFormInstance<any>>();
+  const [callbacksUrl, setCallbacksUrl] = useState<string>('');
+
+  useEffect(() => {
+    getCallbacks().then((res: API.Response<string>) => {
+      if (res.code === 200) {
+        setCallbacksUrl(res.data!);
+      }
+    })
+  }, [])
 
   const onFinish = async (values: any) => {
     setCallbacks({

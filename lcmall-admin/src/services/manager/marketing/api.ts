@@ -12,6 +12,7 @@ const restartStockApiPath = apiPathPrefix + '/restartStock';
 const wxMarketingStockApiPath = apiPathPrefix + '/wxMarketingStock';
 const whitelistApiPath = apiPathPrefix + '/whitelist';
 const setCallbacksApiPath = apiPathPrefix +'/setCallbacks';
+const getCallbacksApiPath = apiPathPrefix +'/getCallbacks';
 
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
@@ -124,6 +125,13 @@ export async function setCallbacks(params: {
     params: {
       ...params,
     },
+    ...(options || {}),
+  });
+}
+
+export async function getCallbacks(options?: { [key: string]: any }) {
+  return request<API.Response<string>>(getCallbacksApiPath, {
+    method: 'GET',
     ...(options || {}),
   });
 }

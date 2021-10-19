@@ -177,18 +177,5 @@ public class WxMaMarketingController {
         }
     }
 
-    /**
-     * 优惠券消费核销时回调
-     * 通过setCallbacks设置此回调地址（https://cloud.lcsays.com/api/wx/ma/{appId}/marketing/payNotify）
-     * @param appId
-     * @return
-     */
-    @PostMapping("/payNotify")
-    public WxResp payNotify(@PathVariable String appId, @RequestBody OriginNotifyResponse originNotifyResponse) {
-        log.info("payNotify");
-        log.info(appId);
-        log.info(originNotifyResponse.toString());
-        return WxResp.success();
-    }
 
 }
