@@ -100,7 +100,7 @@ public class WxMpMarketingController {
         UseNotifyData.Resource resource = new UseNotifyData.Resource();
         resource.setNonce(originNotifyResponse.getResource().getNonce());
         resource.setAlgorithm(originNotifyResponse.getResource().getAlgorithm());
-        resource.setAssociatedData(originNotifyResponse.getResource().getAssociatedData());
+        resource.setAssociatedData("");
         resource.setCipherText(originNotifyResponse.getResource().getCiphertext());
         resource.setOriginalType(originNotifyResponse.getResource().getOriginalType());
         data.setResource(resource);
@@ -113,7 +113,8 @@ public class WxMpMarketingController {
                 header.setNonce(nonce);
                 header.setSignature(signature);
                 header.setSerial(serial);
-                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId()).getMarketingFavorService().decryptNotifyDataResource(data);
+                FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId())
+                        .getMarketingFavorService().decryptNotifyDataResource(data);
 //                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
 //                        .parseOrderNotifyV3Result(notifyData, header);
 //                String outTradeNo = result.getResult().getOutTradeNo();
@@ -126,7 +127,7 @@ public class WxMpMarketingController {
                 log.info(result.toString());
                 log.info("======== end payNotify ");
                 return WxResp.success();
-            } catch (Exception e) {
+            } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error("核销回调处理失败:" + e.getMessage());
                 return WxResp.error("核销回调处理失败:" + e.getMessage());
