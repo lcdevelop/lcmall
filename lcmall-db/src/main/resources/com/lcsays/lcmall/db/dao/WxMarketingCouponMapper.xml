@@ -9,6 +9,9 @@
     <result column="coupon_id" jdbcType="VARCHAR" property="couponId" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="consume_time" jdbcType="TIMESTAMP" property="consumeTime" />
+    <result column="consume_mchid" jdbcType="VARCHAR" property="consumeMchid" />
+    <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, wx_app_id, wx_ma_user_id, stock_id, coupon_id, status, create_time
+    id, wx_app_id, wx_ma_user_id, stock_id, coupon_id, status, create_time, consume_time, 
+    consume_mchid, transaction_id
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingCouponExample" resultMap="BaseResultMap">
     select
@@ -96,10 +100,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into wx_marketing_coupon (wx_app_id, wx_ma_user_id, stock_id, 
-      coupon_id, status, create_time
+      coupon_id, status, create_time, 
+      consume_time, consume_mchid, transaction_id
       )
     values (#{wxAppId,jdbcType=INTEGER}, #{wxMaUserId,jdbcType=INTEGER}, #{stockId,jdbcType=VARCHAR}, 
-      #{couponId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      #{couponId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{consumeTime,jdbcType=TIMESTAMP}, #{consumeMchid,jdbcType=VARCHAR}, #{transactionId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingCoupon">
@@ -126,6 +132,15 @@
       <if test="createTime != null">
         create_time,
       </if>
+      <if test="consumeTime != null">
+        consume_time,
+      </if>
+      <if test="consumeMchid != null">
+        consume_mchid,
+      </if>
+      <if test="transactionId != null">
+        transaction_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="wxAppId != null">
@@ -145,6 +160,15 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consumeTime != null">
+        #{consumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consumeMchid != null">
+        #{consumeMchid,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null">
+        #{transactionId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -178,6 +202,15 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.consumeTime != null">
+        consume_time = #{record.consumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.consumeMchid != null">
+        consume_mchid = #{record.consumeMchid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transactionId != null">
+        transaction_id = #{record.transactionId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -191,7 +224,10 @@
       stock_id = #{record.stockId,jdbcType=VARCHAR},
       coupon_id = #{record.couponId,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      consume_time = #{record.consumeTime,jdbcType=TIMESTAMP},
+      consume_mchid = #{record.consumeMchid,jdbcType=VARCHAR},
+      transaction_id = #{record.transactionId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

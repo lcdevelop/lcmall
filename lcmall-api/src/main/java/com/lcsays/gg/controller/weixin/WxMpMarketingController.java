@@ -11,10 +11,13 @@ import com.lcsays.gg.enums.ErrorCode;
 import com.lcsays.gg.models.result.BaseModel;
 import com.lcsays.gg.models.result.WxResp;
 import com.lcsays.gg.utils.SessionUtils;
+import com.lcsays.gg.utils.TimeUtils;
 import com.lcsays.lcmall.db.model.WxApp;
 import com.lcsays.lcmall.db.model.WxMaUser;
+import com.lcsays.lcmall.db.model.WxMarketingCoupon;
 import com.lcsays.lcmall.db.model.WxMarketingStock;
 import com.lcsays.lcmall.db.service.WxAppService;
+import com.lcsays.lcmall.db.service.WxMarketingCouponService;
 import com.lcsays.lcmall.db.service.WxMarketingStockService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +49,9 @@ public class WxMpMarketingController {
 
     @Resource
     WxAppService wxAppService;
+
+    @Resource
+    WxMarketingCouponService wxMarketingCouponService;
 
     @Data
     private static class CreateCardParam {
@@ -88,11 +94,6 @@ public class WxMpMarketingController {
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
                             @RequestBody String notifyData) {
-        log.info(timestamp);
-        log.info(nonce);
-        log.info(signature);
-        log.info(serial);
-        log.info(notifyData);
 
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
@@ -104,21 +105,30 @@ public class WxMpMarketingController {
                 header.setSerialNo(serial);
                 UseNotifyData data = wxPayService.switchoverTo(wxApp.getMchId())
                         .getMarketingFavorService().parseNotifyData(notifyData, header);
-                log.info(data.toString());
                 FavorCouponsUseResult result = wxPayService.switchoverTo(wxApp.getMchId())
                         .getMarketingFavorService().decryptNotifyDataResource(data);
-//                WxPayOrderNotifyV3Result result = wxPayService.switchoverTo(wxApp.getMchId())
-//                        .parseOrderNotifyV3Result(notifyData, header);
-//                String outTradeNo = result.getResult().getOutTradeNo();
-//                String transactionId = result.getResult().getTransactionId();
-//                String tradeState = result.getResult().getTradeState();
-//                String successTime = result.getResult().getSuccessTime();
 
-                log.info("======== begin payNotify ");
-                log.info(wxApp.getMchId());
-                log.info(result.toString());
-                log.info("======== end payNotify ");
-                return WxResp.success();
+                String stockId = result.getStockId();
+                String couponId = result.getCouponId();
+                String status = result.getStatus();
+                String createTime = result.getCreateTime();
+                String consumeTime = result.getConsumeInformation().getConsumeTime();
+                String consumeMchid = result.getConsumeInformation().getConsumeMchid();
+                String transactionId = result.getConsumeInformation().getTransactionId();
+
+                WxMarketingCoupon wxMarketingCoupon = new WxMarketingCoupon();
+                wxMarketingCoupon.setStockId(stockId);
+                wxMarketingCoupon.setCouponId(couponId);
+                wxMarketingCoupon.setStatus(status);
+                wxMarketingCoupon.setCreateTime(TimeUtils.rfc33992Date(createTime));
+                wxMarketingCoupon.setConsumeTime(TimeUtils.rfc33992Date(consumeTime));
+                wxMarketingCoupon.setConsumeMchid(consumeMchid);
+                wxMarketingCoupon.setTransactionId(transactionId);
+                if (wxMarketingCouponService.update(wxMarketingCoupon) > 0) {
+                    return WxResp.success();
+                } else {
+                    return WxResp.error("更新数据库出错");
+                }
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error("核销回调处理失败:" + e.getMessage());

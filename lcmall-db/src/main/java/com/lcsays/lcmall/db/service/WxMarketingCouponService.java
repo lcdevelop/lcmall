@@ -38,4 +38,12 @@ public class WxMarketingCouponService {
             return null;
         }
     }
+
+    public int update(WxMarketingCoupon record) {
+        WxMarketingCouponExample example = new WxMarketingCouponExample();
+        WxMarketingCouponExample.Criteria criteria = example.createCriteria();
+        criteria.andStockIdEqualTo(record.getStockId());
+        criteria.andCouponIdEqualTo(record.getCouponId());
+        return marketingCouponMapper.updateByExampleSelective(record, example);
+    }
 }

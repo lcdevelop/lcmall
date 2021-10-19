@@ -2,6 +2,7 @@ package com.lcsays.gg.utils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.Date;
 public class TimeUtils {
 
     private static final SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+08:00'");
+    private static final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static Calendar getBeginOfToday() {
         Calendar today = Calendar.getInstance();
@@ -62,6 +64,15 @@ public class TimeUtils {
     public static String timeStr2Rfc3399(String timeStr) {
         Date d = new Date(Timestamp.valueOf(timeStr).getTime());
         return format1.format(d);
+    }
+
+    public static Date rfc33992Date(String rfc3399Time) {
+        try {
+            return format1.parse(rfc3399Time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static Long currentTimeStamp() {

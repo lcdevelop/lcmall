@@ -554,6 +554,206 @@ public class WxMarketingCouponExample {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
+
+        public Criteria andConsumeTimeIsNull() {
+            addCriterion("consume_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeIsNotNull() {
+            addCriterion("consume_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeEqualTo(Date value) {
+            addCriterion("consume_time =", value, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeNotEqualTo(Date value) {
+            addCriterion("consume_time <>", value, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeGreaterThan(Date value) {
+            addCriterion("consume_time >", value, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("consume_time >=", value, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeLessThan(Date value) {
+            addCriterion("consume_time <", value, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeLessThanOrEqualTo(Date value) {
+            addCriterion("consume_time <=", value, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeIn(List<Date> values) {
+            addCriterion("consume_time in", values, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeNotIn(List<Date> values) {
+            addCriterion("consume_time not in", values, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeBetween(Date value1, Date value2) {
+            addCriterion("consume_time between", value1, value2, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeTimeNotBetween(Date value1, Date value2) {
+            addCriterion("consume_time not between", value1, value2, "consumeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidIsNull() {
+            addCriterion("consume_mchid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidIsNotNull() {
+            addCriterion("consume_mchid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidEqualTo(String value) {
+            addCriterion("consume_mchid =", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidNotEqualTo(String value) {
+            addCriterion("consume_mchid <>", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidGreaterThan(String value) {
+            addCriterion("consume_mchid >", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidGreaterThanOrEqualTo(String value) {
+            addCriterion("consume_mchid >=", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidLessThan(String value) {
+            addCriterion("consume_mchid <", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidLessThanOrEqualTo(String value) {
+            addCriterion("consume_mchid <=", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidLike(String value) {
+            addCriterion("consume_mchid like", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidNotLike(String value) {
+            addCriterion("consume_mchid not like", value, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidIn(List<String> values) {
+            addCriterion("consume_mchid in", values, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidNotIn(List<String> values) {
+            addCriterion("consume_mchid not in", values, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidBetween(String value1, String value2) {
+            addCriterion("consume_mchid between", value1, value2, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andConsumeMchidNotBetween(String value1, String value2) {
+            addCriterion("consume_mchid not between", value1, value2, "consumeMchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdIsNull() {
+            addCriterion("transaction_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdIsNotNull() {
+            addCriterion("transaction_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdEqualTo(String value) {
+            addCriterion("transaction_id =", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdNotEqualTo(String value) {
+            addCriterion("transaction_id <>", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdGreaterThan(String value) {
+            addCriterion("transaction_id >", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdGreaterThanOrEqualTo(String value) {
+            addCriterion("transaction_id >=", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdLessThan(String value) {
+            addCriterion("transaction_id <", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdLessThanOrEqualTo(String value) {
+            addCriterion("transaction_id <=", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdLike(String value) {
+            addCriterion("transaction_id like", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdNotLike(String value) {
+            addCriterion("transaction_id not like", value, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdIn(List<String> values) {
+            addCriterion("transaction_id in", values, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdNotIn(List<String> values) {
+            addCriterion("transaction_id not in", values, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdBetween(String value1, String value2) {
+            addCriterion("transaction_id between", value1, value2, "transactionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionIdNotBetween(String value1, String value2) {
+            addCriterion("transaction_id not between", value1, value2, "transactionId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -18,6 +18,12 @@ public class WxMarketingCoupon implements Serializable {
 
     private Date createTime;
 
+    private Date consumeTime;
+
+    private String consumeMchid;
+
+    private String transactionId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -76,6 +82,30 @@ public class WxMarketingCoupon implements Serializable {
         this.createTime = createTime;
     }
 
+    public Date getConsumeTime() {
+        return consumeTime;
+    }
+
+    public void setConsumeTime(Date consumeTime) {
+        this.consumeTime = consumeTime;
+    }
+
+    public String getConsumeMchid() {
+        return consumeMchid;
+    }
+
+    public void setConsumeMchid(String consumeMchid) {
+        this.consumeMchid = consumeMchid;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -89,6 +119,9 @@ public class WxMarketingCoupon implements Serializable {
         sb.append(", couponId=").append(couponId);
         sb.append(", status=").append(status);
         sb.append(", createTime=").append(createTime);
+        sb.append(", consumeTime=").append(consumeTime);
+        sb.append(", consumeMchid=").append(consumeMchid);
+        sb.append(", transactionId=").append(transactionId);
         sb.append("]");
         return sb.toString();
     }
