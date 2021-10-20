@@ -194,8 +194,9 @@ public class ManagerMarketingController {
         }
     }
 
-    private int createOrUpdateMarketingStock(WxMarketingStock wxMarketingStock, String curMchId) throws WxPayException {
+    private int createOrUpdateMarketingStock(WxMarketingStock wxMarketingStock) throws WxPayException {
         // 查询批次详情
+        String curMchId = wxAppService.queryById(wxMarketingStock.getWxAppId()).getMchId();
         FavorStocksGetResult result = wxPayService.switchoverTo(curMchId)
                 .getMarketingFavorService().getFavorStocksV3(wxMarketingStock.getStockId(), curMchId);
         String createTime = result.getCreate_time();
@@ -230,7 +231,7 @@ public class ManagerMarketingController {
             String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
 
             try {
-                int ret = createOrUpdateMarketingStock(wxMarketingStock, curMchId);
+                int ret = createOrUpdateMarketingStock(wxMarketingStock);
                 if (ret > 0) {
                     return BaseModel.success();
                 } else {
@@ -397,11 +398,10 @@ public class ManagerMarketingController {
 
             // 加载map(stockId, Stock)表
             Map<String, WxMarketingStock> stocksMap = wxMarketingStockService.getStocksMap();
-            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
             for (WxMarketingStock stock: stocksMap.values()) {
                 if (stock.getStockName() == null) {
                     try {
-                        createOrUpdateMarketingStock(stock, curMchId);
+                        createOrUpdateMarketingStock(stock);
                     } catch (WxPayException e) {
                         e.printStackTrace();
                         log.error(e.getMessage());
