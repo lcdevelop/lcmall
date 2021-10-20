@@ -1,7 +1,6 @@
 package com.lcsays.lcmall.db.service;
 
 import com.lcsays.lcmall.db.dao.WxMarketingCouponMapper;
-import com.lcsays.lcmall.db.model.WxAppExample;
 import com.lcsays.lcmall.db.model.WxMaUser;
 import com.lcsays.lcmall.db.model.WxMarketingCoupon;
 import com.lcsays.lcmall.db.model.WxMarketingCouponExample;
@@ -37,6 +36,13 @@ public class WxMarketingCouponService {
         } else {
             return null;
         }
+    }
+
+    public List<WxMarketingCoupon> queryAll() {
+        WxMarketingCouponExample example = new WxMarketingCouponExample();
+        WxMarketingCouponExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        return marketingCouponMapper.selectByExample(example);
     }
 
     public int update(WxMarketingCoupon record) {

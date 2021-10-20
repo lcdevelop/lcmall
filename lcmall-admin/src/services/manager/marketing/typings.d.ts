@@ -78,4 +78,24 @@ declare namespace API {
     updateTime: string;
     notifyUrl: string;
   }
+
+  type CouponItem = {
+    stockId: string;
+    couponId: string;
+    status: string;
+    transactionMinimum: number;
+    couponAmount: number;
+  }
+
+  type CouponsInfo = {
+    coupons: CouponItem[];
+    consumeCount: number;
+    consumeAmount: number;
+  }
+
+  type CouponStatistics = {
+    whitelistPhoneNumber: string;
+    wxMaUserHasPhoneNumber: boolean;
+    couponsInfo: CouponsInfo;
+  }
 }

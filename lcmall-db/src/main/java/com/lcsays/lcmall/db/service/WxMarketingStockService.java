@@ -6,7 +6,9 @@ import com.lcsays.lcmall.db.model.WxMarketingStockExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: lichuang
@@ -45,5 +47,16 @@ public class WxMarketingStockService {
         } else {
             return null;
         }
+    }
+
+    public Map<String, WxMarketingStock> getStocksMap() {
+        Map<String, WxMarketingStock> ret = new HashMap<>();
+        WxMarketingStockExample example = new WxMarketingStockExample();
+        WxMarketingStockExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        for (WxMarketingStock stock: marketingStockMapper.selectByExample(example)) {
+            ret.put(stock.getStockId(), stock);
+        }
+        return ret;
     }
 }

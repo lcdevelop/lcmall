@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {PageContainer} from "@ant-design/pro-layout";
-import {Button, Form, Input, message, Popconfirm} from "antd";
-import ProForm, {ModalForm, ProFormSelect, ProFormText, ProFormTextArea} from "@ant-design/pro-form";
+import {Button, message, Popconfirm} from "antd";
+import ProForm, {ProFormText} from "@ant-design/pro-form";
 import {setCallbacks, getCallbacks} from "@/services/manager/marketing/api";
 import {ProFormInstance} from "@ant-design/pro-form";
 

@@ -94,4 +94,11 @@ public class WxMaUserService {
         criteria.andIdIsNotNull();
         return wxMaUserMapper.selectByExample(example);
     }
+
+    public List<WxMaUser> listUsersWithPhoneNumber() {
+        WxMaUserExample example = new WxMaUserExample();
+        WxMaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andPhoneNumberIsNotNull();
+        return wxMaUserMapper.selectByExample(example);
+    }
 }

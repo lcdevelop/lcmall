@@ -7,23 +7,20 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.v3.util.RsaCryptoUtil;
 import com.google.gson.annotations.SerializedName;
 import com.lcsays.gg.enums.ErrorCode;
+import com.lcsays.gg.models.manager.CouponStatistics;
 import com.lcsays.gg.models.result.BaseModel;
 import com.lcsays.gg.utils.ApiUtils;
 import com.lcsays.gg.utils.RequestNo;
 import com.lcsays.gg.utils.SessionUtils;
-import com.lcsays.lcmall.db.model.WxMaUser;
-import com.lcsays.lcmall.db.model.WxMarketingConfig;
-import com.lcsays.lcmall.db.model.WxMarketingStock;
-import com.lcsays.lcmall.db.model.WxMarketingWhitelist;
-import com.lcsays.lcmall.db.service.WxAppService;
-import com.lcsays.lcmall.db.service.WxMarketingConfigService;
-import com.lcsays.lcmall.db.service.WxMarketingStockService;
-import com.lcsays.lcmall.db.service.WxMarketingWhitelistService;
+import com.lcsays.gg.utils.TimeUtils;
+import com.lcsays.lcmall.db.model.*;
+import com.lcsays.lcmall.db.service.*;
 import com.lcsays.lcmall.db.util.WxMaUserUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
@@ -33,7 +30,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.lcsays.gg.utils.TimeUtils.timeStr2Rfc3399;
 
@@ -63,6 +62,12 @@ public class ManagerMarketingController {
 
     @Resource
     WxMarketingConfigService wxMarketingConfigService;
+
+    @Resource
+    WxMaUserService wxMaUserService;
+
+    @Resource
+    WxMarketingCouponService wxMarketingCouponService;
 
     @GetMapping("/whitelist")
     public BaseModel<List<WxMarketingWhitelist>> whitelist(HttpSession session,
@@ -198,11 +203,39 @@ public class ManagerMarketingController {
             }
 
             wxMarketingStock.setWxAppId(user.getSessionWxAppId());
-            int ret = wxMarketingStockService.createOrUpdate(wxMarketingStock);
-            if (ret > 0) {
-                return BaseModel.success();
-            } else {
-                return BaseModel.error(ErrorCode.DAO_ERROR);
+
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
+
+            try {
+                // 查询批次详情
+                FavorStocksGetResult result = wxPayService.switchoverTo(curMchId)
+                        .getMarketingFavorService().getFavorStocksV3(wxMarketingStock.getStockId(), curMchId);
+                String createTime = result.getCreate_time();
+                String availableBeginTime = result.getAvailableBeginTime();
+                String availableEndTime = result.getAvailableEndTime();
+                String description = result.getDescription();
+                String stockName = result.getStockName();
+                Integer transactionMinimum = result.getStockUseRule().getFixedNormalCoupon().getTransactionMinimum();
+                Integer couponAmount = result.getStockUseRule().getFixedNormalCoupon().getCouponAmount();
+
+                wxMarketingStock.setCreateTime(TimeUtils.rfc33992Date(createTime));
+                wxMarketingStock.setAvailableBeginTime(TimeUtils.rfc33992Date(availableBeginTime));
+                wxMarketingStock.setAvailableEndTime(TimeUtils.rfc33992Date(availableEndTime));
+                wxMarketingStock.setDescription(description);
+                wxMarketingStock.setStockName(stockName);
+                wxMarketingStock.setTransactionMinimum(transactionMinimum);
+                wxMarketingStock.setCouponAmount(couponAmount);
+
+                int ret = wxMarketingStockService.createOrUpdate(wxMarketingStock);
+                if (ret > 0) {
+                    return BaseModel.success();
+                } else {
+                    return BaseModel.error(ErrorCode.DAO_ERROR);
+                }
+            } catch (WxPayException e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+                return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
             }
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
@@ -339,6 +372,90 @@ public class ManagerMarketingController {
             } else {
                 return BaseModel.error(ErrorCode.NO_RESULT);
             }
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    @GetMapping("/couponStatistics")
+    public BaseModel<List<CouponStatistics>> couponStatistics(HttpSession session) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            // 加载map(电话,用户)表
+            Map<String, WxMaUser> usersWithPhoneNumberMap = new HashMap<>();
+            for (WxMaUser u: wxMaUserService.listUsersWithPhoneNumber()) {
+                usersWithPhoneNumberMap.put(u.getPhoneNumber(), u);
+            }
+
+            // 加载map(stockId, Stock)表
+            Map<String, WxMarketingStock> stocksMap = wxMarketingStockService.getStocksMap();
+
+            // 加载map(用户id,coupon)表
+            Map<Integer, CouponStatistics.CouponsInfo> userCouponsInfoMap = new HashMap<>();
+            for (WxMarketingCoupon coupon: wxMarketingCouponService.queryAll()) {
+                Integer wxMaUserId = coupon.getWxMaUserId();
+                if (userCouponsInfoMap.containsKey(wxMaUserId)) {
+                    CouponStatistics.CouponsInfo couponsInfo = userCouponsInfoMap.get(wxMaUserId);
+                    List<CouponStatistics.CouponItem> coupons = couponsInfo.getCoupons();
+                    // 构造CouponItem
+                    CouponStatistics.CouponItem item = new CouponStatistics.CouponItem();
+                    item.setStockId(coupon.getStockId());
+                    item.setCouponId(coupon.getCouponId());
+                    item.setStatus(coupon.getStatus());
+                    if (stocksMap.containsKey(coupon.getStockId())) {
+                        WxMarketingStock stock = stocksMap.get(coupon.getStockId());
+                        item.setTransactionMinimum(stock.getTransactionMinimum());
+                        item.setCouponAmount(stock.getCouponAmount());
+                        if ("USED".equals(coupon.getStatus())) {
+                            couponsInfo.setConsumeCount(couponsInfo.getConsumeCount() + 1);
+                            couponsInfo.setConsumeAmount(couponsInfo.getConsumeAmount() + stock.getCouponAmount());
+                        }
+                    }
+                    coupons.add(item);
+                } else {
+                    CouponStatistics.CouponsInfo couponsInfo = new CouponStatistics.CouponsInfo();
+                    couponsInfo.setConsumeCount(0);
+                    couponsInfo.setConsumeAmount(0);
+                    List<CouponStatistics.CouponItem> coupons = new ArrayList<>();
+
+                    // 构造CouponItem
+                    CouponStatistics.CouponItem item = new CouponStatistics.CouponItem();
+                    item.setStockId(coupon.getStockId());
+                    item.setCouponId(coupon.getCouponId());
+                    item.setStatus(coupon.getStatus());
+                    if (stocksMap.containsKey(coupon.getStockId())) {
+                        WxMarketingStock stock = stocksMap.get(coupon.getStockId());
+                        item.setTransactionMinimum(stock.getTransactionMinimum());
+                        item.setCouponAmount(stock.getCouponAmount());
+                        if ("USED".equals(coupon.getStatus())) {
+                            couponsInfo.setConsumeCount(1);
+                            couponsInfo.setConsumeAmount(stock.getCouponAmount());
+                        }
+                    }
+                    coupons.add(item);
+                    couponsInfo.setCoupons(coupons);
+
+                    userCouponsInfoMap.put(coupon.getWxMaUserId(), couponsInfo);
+                }
+            }
+
+            List<CouponStatistics> ret = new ArrayList<>();
+            for (WxMarketingWhitelist whitelistItem: wxMarketingWhitelistService.queryAll()) {
+                CouponStatistics cs = new CouponStatistics();
+                String whitelistPhoneNumber = whitelistItem.getPhoneNumber();
+                cs.setWhitelistPhoneNumber(whitelistPhoneNumber);
+                if (usersWithPhoneNumberMap.containsKey(whitelistPhoneNumber)) {
+                    cs.setWxMaUserHasPhoneNumber(true);
+                    WxMaUser wxMaUser = usersWithPhoneNumberMap.get(whitelistPhoneNumber);
+                    cs.setCouponsInfo(userCouponsInfoMap.get(wxMaUser.getId()));
+                }
+                ret.add(cs);
+            }
+            return BaseModel.success(ret);
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }

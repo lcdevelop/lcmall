@@ -5,6 +5,13 @@
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
     <result column="stock_id" jdbcType="VARCHAR" property="stockId" />
+    <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="available_begin_time" jdbcType="TIMESTAMP" property="availableBeginTime" />
+    <result column="available_end_time" jdbcType="TIMESTAMP" property="availableEndTime" />
+    <result column="transaction_minimum" jdbcType="INTEGER" property="transactionMinimum" />
+    <result column="coupon_amount" jdbcType="INTEGER" property="couponAmount" />
     <result column="card_id" jdbcType="VARCHAR" property="cardId" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -66,7 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, wx_app_id, stock_id, card_id
+    id, wx_app_id, stock_id, stock_name, description, create_time, available_begin_time, 
+    available_end_time, transaction_minimum, coupon_amount, card_id
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingStockExample" resultMap="BaseResultMap">
     select
@@ -92,10 +100,14 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_marketing_stock (wx_app_id, stock_id, card_id
-      )
-    values (#{wxAppId,jdbcType=INTEGER}, #{stockId,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}
-      )
+    insert into wx_marketing_stock (wx_app_id, stock_id, stock_name, 
+      description, create_time, available_begin_time, 
+      available_end_time, transaction_minimum, 
+      coupon_amount, card_id)
+    values (#{wxAppId,jdbcType=INTEGER}, #{stockId,jdbcType=VARCHAR}, #{stockName,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{availableBeginTime,jdbcType=TIMESTAMP}, 
+      #{availableEndTime,jdbcType=TIMESTAMP}, #{transactionMinimum,jdbcType=INTEGER}, 
+      #{couponAmount,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingStock">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -109,6 +121,27 @@
       <if test="stockId != null">
         stock_id,
       </if>
+      <if test="stockName != null">
+        stock_name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="availableBeginTime != null">
+        available_begin_time,
+      </if>
+      <if test="availableEndTime != null">
+        available_end_time,
+      </if>
+      <if test="transactionMinimum != null">
+        transaction_minimum,
+      </if>
+      <if test="couponAmount != null">
+        coupon_amount,
+      </if>
       <if test="cardId != null">
         card_id,
       </if>
@@ -119,6 +152,27 @@
       </if>
       <if test="stockId != null">
         #{stockId,jdbcType=VARCHAR},
+      </if>
+      <if test="stockName != null">
+        #{stockName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="availableBeginTime != null">
+        #{availableBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="availableEndTime != null">
+        #{availableEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transactionMinimum != null">
+        #{transactionMinimum,jdbcType=INTEGER},
+      </if>
+      <if test="couponAmount != null">
+        #{couponAmount,jdbcType=INTEGER},
       </if>
       <if test="cardId != null">
         #{cardId,jdbcType=VARCHAR},
@@ -143,6 +197,27 @@
       <if test="record.stockId != null">
         stock_id = #{record.stockId,jdbcType=VARCHAR},
       </if>
+      <if test="record.stockName != null">
+        stock_name = #{record.stockName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.availableBeginTime != null">
+        available_begin_time = #{record.availableBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.availableEndTime != null">
+        available_end_time = #{record.availableEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.transactionMinimum != null">
+        transaction_minimum = #{record.transactionMinimum,jdbcType=INTEGER},
+      </if>
+      <if test="record.couponAmount != null">
+        coupon_amount = #{record.couponAmount,jdbcType=INTEGER},
+      </if>
       <if test="record.cardId != null">
         card_id = #{record.cardId,jdbcType=VARCHAR},
       </if>
@@ -156,6 +231,13 @@
     set id = #{record.id,jdbcType=INTEGER},
       wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
       stock_id = #{record.stockId,jdbcType=VARCHAR},
+      stock_name = #{record.stockName,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      available_begin_time = #{record.availableBeginTime,jdbcType=TIMESTAMP},
+      available_end_time = #{record.availableEndTime,jdbcType=TIMESTAMP},
+      transaction_minimum = #{record.transactionMinimum,jdbcType=INTEGER},
+      coupon_amount = #{record.couponAmount,jdbcType=INTEGER},
       card_id = #{record.cardId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
