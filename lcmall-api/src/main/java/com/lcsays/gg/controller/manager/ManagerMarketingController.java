@@ -194,6 +194,29 @@ public class ManagerMarketingController {
         }
     }
 
+    private int createOrUpdateMarketingStock(WxMarketingStock wxMarketingStock, String curMchId) throws WxPayException {
+        // 查询批次详情
+        FavorStocksGetResult result = wxPayService.switchoverTo(curMchId)
+                .getMarketingFavorService().getFavorStocksV3(wxMarketingStock.getStockId(), curMchId);
+        String createTime = result.getCreate_time();
+        String availableBeginTime = result.getAvailableBeginTime();
+        String availableEndTime = result.getAvailableEndTime();
+        String description = result.getDescription();
+        String stockName = result.getStockName();
+        Integer transactionMinimum = result.getStockUseRule().getFixedNormalCoupon().getTransactionMinimum();
+        Integer couponAmount = result.getStockUseRule().getFixedNormalCoupon().getCouponAmount();
+
+        wxMarketingStock.setCreateTime(TimeUtils.rfc33992Date(createTime));
+        wxMarketingStock.setAvailableBeginTime(TimeUtils.rfc33992Date(availableBeginTime));
+        wxMarketingStock.setAvailableEndTime(TimeUtils.rfc33992Date(availableEndTime));
+        wxMarketingStock.setDescription(description);
+        wxMarketingStock.setStockName(stockName);
+        wxMarketingStock.setTransactionMinimum(transactionMinimum);
+        wxMarketingStock.setCouponAmount(couponAmount);
+
+        return wxMarketingStockService.createOrUpdate(wxMarketingStock);
+    }
+
     @PutMapping("/wxMarketingStock")
     public BaseModel<String> createOrUpdateWxMarketingStock(HttpSession session, @RequestBody WxMarketingStock wxMarketingStock) {
         WxMaUser user = SessionUtils.getWxUserFromSession(session);
@@ -207,26 +230,7 @@ public class ManagerMarketingController {
             String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
 
             try {
-                // 查询批次详情
-                FavorStocksGetResult result = wxPayService.switchoverTo(curMchId)
-                        .getMarketingFavorService().getFavorStocksV3(wxMarketingStock.getStockId(), curMchId);
-                String createTime = result.getCreate_time();
-                String availableBeginTime = result.getAvailableBeginTime();
-                String availableEndTime = result.getAvailableEndTime();
-                String description = result.getDescription();
-                String stockName = result.getStockName();
-                Integer transactionMinimum = result.getStockUseRule().getFixedNormalCoupon().getTransactionMinimum();
-                Integer couponAmount = result.getStockUseRule().getFixedNormalCoupon().getCouponAmount();
-
-                wxMarketingStock.setCreateTime(TimeUtils.rfc33992Date(createTime));
-                wxMarketingStock.setAvailableBeginTime(TimeUtils.rfc33992Date(availableBeginTime));
-                wxMarketingStock.setAvailableEndTime(TimeUtils.rfc33992Date(availableEndTime));
-                wxMarketingStock.setDescription(description);
-                wxMarketingStock.setStockName(stockName);
-                wxMarketingStock.setTransactionMinimum(transactionMinimum);
-                wxMarketingStock.setCouponAmount(couponAmount);
-
-                int ret = wxMarketingStockService.createOrUpdate(wxMarketingStock);
+                int ret = createOrUpdateMarketingStock(wxMarketingStock, curMchId);
                 if (ret > 0) {
                     return BaseModel.success();
                 } else {
@@ -393,6 +397,17 @@ public class ManagerMarketingController {
 
             // 加载map(stockId, Stock)表
             Map<String, WxMarketingStock> stocksMap = wxMarketingStockService.getStocksMap();
+            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
+            for (WxMarketingStock stock: stocksMap.values()) {
+                if (stock.getStockName() == null) {
+                    try {
+                        createOrUpdateMarketingStock(stock, curMchId);
+                    } catch (WxPayException e) {
+                        e.printStackTrace();
+                        log.error(e.getMessage());
+                    }
+                }
+            }
 
             // 加载map(用户id,coupon)表
             Map<Integer, CouponStatistics.CouponsInfo> userCouponsInfoMap = new HashMap<>();
@@ -412,7 +427,11 @@ public class ManagerMarketingController {
                         item.setCouponAmount(stock.getCouponAmount());
                         if ("USED".equals(coupon.getStatus())) {
                             couponsInfo.setConsumeCount(couponsInfo.getConsumeCount() + 1);
-                            couponsInfo.setConsumeAmount(couponsInfo.getConsumeAmount() + stock.getCouponAmount());
+                            if (null != stock.getCouponAmount()) {
+                                couponsInfo.setConsumeAmount(couponsInfo.getConsumeAmount() + stock.getCouponAmount());
+                            } else {
+                                log.warn("某stock没有详情数据，stockId: " + stock.getStockId());
+                            }
                         }
                     }
                     coupons.add(item);
