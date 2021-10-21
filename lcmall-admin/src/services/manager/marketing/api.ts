@@ -83,7 +83,7 @@ export async function restartStock(params: {
 export async function generateMaLink(params: {
   appId: string;
   activityId: number,
-  templateId: number,
+  templateType: number,
 }, options?: { [key: string]: any }) {
   return request<API.Response<any>>(`/api/wx/ma/${params.appId}/marketing/generateUrlLink`, {
     method: 'GET',

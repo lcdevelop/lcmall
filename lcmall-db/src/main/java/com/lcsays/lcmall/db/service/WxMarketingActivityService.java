@@ -25,6 +25,18 @@ public class WxMarketingActivityService {
         return wxMarketingActivityMapper.selectByExample(example);
     }
 
+    public WxMarketingActivity queryById(Integer id) {
+        WxMarketingActivityExample example = new WxMarketingActivityExample();
+        WxMarketingActivityExample.Criteria criteria = example.createCriteria();
+        criteria.andIdEqualTo(id);
+        List<WxMarketingActivity> ret = wxMarketingActivityMapper.selectByExample(example);
+        if (ret.size() == 1) {
+            return ret.get(0);
+        } else {
+            return null;
+        }
+    }
+
     public int update(WxMarketingActivity activity) {
         WxMarketingActivityExample example = new WxMarketingActivityExample();
         WxMarketingActivityExample.Criteria criteria = example.createCriteria();

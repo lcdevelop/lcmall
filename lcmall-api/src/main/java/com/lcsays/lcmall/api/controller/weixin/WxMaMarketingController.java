@@ -13,17 +13,23 @@ import com.lcsays.lcmall.api.utils.RequestNo;
 import com.lcsays.lcmall.api.utils.SessionUtils;
 import com.lcsays.lcmall.db.model.WxApp;
 import com.lcsays.lcmall.db.model.WxMaUser;
+import com.lcsays.lcmall.db.model.WxMarketingActivity;
 import com.lcsays.lcmall.db.model.WxMarketingCoupon;
+import com.lcsays.lcmall.db.service.WxMarketingActivityService;
 import com.lcsays.lcmall.db.service.WxMarketingCouponService;
 import com.lcsays.lcmall.db.service.WxMarketingWhitelistService;
+import com.lcsays.lcmall.db.util.WxMarketingActivityUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 import com.lcsays.lcmall.db.service.WxAppService;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: lichuang
@@ -55,20 +61,23 @@ public class WxMaMarketingController {
     @Resource
     WxMarketingWhitelistService wxMarketingWhitelistService;
 
+    @Resource
+    WxMarketingActivityService wxMarketingActivityService;
+
     @Data
     private static class CreateCouponParam {
-        private String stockId;
+        private Integer activityId;
 
         /* 为了解决通过小程序schema链接带过来的参数总有？的问题 */
-        public String getStockId() {
-            return stockId.replace("?", "");
-        }
+//        public String getStockId() {
+//            return stockId.replace("?", "");
+//        }
     }
 
     @PostMapping("/createCoupon")
-    public BaseModel<FavorCouponsCreateResult> createCoupon(HttpSession session,
-                                                            @PathVariable String appId,
-                                                            @RequestBody CreateCouponParam createCouponParam) {
+    public BaseModel<List<FavorCouponsCreateResult>> createCoupon(HttpSession session,
+                                                                 @PathVariable String appId,
+                                                                 @RequestBody CreateCouponParam createCouponParam) {
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null == wxApp) {
             return BaseModel.error(ErrorCode.PARAM_ERROR);
@@ -80,24 +89,33 @@ public class WxMaMarketingController {
             return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "非工行指定手机号用户无法领取");
         }
 
-        if ("development".equals(environment.getProperty("env"))) {
-            // 如果是开发环境就返回一个假的couponId
-            String fakeCouponId = "27595222804";
-            FavorCouponsCreateResult r = new FavorCouponsCreateResult();
-            r.setCouponId(fakeCouponId);
-            WxMarketingCoupon wxMarketingCoupon = new WxMarketingCoupon();
-            wxMarketingCoupon.setWxAppId(wxApp.getId());
-            wxMarketingCoupon.setWxMaUserId(wxMaUser.getId());
-            wxMarketingCoupon.setStockId(createCouponParam.getStockId());
-            wxMarketingCoupon.setCouponId(fakeCouponId);
-            marketingCouponService.addCoupon(wxMarketingCoupon);
-            return BaseModel.success(r);
-        } else {
+//        if ("development".equals(environment.getProperty("env"))) {
+//            // 如果是开发环境就返回一个假的couponId
+//            String fakeCouponId = "27595222804";
+//            FavorCouponsCreateResult r = new FavorCouponsCreateResult();
+//            r.setCouponId(fakeCouponId);
+//            WxMarketingCoupon wxMarketingCoupon = new WxMarketingCoupon();
+//            wxMarketingCoupon.setWxAppId(wxApp.getId());
+//            wxMarketingCoupon.setWxMaUserId(wxMaUser.getId());
+//            wxMarketingCoupon.setStockId(createCouponParam.getStockId());
+//            wxMarketingCoupon.setCouponId(fakeCouponId);
+//            marketingCouponService.addCoupon(wxMarketingCoupon);
+//            return BaseModel.success(r);
+//        } else {
 
 
+
+
+
+        WxMarketingActivity activity = wxMarketingActivityService.queryById(createCouponParam.getActivityId());
+        log.info(activity.toString());
+
+        List<FavorCouponsCreateResult> ret = new ArrayList<>();
+
+        for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
             try {
                 FavorCouponsCreateRequest request = new FavorCouponsCreateRequest();
-                request.setStockId(createCouponParam.getStockId());
+                request.setStockId(stockId);
                 String requestNo = RequestNo.randomWithCurTime("cc");
                 request.setOutRequestNo(requestNo);
                 request.setAppid(appId);
@@ -111,22 +129,31 @@ public class WxMaMarketingController {
                 WxMarketingCoupon wxMarketingCoupon = new WxMarketingCoupon();
                 wxMarketingCoupon.setWxAppId(wxApp.getId());
                 wxMarketingCoupon.setWxMaUserId(wxMaUser.getId());
-                wxMarketingCoupon.setStockId(createCouponParam.getStockId());
+                wxMarketingCoupon.setStockId(stockId);
                 wxMarketingCoupon.setCouponId(result.getCouponId());
                 marketingCouponService.addCoupon(wxMarketingCoupon);
-                return BaseModel.success(result);
+
+                ret.add(result);
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error(e.getMessage());
                 return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
             }
         }
+
+        return BaseModel.success(ret);
+
+
+
+
+
+//        }
     }
 
     @GetMapping("/coupon")
     public BaseModel<FavorCouponsGetResult> getCoupon(HttpSession session,
-                                                            @PathVariable String appId,
-                                                            @RequestParam("couponId") String couponId) {
+                                                      @PathVariable String appId,
+                                                      @RequestParam("couponId") String couponId) {
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null == wxApp) {
             return BaseModel.error(ErrorCode.PARAM_ERROR);
@@ -145,26 +172,26 @@ public class WxMaMarketingController {
         }
     }
 
-    @GetMapping("/hasGotCoupon")
-    public BaseModel<String> hasGotCoupon(HttpSession session, @RequestParam("stockId") String stockId) {
-        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
-
-        WxMarketingCoupon wxMarketingCoupon = wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId);
-        if (null == wxMarketingCoupon) {
-            return BaseModel.error(ErrorCode.NO_RESULT);
-        } else {
-            return BaseModel.success();
-        }
-    }
+//    @GetMapping("/hasGotCoupon")
+//    public BaseModel<String> hasGotCoupon(HttpSession session, @RequestParam("activityId") Integer activityId) {
+//        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+//
+//        WxMarketingCoupon wxMarketingCoupon = wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId);
+//        if (null == wxMarketingCoupon) {
+//            return BaseModel.error(ErrorCode.NO_RESULT);
+//        } else {
+//            return BaseModel.success();
+//        }
+//    }
 
     @GetMapping("/generateUrlLink")
     public BaseModel<String> generateUrlLink(@PathVariable String appId,
                                              @RequestParam Integer activityId,
-                                             @RequestParam Integer templateId) {
+                                             @RequestParam Integer templateType) {
         try {
             GenerateUrlLinkRequest request = GenerateUrlLinkRequest.builder().build();
             request.setPath("/pages/stock/index");
-            request.setQuery("?activityId=" + activityId + "&templateId=" + templateId);
+            request.setQuery("?activityId=" + activityId + "&templateType=" + templateType);
             request.setIsExpire(false);
             String result = wxMaService.switchoverTo(appId).getLinkService().generateUrlLink(request);
             result = result.replaceAll("\"", "");

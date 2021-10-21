@@ -9,8 +9,11 @@ import com.lcsays.lcmall.db.model.WxMarketingActivity;
 
 public class WxMarketingActivityUtil {
 
-    public static void clearSecret(WxMarketingActivity wxMarketingActivity) {
-        wxMarketingActivity.setStockIdList(null);
-        wxMarketingActivity.setWxAppId(null);
+    public static String[] getStockIds(WxMarketingActivity activity) {
+        if (null != activity && null != activity.getStockIdList()) {
+            return activity.getStockIdList().split(",");
+        } else {
+            return new String[]{};
+        }
     }
 }

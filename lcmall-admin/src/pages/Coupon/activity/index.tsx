@@ -19,12 +19,20 @@ const Statistics: React.FC = () => {
       dataIndex: 'name',
     },
     {
-      title: 'templateId',
-      dataIndex: 'templateId',
+      title: 'templateType',
+      dataIndex: 'templateType',
     },
     {
       title: 'stockIdList',
-      dataIndex: 'stockIdList',
+      render: (_, entity) => {
+        return entity.stockIdList.split(',').map((value, index) => {
+          return (
+            <div key={index}>
+              <a href={'#/marketing/stock/detail/' + value}>{value}</a>
+            </div>
+          )
+        })
+      }
     },
     {
       title: 'createTime',
@@ -39,7 +47,7 @@ const Statistics: React.FC = () => {
               generateMaLink({
                 appId: initialState?.currentWxUser?.sessionWxApp.appId!,
                 activityId: entity.id,
-                templateId: entity.templateId,
+                templateType: entity.templateType,
               }).then(res => {
                 console.log(res);
                 if (res.code === 200) {

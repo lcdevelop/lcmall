@@ -10,7 +10,7 @@ public class WxMarketingActivity implements Serializable {
 
     private Integer wxAppId;
 
-    private Integer templateId;
+    private Integer templateType;
 
     private String stockIdList;
 
@@ -44,12 +44,12 @@ public class WxMarketingActivity implements Serializable {
         this.wxAppId = wxAppId;
     }
 
-    public Integer getTemplateId() {
-        return templateId;
+    public Integer getTemplateType() {
+        return templateType;
     }
 
-    public void setTemplateId(Integer templateId) {
-        this.templateId = templateId;
+    public void setTemplateType(Integer templateType) {
+        this.templateType = templateType;
     }
 
     public String getStockIdList() {
@@ -85,7 +85,7 @@ public class WxMarketingActivity implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
         sb.append(", wxAppId=").append(wxAppId);
-        sb.append(", templateId=").append(templateId);
+        sb.append(", templateType=").append(templateType);
         sb.append(", stockIdList=").append(stockIdList);
         sb.append(", urlLink=").append(urlLink);
         sb.append(", createTime=").append(createTime);

@@ -5,7 +5,7 @@
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
-    <result column="template_id" jdbcType="INTEGER" property="templateId" />
+    <result column="template_type" jdbcType="INTEGER" property="templateType" />
     <result column="stock_id_list" jdbcType="VARCHAR" property="stockIdList" />
     <result column="url_link" jdbcType="VARCHAR" property="urlLink" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -69,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, wx_app_id, template_id, stock_id_list, url_link, create_time
+    id, name, wx_app_id, template_type, stock_id_list, url_link, create_time
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExample" resultMap="BaseResultMap">
     select
@@ -95,10 +95,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_marketing_activity (name, wx_app_id, template_id, 
+    insert into wx_marketing_activity (name, wx_app_id, template_type, 
       stock_id_list, url_link, create_time
       )
-    values (#{name,jdbcType=VARCHAR}, #{wxAppId,jdbcType=INTEGER}, #{templateId,jdbcType=INTEGER}, 
+    values (#{name,jdbcType=VARCHAR}, #{wxAppId,jdbcType=INTEGER}, #{templateType,jdbcType=INTEGER}, 
       #{stockIdList,jdbcType=VARCHAR}, #{urlLink,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -114,8 +114,8 @@
       <if test="wxAppId != null">
         wx_app_id,
       </if>
-      <if test="templateId != null">
-        template_id,
+      <if test="templateType != null">
+        template_type,
       </if>
       <if test="stockIdList != null">
         stock_id_list,
@@ -134,8 +134,8 @@
       <if test="wxAppId != null">
         #{wxAppId,jdbcType=INTEGER},
       </if>
-      <if test="templateId != null">
-        #{templateId,jdbcType=INTEGER},
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
       </if>
       <if test="stockIdList != null">
         #{stockIdList,jdbcType=VARCHAR},
@@ -166,8 +166,8 @@
       <if test="record.wxAppId != null">
         wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
       </if>
-      <if test="record.templateId != null">
-        template_id = #{record.templateId,jdbcType=INTEGER},
+      <if test="record.templateType != null">
+        template_type = #{record.templateType,jdbcType=INTEGER},
       </if>
       <if test="record.stockIdList != null">
         stock_id_list = #{record.stockIdList,jdbcType=VARCHAR},
@@ -188,7 +188,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       name = #{record.name,jdbcType=VARCHAR},
       wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
-      template_id = #{record.templateId,jdbcType=INTEGER},
+      template_type = #{record.templateType,jdbcType=INTEGER},
       stock_id_list = #{record.stockIdList,jdbcType=VARCHAR},
       url_link = #{record.urlLink,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}

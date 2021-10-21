@@ -103,7 +103,7 @@ declare namespace API {
     id: number;
     name: string;
     wxAppId: number;
-    templateId: number;
+    templateType: number;
     stockIdList: string;
     urlLink: string;
     createTime: string;

@@ -295,63 +295,63 @@ public class WxMarketingActivityExample {
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdIsNull() {
-            addCriterion("template_id is null");
+        public Criteria andTemplateTypeIsNull() {
+            addCriterion("template_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdIsNotNull() {
-            addCriterion("template_id is not null");
+        public Criteria andTemplateTypeIsNotNull() {
+            addCriterion("template_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdEqualTo(Integer value) {
-            addCriterion("template_id =", value, "templateId");
+        public Criteria andTemplateTypeEqualTo(Integer value) {
+            addCriterion("template_type =", value, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdNotEqualTo(Integer value) {
-            addCriterion("template_id <>", value, "templateId");
+        public Criteria andTemplateTypeNotEqualTo(Integer value) {
+            addCriterion("template_type <>", value, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdGreaterThan(Integer value) {
-            addCriterion("template_id >", value, "templateId");
+        public Criteria andTemplateTypeGreaterThan(Integer value) {
+            addCriterion("template_type >", value, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("template_id >=", value, "templateId");
+        public Criteria andTemplateTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("template_type >=", value, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdLessThan(Integer value) {
-            addCriterion("template_id <", value, "templateId");
+        public Criteria andTemplateTypeLessThan(Integer value) {
+            addCriterion("template_type <", value, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdLessThanOrEqualTo(Integer value) {
-            addCriterion("template_id <=", value, "templateId");
+        public Criteria andTemplateTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("template_type <=", value, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdIn(List<Integer> values) {
-            addCriterion("template_id in", values, "templateId");
+        public Criteria andTemplateTypeIn(List<Integer> values) {
+            addCriterion("template_type in", values, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdNotIn(List<Integer> values) {
-            addCriterion("template_id not in", values, "templateId");
+        public Criteria andTemplateTypeNotIn(List<Integer> values) {
+            addCriterion("template_type not in", values, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdBetween(Integer value1, Integer value2) {
-            addCriterion("template_id between", value1, value2, "templateId");
+        public Criteria andTemplateTypeBetween(Integer value1, Integer value2) {
+            addCriterion("template_type between", value1, value2, "templateType");
             return (Criteria) this;
         }
 
-        public Criteria andTemplateIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("template_id not between", value1, value2, "templateId");
+        public Criteria andTemplateTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("template_type not between", value1, value2, "templateType");
             return (Criteria) this;
         }
 
