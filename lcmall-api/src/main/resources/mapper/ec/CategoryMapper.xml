@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.ec.CategoryDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.ec.CategoryDao">
 
-    <resultMap id="CategoryResultMap" type="com.lcsays.gg.models.ec.Category">
+    <resultMap id="CategoryResultMap" type="com.lcsays.lcmall.api.models.ec.Category">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <association property="wxApp"
-                     javaType="com.lcsays.gg.models.manager.WxApp"
+                     javaType="com.lcsays.lcmall.api.models.manager.WxApp"
                      column="wx_app_id"
-                     select="com.lcsays.gg.dao.manager.WxAppDao.getWxAppById">
+                     select="com.lcsays.lcmall.api.dao.manager.WxAppDao.getWxAppById">
         </association>
     </resultMap>
 

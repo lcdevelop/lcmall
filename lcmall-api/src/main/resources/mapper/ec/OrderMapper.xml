@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.ec.OrderDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.ec.OrderDao">
 
-    <resultMap id="OrderResultMap" type="com.lcsays.gg.models.ec.Order">
+    <resultMap id="OrderResultMap" type="com.lcsays.lcmall.api.models.ec.Order">
         <id column="id" property="id" />
         <result column="out_trade_no" property="outTradeNo" />
         <result column="transaction_id" property="transactionId" />
@@ -17,24 +17,24 @@
     </resultMap>
 
     <resultMap id="OrderWithAffiliateResultMap"
-               type="com.lcsays.gg.models.ec.Order"
+               type="com.lcsays.lcmall.api.models.ec.Order"
                extends="OrderResultMap">
         <association property="wxApp"
-                     javaType="com.lcsays.gg.models.manager.WxApp"
+                     javaType="com.lcsays.lcmall.api.models.manager.WxApp"
                      column="wx_app_id"
-                     select="com.lcsays.gg.dao.manager.WxAppDao.getWxAppById" />
+                     select="com.lcsays.lcmall.api.dao.manager.WxAppDao.getWxAppById" />
         <association property="wxMaUser"
                      column="wx_ma_user_id"
-                     select="com.lcsays.gg.dao.weixin.WxMaUserDao.getWxMaUserBySimpleId" />
+                     select="com.lcsays.lcmall.api.dao.weixin.WxMaUserDao.getWxMaUserBySimpleId" />
         <association property="address"
                      column="address_id"
-                     select="com.lcsays.gg.dao.weixin.AddressDao.getAddressById" />
+                     select="com.lcsays.lcmall.api.dao.weixin.AddressDao.getAddressById" />
         <collection property="affiliateList"
                     column="id"
-                    select="com.lcsays.gg.dao.ec.OrderDao.getOrderAffiliatesByOrderId" />
+                    select="com.lcsays.lcmall.api.dao.ec.OrderDao.getOrderAffiliatesByOrderId" />
         <collection property="expressType"
                     column="express_type_id"
-                    select="com.lcsays.gg.dao.ec.ExpressDao.getExpressTypeById" />
+                    select="com.lcsays.lcmall.api.dao.ec.ExpressDao.getExpressTypeById" />
     </resultMap>
 
     <insert id="createOrder" useGeneratedKeys="true" keyProperty="id">
@@ -54,7 +54,7 @@
         SELECT * FROM ec_order WHERE id=#{id} LIMIT 1
     </select>
 
-    <select id="orderList" parameterType="com.lcsays.gg.models.weixin.WxMaUser" resultMap="OrderWithAffiliateResultMap">
+    <select id="orderList" parameterType="com.lcsays.lcmall.api.models.weixin.WxMaUser" resultMap="OrderWithAffiliateResultMap">
         SELECT * FROM ec_order WHERE wx_ma_user_id=#{id} AND is_del=0 ORDER BY create_time DESC LIMIT 1000
     </select>
 
@@ -68,7 +68,7 @@
         LIMIT 10000
     </select>
 
-    <update id="updateOrder" parameterType="com.lcsays.gg.models.ec.Order">
+    <update id="updateOrder" parameterType="com.lcsays.lcmall.api.models.ec.Order">
         UPDATE ec_order
         SET address_id=#{order.address.id}, transaction_id=#{order.transactionId},
             status=#{order.status}, trade_status=#{order.tradeStatus}, success_time=#{order.successTime},

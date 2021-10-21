@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.ec.ProductDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.ec.ProductDao">
 
-    <resultMap id="ProductResultMap" type="com.lcsays.gg.models.ec.Product">
+    <resultMap id="ProductResultMap" type="com.lcsays.lcmall.api.models.ec.Product">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="description" property="description" />
     </resultMap>
 
     <resultMap id="ProductWithCategoryResultMap"
-               type="com.lcsays.gg.models.ec.Product"
+               type="com.lcsays.lcmall.api.models.ec.Product"
                extends="ProductResultMap">
-        <association property="category" javaType="com.lcsays.gg.models.ec.Category" autoMapping="true">
+        <association property="category" javaType="com.lcsays.lcmall.api.models.ec.Category" autoMapping="true">
             <id column="category_id" property="id" />
             <result column="category_name" property="name" />
         </association>
@@ -35,11 +35,11 @@
         </if>
     </select>
 
-    <insert id="createProduct" parameterType="com.lcsays.gg.models.ec.Product" useGeneratedKeys="true" keyProperty="id">
+    <insert id="createProduct" parameterType="com.lcsays.lcmall.api.models.ec.Product" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO ec_product(name, description, category_id) VALUES(#{product.name}, #{product.description}, #{product.category.id})
     </insert>
 
-    <update id="updateProduct" parameterType="com.lcsays.gg.models.ec.Product">
+    <update id="updateProduct" parameterType="com.lcsays.lcmall.api.models.ec.Product">
         UPDATE ec_product
         SET name=#{product.name}, description=#{product.description}, category_id=#{product.category.id}
         WHERE id=#{product.id}

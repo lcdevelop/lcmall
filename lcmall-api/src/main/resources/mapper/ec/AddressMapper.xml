@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.weixin.AddressDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.weixin.AddressDao">
 
-    <resultMap id="AddressResultMap" type="com.lcsays.gg.models.ec.Address">
+    <resultMap id="AddressResultMap" type="com.lcsays.lcmall.api.models.ec.Address">
         <id column="id" property="id" />
         <result column="wx_ma_user_id" property="wxMaUserId" />
         <result column="name" property="name" />
@@ -11,7 +11,7 @@
         <result column="address" property="address" />
     </resultMap>
 
-    <select id="getAddressesByUser" parameterType="com.lcsays.gg.models.weixin.WxMaUser" resultMap="AddressResultMap">
+    <select id="getAddressesByUser" parameterType="com.lcsays.lcmall.api.models.weixin.WxMaUser" resultMap="AddressResultMap">
         SELECT * FROM ec_address WHERE wx_ma_user_id=#{wxMaUser.id} AND is_del=0
     </select>
 

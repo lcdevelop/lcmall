@@ -32,7 +32,7 @@ server:
 spring:
     datasource:
         address: rm-2zes*******0x2udo.mysql.rds.aliyuncs.com:3306
-        database: gg
+        database: lcmall
         username: username1
         password: f*******uG
         driver-class-name: com.mysql.jdbc.Driver
@@ -50,7 +50,7 @@ oss:
     keyId: Abv*******sGZP
     keySecret: r89*******BNBwI
     bucketName: zsenselink
-    fileHost: lcsays/gg
+    fileHost: lcsays/lcmall
 
 manager:
     platformAppId: wx******

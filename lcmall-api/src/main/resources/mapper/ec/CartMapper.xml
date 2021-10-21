@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.ec.CartDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.ec.CartDao">
 
     <resultMap id="CartResultMap"
-               type="com.lcsays.gg.models.ec.Cart">
+               type="com.lcsays.lcmall.api.models.ec.Cart">
         <id column="id" property="id" />
         <result column="wx_ma_user_id" property="wxMaUserId" />
         <result column="count" property="count" />
         <association property="sku"
-                     javaType="com.lcsays.gg.models.ec.Sku"
+                     javaType="com.lcsays.lcmall.api.models.ec.Sku"
                      column="sku_id"
-                     select="com.lcsays.gg.dao.ec.SkuDao.getSkuById">
+                     select="com.lcsays.lcmall.api.dao.ec.SkuDao.getSkuById">
         </association>
     </resultMap>
 
-    <select id="getCartsByUser" parameterType="com.lcsays.gg.models.weixin.WxMaUser" resultMap="CartResultMap">
+    <select id="getCartsByUser" parameterType="com.lcsays.lcmall.api.models.weixin.WxMaUser" resultMap="CartResultMap">
         SELECT * FROM ec_cart WHERE wx_ma_user_id=#{wxMaUser.id}
     </select>
 
@@ -48,7 +48,7 @@
         </if>
     </update>
 
-    <select id="getCountInCart" parameterType="com.lcsays.gg.models.weixin.WxMaUser" resultType="java.lang.Integer">
+    <select id="getCountInCart" parameterType="com.lcsays.lcmall.api.models.weixin.WxMaUser" resultType="java.lang.Integer">
         SELECT IFNULL(sum(`count`), 0) FROM ec_cart WHERE wx_ma_user_id=#{wxMaUser.id}
     </select>
 </mapper>

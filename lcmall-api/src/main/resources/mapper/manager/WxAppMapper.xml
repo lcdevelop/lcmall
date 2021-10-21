@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.manager.WxAppDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.manager.WxAppDao">
 
-    <resultMap id="WxAppResultMap" type="com.lcsays.gg.models.manager.WxApp">
+    <resultMap id="WxAppResultMap" type="com.lcsays.lcmall.api.models.manager.WxApp">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="app_id" property="appId" />

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.ec.SkuDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.ec.SkuDao">
 
-    <resultMap id="SkuResultMap" type="com.lcsays.gg.models.ec.Sku">
+    <resultMap id="SkuResultMap" type="com.lcsays.lcmall.api.models.ec.Sku">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="image" property="image" />
@@ -11,21 +11,19 @@
     </resultMap>
 
     <resultMap id="SkuWithProductResultMap"
-               type="com.lcsays.gg.models.ec.Sku"
+               type="com.lcsays.lcmall.api.models.ec.Sku"
                extends="SkuResultMap">
-        <association property="product" javaType="com.lcsays.gg.models.ec.Product" autoMapping="true">
+        <association property="product" javaType="com.lcsays.lcmall.api.models.ec.Product" autoMapping="true">
             <id column="product_id" property="id" />
             <result column="product_name" property="name" />
             <result column="product_description" property="description" />
         </association>
-        <association property="price" javaType="com.lcsays.gg.models.ec.Price" autoMapping="true">
+        <association property="price" javaType="com.lcsays.lcmall.api.models.ec.Price" autoMapping="true">
             <id column="price_id" property="id" />
             <result column="price_policy" property="policy" />
             <result column="price_price" property="price" />
         </association>
 
-<!--        <collection property="specList" column="id" select="com.lcsays.gg.dao.ec.SkuDao.getSpecsBySkuId">-->
-<!--        </collection>-->
     </resultMap>
 
     <select id="getSkusByAppId" resultMap="SkuWithProductResultMap">
@@ -64,11 +62,11 @@
         WHERE s.id=#{skuId}
     </select>
 
-    <insert id="createSku" parameterType="com.lcsays.gg.models.ec.Sku" useGeneratedKeys="true" keyProperty="id">
+    <insert id="createSku" parameterType="com.lcsays.lcmall.api.models.ec.Sku" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO ec_sku(name, product_id, image, specs) VALUES(#{sku.name}, #{sku.product.id}, #{sku.image}, #{sku.specs})
     </insert>
 
-    <update id="updateSku" parameterType="com.lcsays.gg.models.ec.Sku">
+    <update id="updateSku" parameterType="com.lcsays.lcmall.api.models.ec.Sku">
         UPDATE ec_sku
         SET name=#{sku.name}, product_id=#{sku.product.id}, image=#{sku.image}, specs=#{sku.specs}
         WHERE id=#{sku.id}

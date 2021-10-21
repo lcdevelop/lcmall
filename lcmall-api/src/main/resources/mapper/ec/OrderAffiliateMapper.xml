@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lcsays.gg.dao.ec.OrderDao">
+<mapper namespace="com.lcsays.lcmall.api.dao.ec.OrderDao">
 
-    <resultMap id="OrderAffiliateResultMap" type="com.lcsays.gg.models.ec.OrderAffiliate">
+    <resultMap id="OrderAffiliateResultMap" type="com.lcsays.lcmall.api.models.ec.OrderAffiliate">
         <id column="id" property="id" />
         <result column="count" property="count" />
         <result column="price" property="price" />
     </resultMap>
 
     <resultMap id="OrderAffiliateWithSkuResultMap"
-               type="com.lcsays.gg.models.ec.OrderAffiliate"
+               type="com.lcsays.lcmall.api.models.ec.OrderAffiliate"
                extends="OrderAffiliateResultMap">
         <association property="sku"
-                     javaType="com.lcsays.gg.models.ec.Sku"
+                     javaType="com.lcsays.lcmall.api.models.ec.Sku"
                      column="sku_id"
-                     select="com.lcsays.gg.dao.ec.SkuDao.getSkuById">
+                     select="com.lcsays.lcmall.api.dao.ec.SkuDao.getSkuById">
         </association>
     </resultMap>
 
