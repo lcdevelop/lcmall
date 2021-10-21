@@ -1,0 +1,95 @@
+package com.lcsays.lcmall.db.model;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class WxMarketingActivity implements Serializable {
+    private Integer id;
+
+    private String name;
+
+    private Integer wxAppId;
+
+    private Integer templateId;
+
+    private String stockIdList;
+
+    private String urlLink;
+
+    private Date createTime;
+
+    private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getWxAppId() {
+        return wxAppId;
+    }
+
+    public void setWxAppId(Integer wxAppId) {
+        this.wxAppId = wxAppId;
+    }
+
+    public Integer getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Integer templateId) {
+        this.templateId = templateId;
+    }
+
+    public String getStockIdList() {
+        return stockIdList;
+    }
+
+    public void setStockIdList(String stockIdList) {
+        this.stockIdList = stockIdList;
+    }
+
+    public String getUrlLink() {
+        return urlLink;
+    }
+
+    public void setUrlLink(String urlLink) {
+        this.urlLink = urlLink;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", name=").append(name);
+        sb.append(", wxAppId=").append(wxAppId);
+        sb.append(", templateId=").append(templateId);
+        sb.append(", stockIdList=").append(stockIdList);
+        sb.append(", urlLink=").append(urlLink);
+        sb.append(", createTime=").append(createTime);
+        sb.append("]");
+        return sb.toString();
+    }
+}
