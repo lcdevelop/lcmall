@@ -11,9 +11,10 @@ const pauseStockApiPath = apiPathPrefix + '/pauseStock';
 const restartStockApiPath = apiPathPrefix + '/restartStock';
 const wxMarketingStockApiPath = apiPathPrefix + '/wxMarketingStock';
 const whitelistApiPath = apiPathPrefix + '/whitelist';
-const setCallbacksApiPath = apiPathPrefix +'/setCallbacks';
-const getCallbacksApiPath = apiPathPrefix +'/getCallbacks';
-const couponStatisticsApiPath = apiPathPrefix +'/couponStatistics';
+const setCallbacksApiPath = apiPathPrefix + '/setCallbacks';
+const getCallbacksApiPath = apiPathPrefix + '/getCallbacks';
+const couponStatisticsApiPath = apiPathPrefix + '/couponStatistics';
+const activityApiPath = apiPathPrefix + '/activity';
 
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
@@ -80,8 +81,9 @@ export async function restartStock(params: {
 }
 
 export async function generateMaLink(params: {
-  appId: string,
-  stockId: string,
+  appId: string;
+  activityId: number,
+  templateId: number,
 }, options?: { [key: string]: any }) {
   return request<API.Response<any>>(`/api/wx/ma/${params.appId}/marketing/generateUrlLink`, {
     method: 'GET',
@@ -142,4 +144,19 @@ export async function couponStatistics(options?: { [key: string]: any }) {
     method: 'GET',
     ...(options || {}),
   });
+}
+
+/* activity api */
+export async function activity(params?: ParamsType, options?: OptionsType) {
+  return new Promise<any>((resolve, reject) => {
+    op<API.WxMarketingActivity>(activityApiPath, OP_GET, undefined, params, options)
+      .then((res) => {resolve(res);}, (err) => {reject(err);})
+  })
+}
+
+export async function updateActivity(body?: API.WxMarketingActivity, params?: ParamsType, options?: OptionsType) {
+  return new Promise<any>((resolve, reject) => {
+    op<API.WxMarketingActivity>(activityApiPath, OP_MOD, body, params, options)
+      .then((res) => {resolve(res);}, (err) => {reject(err);})
+  })
 }

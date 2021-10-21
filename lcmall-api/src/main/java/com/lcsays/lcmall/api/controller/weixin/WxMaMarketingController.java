@@ -158,11 +158,13 @@ public class WxMaMarketingController {
     }
 
     @GetMapping("/generateUrlLink")
-    public BaseModel<String> generateUrlLink(@PathVariable String appId, String stockId) {
+    public BaseModel<String> generateUrlLink(@PathVariable String appId,
+                                             @RequestParam Integer activityId,
+                                             @RequestParam Integer templateId) {
         try {
             GenerateUrlLinkRequest request = GenerateUrlLinkRequest.builder().build();
             request.setPath("/pages/stock/index");
-            request.setQuery("?stockId=" + stockId);
+            request.setQuery("?activityId=" + activityId + "&templateId=" + templateId);
             request.setIsExpire(false);
             String result = wxMaService.switchoverTo(appId).getLinkService().generateUrlLink(request);
             result = result.replaceAll("\"", "");

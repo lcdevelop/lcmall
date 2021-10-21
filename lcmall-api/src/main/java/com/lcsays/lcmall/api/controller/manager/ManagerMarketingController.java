@@ -16,6 +16,7 @@ import com.lcsays.lcmall.api.utils.TimeUtils;
 import com.lcsays.lcmall.db.model.*;
 import com.lcsays.lcmall.db.service.*;
 import com.lcsays.lcmall.db.util.WxMaUserUtil;
+import com.lcsays.lcmall.db.util.WxMarketingActivityUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -65,6 +66,9 @@ public class ManagerMarketingController {
 
     @Resource
     WxMarketingCouponService wxMarketingCouponService;
+
+    @Resource
+    WxMarketingActivityService wxMarketingActivityService;
 
     @GetMapping("/whitelist")
     public BaseModel<List<WxMarketingWhitelist>> whitelist(HttpSession session,
@@ -225,8 +229,6 @@ public class ManagerMarketingController {
 
             wxMarketingStock.setWxAppId(user.getSessionWxAppId());
 
-            String curMchId = WxMaUserUtil.getSessionWxApp(user, wxAppService).getMchId();
-
             try {
                 int ret = createOrUpdateMarketingStock(wxMarketingStock);
                 if (ret > 0) {
@@ -320,6 +322,36 @@ public class ManagerMarketingController {
                 e.printStackTrace();
                 log.error(e.getMessage());
                 return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+            }
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    @GetMapping("/activity")
+    public BaseModel<List<WxMarketingActivity>> getActivity(HttpSession session,
+                                                                @RequestParam("current") Integer current,
+                                                                @RequestParam("pageSize") Integer pageSize) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            List<WxMarketingActivity> activities = wxMarketingActivityService.queryByWxAppId(user.getSessionWxAppId());
+            return BaseModel.success(activities);
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    @PutMapping("/activity")
+    public BaseModel<String> updateActivity(HttpSession session, @RequestBody WxMarketingActivity activity) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+            if (wxMarketingActivityService.update(activity) > 0) {
+                return BaseModel.success();
+            } else {
+                return BaseModel.error(ErrorCode.DAO_ERROR);
             }
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);

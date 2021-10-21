@@ -38,6 +38,7 @@ export default [
       { path: '/marketing/stock/list', name: '代金券批次', component: './Coupon/stockList'},
       { path: '/marketing/stock/data', name: '代金券批次(全部)', component: './Coupon/stock', hideInMenu: true},
       { path: '/marketing/stock/detail/:stockId', name: '代金券批次详情', component: './Coupon/stockDetail', hideInMenu:true},
+      { path: '/marketing/activity/list', name: '活动', component: './Coupon/activity'},
       { path: '/marketing/whitelist', name: '白名单管理', component: './Coupon/whitelist'},
       { path: '/marketing/statistics', name: '数据统计', component: './Coupon/statistics'},
       { path: '/marketing/system', name: '系统设置', component: './Coupon/system'},

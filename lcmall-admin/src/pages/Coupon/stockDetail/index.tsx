@@ -1,13 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Button, message, Popconfirm, Modal} from 'antd';
+import {Button, message, Popconfirm} from 'antd';
 import ProCard, {StatisticCard} from '@ant-design/pro-card';
-import {useModel} from "@@/plugin-model/useModel";
+// import {useModel} from "@@/plugin-model/useModel";
 import {
   startStock,
   pauseStock,
   restartStock,
   stockDetail,
-  generateMaLink,
   updateWxMarketingStock,
   getWxMarketingStockByStockId
 } from "@/services/manager/marketing/api";
@@ -22,7 +21,7 @@ export type StockDetailProps = {
 
 const StockDetail: React.FC<StockDetailProps> = (props) => {
 
-  const { initialState } = useModel('@@initialState');
+  // const { initialState } = useModel('@@initialState');
   const [stock, setStock] = useState<API.Stock>();
   const [cardId, setCardId] = useState<string>();
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -91,30 +90,30 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
     }
   }
 
-  const onGenerateMaLink = () => {
-    if (cardId === undefined || cardId === null) {
-      message.warning('请先完善卡包ID信息').then();
-      return;
-    }
-
-    if (undefined !== stock && null !== stock.stockId) {
-      generateMaLink({appId: initialState?.currentWxUser?.sessionWxApp.appId!, stockId: stock.stockId}).then(res => {
-        if (res.code === 200) {
-          Modal.info({
-            title: '生成链接成功',
-            content: (
-              <div>
-                <p>如下是此批次专属链接，请保存好，可用于短信发送</p>
-                <p>{res.data}</p>
-              </div>
-            )
-          })
-        } else {
-          message.error(res.msg).then();
-        }
-      })
-    }
-  }
+  // const onGenerateMaLink = () => {
+  //   if (cardId === undefined || cardId === null) {
+  //     message.warning('请先完善卡包ID信息').then();
+  //     return;
+  //   }
+  //
+  //   if (undefined !== stock && null !== stock.stockId) {
+  //     generateMaLink({appId: initialState?.currentWxUser?.sessionWxApp.appId!, stockId: stock.stockId}).then(res => {
+  //       if (res.code === 200) {
+  //         Modal.info({
+  //           title: '生成链接成功',
+  //           content: (
+  //             <div>
+  //               <p>如下是此批次专属链接，请保存好，可用于短信发送</p>
+  //               <p>{res.data}</p>
+  //             </div>
+  //           )
+  //         })
+  //       } else {
+  //         message.error(res.msg).then();
+  //       }
+  //     })
+  //   }
+  // }
 
   const handleUpdateInfo = (ms: API.WxMarketingStock) => {
     return updateWxMarketingStock(ms);
@@ -164,8 +163,8 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
         <Button type={"primary"}>重启</Button>
       </Popconfirm>
 
-      <span style={{marginLeft: '10px'}} />
-      <Button type={"primary"} onClick={onGenerateMaLink}>生成链接</Button>
+      {/*<span style={{marginLeft: '10px'}} />*/}
+      {/*<Button type={"primary"} onClick={onGenerateMaLink}>生成链接</Button>*/}
 
       <Divider />
       <ProCard.Group>

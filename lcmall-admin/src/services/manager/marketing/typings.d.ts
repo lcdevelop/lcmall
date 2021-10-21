@@ -98,4 +98,14 @@ declare namespace API {
     wxMaUserHasPhoneNumber: boolean;
     couponsInfo: CouponsInfo;
   }
+
+  type WxMarketingActivity = {
+    id: number;
+    name: string;
+    wxAppId: number;
+    templateId: number;
+    stockIdList: string;
+    urlLink: string;
+    createTime: string;
+  }
 }
