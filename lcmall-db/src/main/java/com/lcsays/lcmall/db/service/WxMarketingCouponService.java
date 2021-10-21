@@ -38,10 +38,10 @@ public class WxMarketingCouponService {
         }
     }
 
-    public List<WxMarketingCoupon> queryAll() {
+    public List<WxMarketingCoupon> queryByWxAppId(Integer wxAppId) {
         WxMarketingCouponExample example = new WxMarketingCouponExample();
         WxMarketingCouponExample.Criteria criteria = example.createCriteria();
-        criteria.andIdIsNotNull();
+        criteria.andWxAppIdEqualTo(wxAppId);
         return marketingCouponMapper.selectByExample(example);
     }
 

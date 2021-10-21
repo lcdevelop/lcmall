@@ -49,10 +49,11 @@ public class WxMarketingStockService {
         }
     }
 
-    public Map<String, WxMarketingStock> getStocksMap() {
+    public Map<String, WxMarketingStock> getStocksMapByWxAppId(Integer wxAppId) {
         Map<String, WxMarketingStock> ret = new HashMap<>();
         WxMarketingStockExample example = new WxMarketingStockExample();
         WxMarketingStockExample.Criteria criteria = example.createCriteria();
+        criteria.andWxAppIdEqualTo(wxAppId);
         criteria.andIdIsNotNull();
         for (WxMarketingStock stock: marketingStockMapper.selectByExample(example)) {
             ret.put(stock.getStockId(), stock);

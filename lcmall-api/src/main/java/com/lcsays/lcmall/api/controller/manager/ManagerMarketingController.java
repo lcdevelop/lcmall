@@ -387,14 +387,18 @@ public class ManagerMarketingController {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
 
+            // 找出当前要统计哪个商户
+            WxApp wxApp = WxMaUserUtil.getSessionWxApp(user, wxAppService);
+            Integer curWxAppId = wxApp.getId();
+
             // 加载map(电话,用户)表
             Map<String, WxMaUser> usersWithPhoneNumberMap = new HashMap<>();
-            for (WxMaUser u: wxMaUserService.listUsersWithPhoneNumber()) {
+            for (WxMaUser u: wxMaUserService.listUsersWithPhoneNumberByWxAppId(curWxAppId)) {
                 usersWithPhoneNumberMap.put(u.getPhoneNumber(), u);
             }
 
             // 加载map(stockId, Stock)表
-            Map<String, WxMarketingStock> stocksMap = wxMarketingStockService.getStocksMap();
+            Map<String, WxMarketingStock> stocksMap = wxMarketingStockService.getStocksMapByWxAppId(curWxAppId);
             for (WxMarketingStock stock: stocksMap.values()) {
                 if (stock.getStockName() == null) {
                     try {
@@ -408,7 +412,7 @@ public class ManagerMarketingController {
 
             // 加载map(用户id,coupon)表
             Map<Integer, CouponStatistics.CouponsInfo> userCouponsInfoMap = new HashMap<>();
-            for (WxMarketingCoupon coupon: wxMarketingCouponService.queryAll()) {
+            for (WxMarketingCoupon coupon: wxMarketingCouponService.queryByWxAppId(curWxAppId)) {
                 Integer wxMaUserId = coupon.getWxMaUserId();
                 if (userCouponsInfoMap.containsKey(wxMaUserId)) {
                     CouponStatistics.CouponsInfo couponsInfo = userCouponsInfoMap.get(wxMaUserId);
