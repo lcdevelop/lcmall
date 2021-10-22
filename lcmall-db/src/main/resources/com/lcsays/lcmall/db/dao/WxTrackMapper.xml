@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcsays.lcmall.db.dao.WxTrackMapper">
+  <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxTrack">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="wx_ma_user_id" jdbcType="INTEGER" property="wxMaUserId" />
+    <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
+    <result column="event_type" jdbcType="VARCHAR" property="eventType" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="ua" jdbcType="VARCHAR" property="ua" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, wx_ma_user_id, wx_app_id, event_type, msg, ua, ip, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxTrackExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wx_track
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxTrackExample">
+    delete from wx_track
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.lcsays.lcmall.db.model.WxTrack">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wx_track (wx_ma_user_id, wx_app_id, event_type, 
+      msg, ua, ip, create_time
+      )
+    values (#{wxMaUserId,jdbcType=INTEGER}, #{wxAppId,jdbcType=INTEGER}, #{eventType,jdbcType=VARCHAR}, 
+      #{msg,jdbcType=VARCHAR}, #{ua,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxTrack">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wx_track
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wxMaUserId != null">
+        wx_ma_user_id,
+      </if>
+      <if test="wxAppId != null">
+        wx_app_id,
+      </if>
+      <if test="eventType != null">
+        event_type,
+      </if>
+      <if test="msg != null">
+        msg,
+      </if>
+      <if test="ua != null">
+        ua,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wxMaUserId != null">
+        #{wxMaUserId,jdbcType=INTEGER},
+      </if>
+      <if test="wxAppId != null">
+        #{wxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="eventType != null">
+        #{eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="ua != null">
+        #{ua,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.lcsays.lcmall.db.model.WxTrackExample" resultType="java.lang.Long">
+    select count(*) from wx_track
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wx_track
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.wxMaUserId != null">
+        wx_ma_user_id = #{record.wxMaUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.wxAppId != null">
+        wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="record.eventType != null">
+        event_type = #{record.eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msg != null">
+        msg = #{record.msg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ua != null">
+        ua = #{record.ua,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ip != null">
+        ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wx_track
+    set id = #{record.id,jdbcType=INTEGER},
+      wx_ma_user_id = #{record.wxMaUserId,jdbcType=INTEGER},
+      wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
+      event_type = #{record.eventType,jdbcType=VARCHAR},
+      msg = #{record.msg,jdbcType=VARCHAR},
+      ua = #{record.ua,jdbcType=VARCHAR},
+      ip = #{record.ip,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

@@ -3,6 +3,7 @@ import {PageContainer} from "@ant-design/pro-layout";
 import {activity, generateMaLink, updateActivity} from "@/services/manager/marketing/api";
 import ProTable, {ActionType, ProColumns} from "@ant-design/pro-table";
 import {useModel} from "@@/plugin-model/useModel";
+import {message} from "antd";
 
 const Statistics: React.FC = () => {
 
@@ -58,6 +59,8 @@ const Statistics: React.FC = () => {
                       actionRef.current?.reload();
                     }
                   })
+                } else {
+                  message.error(res.msg).then();
                 }
               })
             }}>生成</a>

@@ -234,6 +234,9 @@ public class WxMaMarketingController {
 
         for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
             WxMarketingStock stock = wxMarketingStockService.queryByStockId(stockId);
+            if (null == stock) {
+                return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "stock信息为空，请去详情完善信息,stockId:" + stockId);
+            }
             if (StringUtils.isEmpty(stock.getCardId())) {
                 return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "还没填写CardId,stockId:" + stockId);
             }

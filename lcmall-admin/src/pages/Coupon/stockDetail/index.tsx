@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Button, message, Popconfirm} from 'antd';
+import {Button, message, Popconfirm, Tooltip, Typography } from 'antd';
 import ProCard, {StatisticCard} from '@ant-design/pro-card';
 // import {useModel} from "@@/plugin-model/useModel";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/services/manager/marketing/api";
 import {ModalForm, ProFormInstance, ProFormText} from "@ant-design/pro-form";
 import styles from './index.less';
+import {InfoCircleOutlined} from "@ant-design/icons";
 
 const { Divider } = ProCard;
 
@@ -250,6 +251,9 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
           name="cardId"
           placeholder='请输入卡包ID'
         />
+        <Tooltip title="前往微信支付平台">
+          <Typography.Link target={"_blank"} href={'https://pay.weixin.qq.com/index.php/extend/mktaccount/getstockdetail?stockid=' + stock.stockId}>去哪找卡包ID</Typography.Link>
+        </Tooltip>
       </ModalForm>
     </div>
   );

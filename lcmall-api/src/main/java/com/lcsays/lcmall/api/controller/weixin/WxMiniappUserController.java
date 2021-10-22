@@ -10,9 +10,11 @@ import com.lcsays.lcmall.api.utils.SessionUtils;
 import com.lcsays.lcmall.db.model.EcAddress;
 import com.lcsays.lcmall.db.model.WxApp;
 import com.lcsays.lcmall.db.model.WxMaUser;
+import com.lcsays.lcmall.db.model.WxTrack;
 import com.lcsays.lcmall.db.service.EcAddressService;
 import com.lcsays.lcmall.db.service.WxAppService;
 import com.lcsays.lcmall.db.service.WxMaUserService;
+import com.lcsays.lcmall.db.service.WxTrackService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -20,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -44,6 +47,9 @@ public class WxMiniappUserController {
 
     @Resource
     EcAddressService ecAddressService;
+
+    @Resource
+    WxTrackService wxTrackService;
 
     @Data
     private static class DecryptPhoneNumberParam {
@@ -152,6 +158,31 @@ public class WxMiniappUserController {
         }
     }
 
+    @GetMapping("/track")
+    public BaseModel<String> track(HttpSession session,
+                                   HttpServletRequest request,
+                                   @PathVariable String appId,
+                                   @RequestParam String eventType,
+                                   @RequestParam String msg) {
+        WxTrack track = new WxTrack();
+        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+        if (null != wxMaUser) {
+            track.setWxMaUserId(wxMaUser.getId());
+            track.setWxAppId(wxMaUser.getWxAppId());
+        } else {
+            WxApp wxApp = wxAppService.queryByAppId(appId);
+            if (null != wxApp) {
+                track.setWxAppId(wxApp.getId());
+            }
+        }
+        track.setIp(request.getRemoteAddr());
+        track.setUa(request.getHeader("user-agent"));
+        track.setEventType(eventType);
+        track.setMsg(msg);
+        wxTrackService.track(track);
+        return BaseModel.success();
+    }
+
     @GetMapping("/get_user_display")
     public BaseModel<WxMaUser> getUserDisplay(HttpSession session, @PathVariable String appId) {
         WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
@@ -175,6 +206,7 @@ public class WxMiniappUserController {
             ret.setLanguage(wxMaUser.getLanguage());
             ret.setPhoneNumber(wxMaUser.getPhoneNumber());
             ret.setRole(wxMaUser.getRole());
+
             return BaseModel.success(ret);
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
