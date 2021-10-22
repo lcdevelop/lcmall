@@ -175,7 +175,7 @@ public class WxMiniappUserController {
                 track.setWxAppId(wxApp.getId());
             }
         }
-        track.setIp(request.getHeader("x-forwarded-for"));
+        track.setIp(request.getHeader("x-forwarded-for").split(",")[0]);
         track.setUa(request.getHeader("user-agent"));
         track.setEventType(eventType);
         track.setMsg(msg);
