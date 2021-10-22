@@ -10,13 +10,12 @@ import com.lcsays.lcmall.api.models.result.BaseModel;
 import com.lcsays.lcmall.api.models.result.WxResp;
 import com.lcsays.lcmall.api.utils.SessionUtils;
 import com.lcsays.lcmall.api.utils.TimeUtils;
-import com.lcsays.lcmall.db.model.WxApp;
-import com.lcsays.lcmall.db.model.WxMaUser;
-import com.lcsays.lcmall.db.model.WxMarketingCoupon;
-import com.lcsays.lcmall.db.model.WxMarketingStock;
+import com.lcsays.lcmall.db.model.*;
 import com.lcsays.lcmall.db.service.WxAppService;
+import com.lcsays.lcmall.db.service.WxMarketingActivityService;
 import com.lcsays.lcmall.db.service.WxMarketingCouponService;
 import com.lcsays.lcmall.db.service.WxMarketingStockService;
+import com.lcsays.lcmall.db.util.WxMarketingActivityUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxCardApiSignature;
@@ -26,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: lichuang
@@ -51,32 +52,48 @@ public class WxMpMarketingController {
     @Resource
     WxMarketingCouponService wxMarketingCouponService;
 
+    @Resource
+    WxMarketingActivityService activityService;
+
     @Data
     private static class CreateCardParam {
-        private String stockId;
+        private Integer activityId;
     }
 
     @PostMapping("/createCard")
-    public BaseModel<WxCardApiSignature> createCard(HttpSession session,
-                                                    @PathVariable String appId,
-                                                    @RequestBody CreateCardParam createCardParam
+    public BaseModel<List<WxCardApiSignature>> createCard(HttpSession session,
+                                                         @PathVariable String appId,
+                                                         @RequestBody CreateCardParam createCardParam
     ) {
-        WxMarketingStock wxMarketingStock = wxMarketingStockService.queryByStockId(createCardParam.getStockId());
-        String cardId = wxMarketingStock.getCardId();
-        String code = "abc";
-        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
-        try {
-            String[] param = {cardId, code, wxMaUser.getOpenid()};
-            WxCardApiSignature result = wxMpService.switchoverTo(appId).getCardService().createCardApiSignature(param);
-            result.setOpenId(wxMaUser.getOpenid());
-            result.setCode(code);
-            result.setCardId(cardId);
-            return BaseModel.success(result);
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-            return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+        WxMarketingActivity activity = activityService.queryById(createCardParam.getActivityId());
+        if (null == activity) {
+            return BaseModel.error(ErrorCode.PARAM_ERROR);
         }
+
+        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+
+        List<WxCardApiSignature> data = new ArrayList<>();
+
+        for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
+            WxMarketingStock wxMarketingStock = wxMarketingStockService.queryByStockId(stockId);
+            String cardId = wxMarketingStock.getCardId();
+            String code = "abc";
+
+            try {
+                String[] param = {cardId, code, wxMaUser.getOpenid()};
+                WxCardApiSignature result = wxMpService.switchoverTo(appId).getCardService().createCardApiSignature(param);
+                result.setOpenId(wxMaUser.getOpenid());
+                result.setCode(code);
+                result.setCardId(cardId);
+                data.add(result);
+            } catch (WxErrorException e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+                return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
+            }
+        }
+
+        return BaseModel.success(data);
     }
 
     /**

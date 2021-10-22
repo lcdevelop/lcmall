@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.core.env.Environment;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -67,6 +68,9 @@ public class WxMaMarketingController {
 
     @Resource
     WxMarketingActivityExtraGroupService wxMarketingActivityExtraGroupService;
+
+    @Resource
+    WxMarketingStockService wxMarketingStockService;
 
     @Data
     private static class CreateCouponParam {
@@ -142,6 +146,11 @@ public class WxMaMarketingController {
         List<FavorCouponsCreateResult> ret = new ArrayList<>();
 
         for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
+            // 如果已经领过的则直接跳过
+            if (null != wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId)) {
+                continue;
+            }
+
             try {
                 FavorCouponsCreateRequest request = new FavorCouponsCreateRequest();
                 request.setStockId(stockId);
@@ -201,22 +210,35 @@ public class WxMaMarketingController {
         }
     }
 
-//    @GetMapping("/hasGotCoupon")
-//    public BaseModel<String> hasGotCoupon(HttpSession session, @RequestParam("activityId") Integer activityId) {
-//        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
-//
-//        WxMarketingCoupon wxMarketingCoupon = wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId);
-//        if (null == wxMarketingCoupon) {
-//            return BaseModel.error(ErrorCode.NO_RESULT);
-//        } else {
-//            return BaseModel.success();
-//        }
-//    }
+    @GetMapping("/hasGotCoupon")
+    public BaseModel<String> hasGotCoupon(HttpSession session, @RequestParam("activityId") Integer activityId) {
+        WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+
+        WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+        for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
+            if (null == wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId)) {
+                return BaseModel.error(ErrorCode.NO_RESULT);
+            }
+        }
+        return BaseModel.success();
+    }
 
     @GetMapping("/generateUrlLink")
     public BaseModel<String> generateUrlLink(@PathVariable String appId,
                                              @RequestParam Integer activityId,
                                              @RequestParam Integer templateType) {
+        WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+        if (null == activity) {
+            return BaseModel.error(ErrorCode.PARAM_ERROR);
+        }
+
+        for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
+            WxMarketingStock stock = wxMarketingStockService.queryByStockId(stockId);
+            if (StringUtils.isEmpty(stock.getCardId())) {
+                return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "还没填写CardId,stockId:" + stockId);
+            }
+        }
+
         try {
             GenerateUrlLinkRequest request = GenerateUrlLinkRequest.builder().build();
             request.setPath("/pages/stock/index");
