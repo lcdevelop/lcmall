@@ -8,28 +8,26 @@ import com.github.binarywang.wxpay.bean.marketing.FavorCouponsGetResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.lcsays.lcmall.api.enums.ErrorCode;
+import com.lcsays.lcmall.api.models.dbwrapper.WxMarketingActivityExtraGroupEx;
 import com.lcsays.lcmall.api.models.result.BaseModel;
 import com.lcsays.lcmall.api.utils.RequestNo;
 import com.lcsays.lcmall.api.utils.SessionUtils;
-import com.lcsays.lcmall.db.model.WxApp;
-import com.lcsays.lcmall.db.model.WxMaUser;
-import com.lcsays.lcmall.db.model.WxMarketingActivity;
-import com.lcsays.lcmall.db.model.WxMarketingCoupon;
-import com.lcsays.lcmall.db.service.WxMarketingActivityService;
-import com.lcsays.lcmall.db.service.WxMarketingCouponService;
-import com.lcsays.lcmall.db.service.WxMarketingWhitelistService;
+import com.lcsays.lcmall.db.model.*;
+import com.lcsays.lcmall.db.service.*;
 import com.lcsays.lcmall.db.util.WxMarketingActivityUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
-import com.lcsays.lcmall.db.service.WxAppService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author: lichuang
@@ -64,6 +62,12 @@ public class WxMaMarketingController {
     @Resource
     WxMarketingActivityService wxMarketingActivityService;
 
+    @Resource
+    WxMarketingActivityExtraService wxMarketingActivityExtraService;
+
+    @Resource
+    WxMarketingActivityExtraGroupService wxMarketingActivityExtraGroupService;
+
     @Data
     private static class CreateCouponParam {
         private Integer activityId;
@@ -72,6 +76,31 @@ public class WxMaMarketingController {
 //        public String getStockId() {
 //            return stockId.replace("?", "");
 //        }
+    }
+
+    @GetMapping("/activityExtras")
+    public BaseModel<List<WxMarketingActivityExtraGroupEx>> activityExtras(@RequestParam Integer activityId) {
+        List<WxMarketingActivityExtraGroup> groups = wxMarketingActivityExtraGroupService.queryByActivityId(activityId);
+        Map<Integer, WxMarketingActivityExtraGroup> idGroupMap = new HashMap<>();
+        for (WxMarketingActivityExtraGroup group: groups) {
+            idGroupMap.put(group.getId(), group);
+        }
+        List<Integer> groupIds = groups.stream().map(WxMarketingActivityExtraGroup::getId).collect(Collectors.toList());
+        Map<Integer, WxMarketingActivityExtraGroupEx> idGroupExMap = new HashMap<>();
+        for (WxMarketingActivityExtra extra: wxMarketingActivityExtraService.queryByGroupIds(groupIds)) {
+            if (idGroupExMap.containsKey(extra.getGroupId())) {
+                idGroupExMap.get(extra.getGroupId()).getExtras().add(extra);
+            } else {
+                WxMarketingActivityExtraGroupEx groupEx = new WxMarketingActivityExtraGroupEx();
+                groupEx.copyFrom(idGroupMap.get(extra.getGroupId()));
+                List<WxMarketingActivityExtra> extras = new ArrayList<>();
+                extras.add(extra);
+                groupEx.setExtras(extras);
+                idGroupExMap.put(extra.getGroupId(), groupEx);
+            }
+        }
+
+        return BaseModel.success(new ArrayList<>(idGroupExMap.values()));
     }
 
     @PostMapping("/createCoupon")

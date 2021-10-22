@@ -108,4 +108,18 @@ declare namespace API {
     urlLink: string;
     createTime: string;
   }
+
+  type WxMarketingActivityExtra = {
+    id: number;
+    groupId: number;
+    content: string;
+    styleType: number;
+  }
+
+  type WxMarketingActivityExtraGroupEx = {
+    id: number;
+    activityId: number;
+    name: string;
+    extras: WxMarketingActivityExtra[];
+  }
 }

@@ -16,20 +16,20 @@ import java.util.List;
 public class WxMarketingActivityService {
 
     @Resource
-    private WxMarketingActivityMapper wxMarketingActivityMapper;
+    private WxMarketingActivityMapper activityMapper;
 
     public List<WxMarketingActivity> queryByWxAppId(Integer wxAppId) {
         WxMarketingActivityExample example = new WxMarketingActivityExample();
         WxMarketingActivityExample.Criteria criteria = example.createCriteria();
         criteria.andWxAppIdEqualTo(wxAppId);
-        return wxMarketingActivityMapper.selectByExample(example);
+        return activityMapper.selectByExample(example);
     }
 
     public WxMarketingActivity queryById(Integer id) {
         WxMarketingActivityExample example = new WxMarketingActivityExample();
         WxMarketingActivityExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(id);
-        List<WxMarketingActivity> ret = wxMarketingActivityMapper.selectByExample(example);
+        List<WxMarketingActivity> ret = activityMapper.selectByExample(example);
         if (ret.size() == 1) {
             return ret.get(0);
         } else {
@@ -41,6 +41,7 @@ public class WxMarketingActivityService {
         WxMarketingActivityExample example = new WxMarketingActivityExample();
         WxMarketingActivityExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(activity.getId());
-        return wxMarketingActivityMapper.updateByExampleSelective(activity, example);
+        return activityMapper.updateByExampleSelective(activity, example);
     }
+
 }

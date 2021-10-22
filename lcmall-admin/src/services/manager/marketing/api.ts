@@ -15,6 +15,7 @@ const setCallbacksApiPath = apiPathPrefix + '/setCallbacks';
 const getCallbacksApiPath = apiPathPrefix + '/getCallbacks';
 const couponStatisticsApiPath = apiPathPrefix + '/couponStatistics';
 const activityApiPath = apiPathPrefix + '/activity';
+const activityExtrasApiPath = apiPathPrefix + '/activityExtras';
 
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
@@ -159,4 +160,16 @@ export async function updateActivity(body?: API.WxMarketingActivity, params?: Pa
     op<API.WxMarketingActivity>(activityApiPath, OP_MOD, body, params, options)
       .then((res) => {resolve(res);}, (err) => {reject(err);})
   })
+}
+
+export async function activityExtras(params: {
+  activityId: number
+}, options?: { [key: string]: any }) {
+  return request<API.Response<API.WxMarketingActivityExtraGroupEx>>(activityExtrasApiPath, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
 }
