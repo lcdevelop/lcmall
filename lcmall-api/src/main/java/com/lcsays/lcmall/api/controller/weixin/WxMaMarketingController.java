@@ -245,7 +245,7 @@ public class WxMaMarketingController {
         try {
             GenerateUrlLinkRequest request = GenerateUrlLinkRequest.builder().build();
             request.setPath("/pages/stock/index");
-            request.setQuery("?activityId=" + activityId + "&templateType=" + templateType);
+            request.setQuery("activityId=" + activityId + "&templateType=" + templateType);
             request.setIsExpire(false);
             String result = wxMaService.switchoverTo(appId).getLinkService().generateUrlLink(request);
             result = result.replaceAll("\"", "");
