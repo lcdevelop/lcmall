@@ -1,5 +1,6 @@
-import {Card, Col, Row} from 'antd';
+import {Button, Card, Col, Divider, Row} from 'antd';
 import React, {useEffect} from 'react';
+import {addStock} from "@/services/manager/marketing/api";
 
 type StockListProps = {
   history: any;
@@ -36,6 +37,46 @@ const StockList: React.FC<StockListProps> = (props: StockListProps) => {
 
   }
 
+  const onAddStock = () => {
+    const request = {
+      stockName: '手工添加1',
+      belongMerchant: '1488848612',
+      availableBeginTime: '2021-10-26 00:00:00',
+      availableEndTime: '2021-10-27 00:00:00',
+      stockUseRule: {
+        maxCoupons: 10,
+        maxAmount: 1000,
+        maxAmountByDay: 1000,
+        maxCouponsPerUser: 10,
+        naturalPersonLimit: true,
+        preventApiAbuse: true,
+      },
+      patternInfo: {
+        description: '这是pattern',
+        merchantLogo: 'http://res.wx.qq.com/zh_CN/htmledition/images/mmpaybanklogo/PayCardGSlogo@2x.png',
+        merchantName: '工商银行储蓄卡',
+        backgroundColor: 'COLOR100',
+      },
+      couponUseRule: {
+        fixedNormalCoupon: {
+          couponAmount: 100,
+          transactionMinimum: 101,
+        },
+        goodsTag: [],
+        limitPay: ['ICBC_DEBIT'],
+        combineUse: false,
+        availableMerchants: ['1488848612'],
+      },
+      noCash: false,
+      stockType: 'NORMAL',
+      outRequestNo: 'stock_manual_create_4',
+    }
+
+    addStock(request).then(res => {
+      console.log(res);
+    })
+  }
+
   return (
     <div>
       <Row gutter={16}>
@@ -60,6 +101,9 @@ const StockList: React.FC<StockListProps> = (props: StockListProps) => {
           </Card>
         </Col>
       </Row>
+
+      <Divider />
+      {/*<Button type={"primary"} onClick={onAddStock}>手工新建批次</Button>*/}
     </div>
   );
 };

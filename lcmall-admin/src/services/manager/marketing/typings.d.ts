@@ -8,16 +8,16 @@ declare namespace API {
     transactionMinimum: number;
   }
 
+  type LimitCard = {
+    name: string;
+    bin: string[];
+  }
+
   type StockUseRule = {
     maxCoupons: number;
     maxAmount: number;
     maxAmountByDay: number;
-    fixedNormalCoupon: FixedNormalCoupon;
     maxCouponsPerUser: number;
-    couponType: string;
-    goodsTag: string[];
-    tradeType: string[];
-    combineUse: boolean;
     naturalPersonLimit: boolean;
     preventApiAbuse: boolean;
   }
@@ -49,7 +49,17 @@ declare namespace API {
 
   type CouponUseRule = {
     fixedNormalCoupon: FixedNormalCoupon;
+    goodsTag: string[];
+    limitPay: string[];
+    combineUse: boolean;
     availableMerchants: string[];
+  }
+
+  type PatternInfo = {
+    description: string;
+    merchantLogo: string;
+    merchantName: string;
+    backgroundColor: string;
   }
 
   type FavorStocksCreateRequest = {
@@ -58,6 +68,7 @@ declare namespace API {
     availableBeginTime: string;
     availableEndTime: string;
     stockUseRule: StockUseRule;
+    patternInfo: PatternInfo;
     couponUseRule: CouponUseRule;
     noCash: boolean;
     stockType: string;
