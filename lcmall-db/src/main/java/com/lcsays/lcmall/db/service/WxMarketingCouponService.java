@@ -25,17 +25,12 @@ public class WxMarketingCouponService {
         return marketingCouponMapper.insert(wxMarketingCoupon);
     }
     
-    public WxMarketingCoupon queryByUserAndStock(WxMaUser wxMaUser, String stockId) {
+    public List<WxMarketingCoupon> queryByUserAndStock(WxMaUser wxMaUser, String stockId) {
         WxMarketingCouponExample example = new WxMarketingCouponExample();
         WxMarketingCouponExample.Criteria criteria = example.createCriteria();
         criteria.andWxMaUserIdEqualTo(wxMaUser.getId());
         criteria.andStockIdEqualTo(stockId);
-        List<WxMarketingCoupon> wxMarketingCoupons = marketingCouponMapper.selectByExample(example);
-        if (wxMarketingCoupons.size() > 0) {
-            return wxMarketingCoupons.get(0);
-        } else {
-            return null;
-        }
+        return marketingCouponMapper.selectByExample(example);
     }
 
     public List<WxMarketingCoupon> queryByWxAppId(Integer wxAppId) {

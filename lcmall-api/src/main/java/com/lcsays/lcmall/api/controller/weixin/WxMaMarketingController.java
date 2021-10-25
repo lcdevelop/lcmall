@@ -210,8 +210,21 @@ public class WxMaMarketingController {
         WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
 
         WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
-        for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
-            if (null == wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId)) {
+        String[] stockIds = WxMarketingActivityUtil.getStockIds(activity);
+        Map<String, Integer> stockIdCountsMap = new HashMap<>();
+        for (String stockId: stockIds) {
+            if (stockIdCountsMap.containsKey(stockId)) {
+                stockIdCountsMap.put(stockId, stockIdCountsMap.get(stockId) + 1);
+            } else {
+                stockIdCountsMap.put(stockId, 1);
+            }
+        }
+        
+        for (Map.Entry<String, Integer> entry: stockIdCountsMap.entrySet()) {
+            String stockId = entry.getKey();
+            Integer count = entry.getValue();
+            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId);
+            if (coupons.size() == 0 || coupons.size() < count) {
                 return BaseModel.error(ErrorCode.NO_RESULT);
             }
         }
