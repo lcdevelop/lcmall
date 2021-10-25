@@ -146,11 +146,6 @@ public class WxMaMarketingController {
         List<FavorCouponsCreateResult> ret = new ArrayList<>();
 
         for (String stockId: WxMarketingActivityUtil.getStockIds(activity)) {
-            // 如果已经领过的则直接跳过
-            if (null != wxMarketingCouponService.queryByUserAndStock(wxMaUser, stockId)) {
-                continue;
-            }
-
             try {
                 FavorCouponsCreateRequest request = new FavorCouponsCreateRequest();
                 request.setStockId(stockId);
