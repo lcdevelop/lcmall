@@ -11,6 +11,8 @@ public class WxMarketingActivityExtra implements Serializable {
 
     private Integer styleType;
 
+    private Integer version;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -45,6 +47,14 @@ public class WxMarketingActivityExtra implements Serializable {
         this.styleType = styleType;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -55,6 +65,7 @@ public class WxMarketingActivityExtra implements Serializable {
         sb.append(", groupId=").append(groupId);
         sb.append(", content=").append(content);
         sb.append(", styleType=").append(styleType);
+        sb.append(", version=").append(version);
         sb.append("]");
         return sb.toString();
     }

@@ -6,6 +6,7 @@
     <result column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="style_type" jdbcType="INTEGER" property="styleType" />
+    <result column="version" jdbcType="INTEGER" property="version" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, group_id, content, style_type
+    id, group_id, content, style_type, version
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExtraExample" resultMap="BaseResultMap">
     select
@@ -92,10 +93,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_marketing_activity_extra (group_id, content, style_type
-      )
-    values (#{groupId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{styleType,jdbcType=INTEGER}
-      )
+    insert into wx_marketing_activity_extra (group_id, content, style_type, 
+      version)
+    values (#{groupId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{styleType,jdbcType=INTEGER}, 
+      #{version,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExtra">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -112,6 +113,9 @@
       <if test="styleType != null">
         style_type,
       </if>
+      <if test="version != null">
+        version,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="groupId != null">
@@ -122,6 +126,9 @@
       </if>
       <if test="styleType != null">
         #{styleType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -146,6 +153,9 @@
       <if test="record.styleType != null">
         style_type = #{record.styleType,jdbcType=INTEGER},
       </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -156,7 +166,8 @@
     set id = #{record.id,jdbcType=INTEGER},
       group_id = #{record.groupId,jdbcType=INTEGER},
       content = #{record.content,jdbcType=VARCHAR},
-      style_type = #{record.styleType,jdbcType=INTEGER}
+      style_type = #{record.styleType,jdbcType=INTEGER},
+      version = #{record.version,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

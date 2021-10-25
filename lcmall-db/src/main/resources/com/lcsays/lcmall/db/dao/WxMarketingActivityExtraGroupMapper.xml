@@ -3,7 +3,6 @@
 <mapper namespace="com.lcsays.lcmall.db.dao.WxMarketingActivityExtraGroupMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxMarketingActivityExtraGroup">
     <result column="id" jdbcType="INTEGER" property="id" />
-    <result column="activity_id" jdbcType="INTEGER" property="activityId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -65,7 +64,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, activity_id, name
+    id, name
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExtraGroupExample" resultMap="BaseResultMap">
     select
@@ -91,8 +90,8 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_marketing_activity_extra_group (activity_id, name)
-    values (#{activityId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
+    insert into wx_marketing_activity_extra_group (name)
+    values (#{name,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExtraGroup">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -100,17 +99,11 @@
     </selectKey>
     insert into wx_marketing_activity_extra_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="activityId != null">
-        activity_id,
-      </if>
       <if test="name != null">
         name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="activityId != null">
-        #{activityId,jdbcType=INTEGER},
-      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
@@ -128,9 +121,6 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.activityId != null">
-        activity_id = #{record.activityId,jdbcType=INTEGER},
-      </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
@@ -142,7 +132,6 @@
   <update id="updateByExample" parameterType="map">
     update wx_marketing_activity_extra_group
     set id = #{record.id,jdbcType=INTEGER},
-      activity_id = #{record.activityId,jdbcType=INTEGER},
       name = #{record.name,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />

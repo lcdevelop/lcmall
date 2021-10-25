@@ -5,8 +5,6 @@ import java.io.Serializable;
 public class WxMarketingActivityExtraGroup implements Serializable {
     private Integer id;
 
-    private Integer activityId;
-
     private String name;
 
     private static final long serialVersionUID = 1L;
@@ -17,14 +15,6 @@ public class WxMarketingActivityExtraGroup implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(Integer activityId) {
-        this.activityId = activityId;
     }
 
     public String getName() {
@@ -42,7 +32,6 @@ public class WxMarketingActivityExtraGroup implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", activityId=").append(activityId);
         sb.append(", name=").append(name);
         sb.append("]");
         return sb.toString();

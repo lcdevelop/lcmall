@@ -20,7 +20,6 @@ public class WxMarketingActivityExtraGroupEx extends WxMarketingActivityExtraGro
     private List<WxMarketingActivityExtra> extras;
 
     public void copyFrom(WxMarketingActivityExtraGroup group) {
-        this.setActivityId(group.getActivityId());
         this.setId(group.getId());
         this.setName(group.getName());
     }

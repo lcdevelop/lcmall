@@ -495,6 +495,66 @@ public class WxMarketingActivityExample {
             return (Criteria) this;
         }
 
+        public Criteria andExtraVersionIsNull() {
+            addCriterion("extra_version is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionIsNotNull() {
+            addCriterion("extra_version is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionEqualTo(Integer value) {
+            addCriterion("extra_version =", value, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionNotEqualTo(Integer value) {
+            addCriterion("extra_version <>", value, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionGreaterThan(Integer value) {
+            addCriterion("extra_version >", value, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("extra_version >=", value, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionLessThan(Integer value) {
+            addCriterion("extra_version <", value, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionLessThanOrEqualTo(Integer value) {
+            addCriterion("extra_version <=", value, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionIn(List<Integer> values) {
+            addCriterion("extra_version in", values, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionNotIn(List<Integer> values) {
+            addCriterion("extra_version not in", values, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionBetween(Integer value1, Integer value2) {
+            addCriterion("extra_version between", value1, value2, "extraVersion");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraVersionNotBetween(Integer value1, Integer value2) {
+            addCriterion("extra_version not between", value1, value2, "extraVersion");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

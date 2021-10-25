@@ -8,6 +8,7 @@
     <result column="template_type" jdbcType="INTEGER" property="templateType" />
     <result column="stock_id_list" jdbcType="VARCHAR" property="stockIdList" />
     <result column="url_link" jdbcType="VARCHAR" property="urlLink" />
+    <result column="extra_version" jdbcType="INTEGER" property="extraVersion" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, wx_app_id, template_type, stock_id_list, url_link, create_time
+    id, name, wx_app_id, template_type, stock_id_list, url_link, extra_version, create_time
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExample" resultMap="BaseResultMap">
     select
@@ -96,11 +97,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into wx_marketing_activity (name, wx_app_id, template_type, 
-      stock_id_list, url_link, create_time
-      )
+      stock_id_list, url_link, extra_version, 
+      create_time)
     values (#{name,jdbcType=VARCHAR}, #{wxAppId,jdbcType=INTEGER}, #{templateType,jdbcType=INTEGER}, 
-      #{stockIdList,jdbcType=VARCHAR}, #{urlLink,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{stockIdList,jdbcType=VARCHAR}, #{urlLink,jdbcType=VARCHAR}, #{extraVersion,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivity">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -123,6 +124,9 @@
       <if test="urlLink != null">
         url_link,
       </if>
+      <if test="extraVersion != null">
+        extra_version,
+      </if>
       <if test="createTime != null">
         create_time,
       </if>
@@ -142,6 +146,9 @@
       </if>
       <if test="urlLink != null">
         #{urlLink,jdbcType=VARCHAR},
+      </if>
+      <if test="extraVersion != null">
+        #{extraVersion,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -175,6 +182,9 @@
       <if test="record.urlLink != null">
         url_link = #{record.urlLink,jdbcType=VARCHAR},
       </if>
+      <if test="record.extraVersion != null">
+        extra_version = #{record.extraVersion,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -191,6 +201,7 @@
       template_type = #{record.templateType,jdbcType=INTEGER},
       stock_id_list = #{record.stockIdList,jdbcType=VARCHAR},
       url_link = #{record.urlLink,jdbcType=VARCHAR},
+      extra_version = #{record.extraVersion,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />

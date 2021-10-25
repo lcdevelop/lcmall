@@ -84,14 +84,18 @@ public class WxMaMarketingController {
 
     @GetMapping("/activityExtras")
     public BaseModel<List<WxMarketingActivityExtraGroupEx>> activityExtras(@RequestParam Integer activityId) {
-        List<WxMarketingActivityExtraGroup> groups = wxMarketingActivityExtraGroupService.queryByActivityId(activityId);
+        WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+
+        // 取出所有的group信息，并构造id到group的字典
+        List<WxMarketingActivityExtraGroup> groups = wxMarketingActivityExtraGroupService.queryAll();
         Map<Integer, WxMarketingActivityExtraGroup> idGroupMap = new HashMap<>();
         for (WxMarketingActivityExtraGroup group: groups) {
             idGroupMap.put(group.getId(), group);
         }
-        List<Integer> groupIds = groups.stream().map(WxMarketingActivityExtraGroup::getId).collect(Collectors.toList());
+
+        // 找出此activity对应的extra版本的所有extra，并添加到map(groupId, extra列表)中
         Map<Integer, WxMarketingActivityExtraGroupEx> idGroupExMap = new HashMap<>();
-        for (WxMarketingActivityExtra extra: wxMarketingActivityExtraService.queryByGroupIds(groupIds)) {
+        for (WxMarketingActivityExtra extra: wxMarketingActivityExtraService.queryByVersion(activity.getExtraVersion())) {
             if (idGroupExMap.containsKey(extra.getGroupId())) {
                 idGroupExMap.get(extra.getGroupId()).getExtras().add(extra);
             } else {

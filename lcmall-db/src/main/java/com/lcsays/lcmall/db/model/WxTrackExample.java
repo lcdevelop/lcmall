@@ -425,76 +425,6 @@ public class WxTrackExample {
             return (Criteria) this;
         }
 
-        public Criteria andUaIsNull() {
-            addCriterion("ua is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaIsNotNull() {
-            addCriterion("ua is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaEqualTo(String value) {
-            addCriterion("ua =", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaNotEqualTo(String value) {
-            addCriterion("ua <>", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaGreaterThan(String value) {
-            addCriterion("ua >", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaGreaterThanOrEqualTo(String value) {
-            addCriterion("ua >=", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaLessThan(String value) {
-            addCriterion("ua <", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaLessThanOrEqualTo(String value) {
-            addCriterion("ua <=", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaLike(String value) {
-            addCriterion("ua like", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaNotLike(String value) {
-            addCriterion("ua not like", value, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaIn(List<String> values) {
-            addCriterion("ua in", values, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaNotIn(List<String> values) {
-            addCriterion("ua not in", values, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaBetween(String value1, String value2) {
-            addCriterion("ua between", value1, value2, "ua");
-            return (Criteria) this;
-        }
-
-        public Criteria andUaNotBetween(String value1, String value2) {
-            addCriterion("ua not between", value1, value2, "ua");
-            return (Criteria) this;
-        }
-
         public Criteria andIpIsNull() {
             addCriterion("ip is null");
             return (Criteria) this;
@@ -622,6 +552,76 @@ public class WxTrackExample {
 
         public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
             addCriterion("create_time not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaIsNull() {
+            addCriterion("ua is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaIsNotNull() {
+            addCriterion("ua is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaEqualTo(String value) {
+            addCriterion("ua =", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaNotEqualTo(String value) {
+            addCriterion("ua <>", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaGreaterThan(String value) {
+            addCriterion("ua >", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaGreaterThanOrEqualTo(String value) {
+            addCriterion("ua >=", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaLessThan(String value) {
+            addCriterion("ua <", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaLessThanOrEqualTo(String value) {
+            addCriterion("ua <=", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaLike(String value) {
+            addCriterion("ua like", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaNotLike(String value) {
+            addCriterion("ua not like", value, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaIn(List<String> values) {
+            addCriterion("ua in", values, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaNotIn(List<String> values) {
+            addCriterion("ua not in", values, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaBetween(String value1, String value2) {
+            addCriterion("ua between", value1, value2, "ua");
+            return (Criteria) this;
+        }
+
+        public Criteria andUaNotBetween(String value1, String value2) {
+            addCriterion("ua not between", value1, value2, "ua");
             return (Criteria) this;
         }
     }

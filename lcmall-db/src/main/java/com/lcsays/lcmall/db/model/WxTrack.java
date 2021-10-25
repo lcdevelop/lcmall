@@ -14,11 +14,11 @@ public class WxTrack implements Serializable {
 
     private String msg;
 
-    private String ua;
-
     private String ip;
 
     private Date createTime;
+
+    private String ua;
 
     private static final long serialVersionUID = 1L;
 
@@ -62,14 +62,6 @@ public class WxTrack implements Serializable {
         this.msg = msg;
     }
 
-    public String getUa() {
-        return ua;
-    }
-
-    public void setUa(String ua) {
-        this.ua = ua;
-    }
-
     public String getIp() {
         return ip;
     }
@@ -86,6 +78,14 @@ public class WxTrack implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getUa() {
+        return ua;
+    }
+
+    public void setUa(String ua) {
+        this.ua = ua;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -97,9 +97,9 @@ public class WxTrack implements Serializable {
         sb.append(", wxAppId=").append(wxAppId);
         sb.append(", eventType=").append(eventType);
         sb.append(", msg=").append(msg);
-        sb.append(", ua=").append(ua);
         sb.append(", ip=").append(ip);
         sb.append(", createTime=").append(createTime);
+        sb.append(", ua=").append(ua);
         sb.append("]");
         return sb.toString();
     }

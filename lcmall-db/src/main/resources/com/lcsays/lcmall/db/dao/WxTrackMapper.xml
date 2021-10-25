@@ -7,9 +7,9 @@
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
     <result column="event_type" jdbcType="VARCHAR" property="eventType" />
     <result column="msg" jdbcType="VARCHAR" property="msg" />
-    <result column="ua" jdbcType="VARCHAR" property="ua" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="ua" jdbcType="VARCHAR" property="ua" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, wx_ma_user_id, wx_app_id, event_type, msg, ua, ip, create_time
+    id, wx_ma_user_id, wx_app_id, event_type, msg, ip, create_time, ua
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxTrackExample" resultMap="BaseResultMap">
     select
@@ -97,11 +97,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into wx_track (wx_ma_user_id, wx_app_id, event_type, 
-      msg, ua, ip, create_time
-      )
+      msg, ip, create_time, 
+      ua)
     values (#{wxMaUserId,jdbcType=INTEGER}, #{wxAppId,jdbcType=INTEGER}, #{eventType,jdbcType=VARCHAR}, 
-      #{msg,jdbcType=VARCHAR}, #{ua,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{msg,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{ua,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxTrack">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -121,14 +121,14 @@
       <if test="msg != null">
         msg,
       </if>
-      <if test="ua != null">
-        ua,
-      </if>
       <if test="ip != null">
         ip,
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="ua != null">
+        ua,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -144,14 +144,14 @@
       <if test="msg != null">
         #{msg,jdbcType=VARCHAR},
       </if>
-      <if test="ua != null">
-        #{ua,jdbcType=VARCHAR},
-      </if>
       <if test="ip != null">
         #{ip,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ua != null">
+        #{ua,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -179,14 +179,14 @@
       <if test="record.msg != null">
         msg = #{record.msg,jdbcType=VARCHAR},
       </if>
-      <if test="record.ua != null">
-        ua = #{record.ua,jdbcType=VARCHAR},
-      </if>
       <if test="record.ip != null">
         ip = #{record.ip,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.ua != null">
+        ua = #{record.ua,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -200,9 +200,9 @@
       wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
       event_type = #{record.eventType,jdbcType=VARCHAR},
       msg = #{record.msg,jdbcType=VARCHAR},
-      ua = #{record.ua,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      ua = #{record.ua,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

@@ -16,6 +16,8 @@ public class WxMarketingActivity implements Serializable {
 
     private String urlLink;
 
+    private Integer extraVersion;
+
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
@@ -68,6 +70,14 @@ public class WxMarketingActivity implements Serializable {
         this.urlLink = urlLink;
     }
 
+    public Integer getExtraVersion() {
+        return extraVersion;
+    }
+
+    public void setExtraVersion(Integer extraVersion) {
+        this.extraVersion = extraVersion;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -88,6 +98,7 @@ public class WxMarketingActivity implements Serializable {
         sb.append(", templateType=").append(templateType);
         sb.append(", stockIdList=").append(stockIdList);
         sb.append(", urlLink=").append(urlLink);
+        sb.append(", extraVersion=").append(extraVersion);
         sb.append(", createTime=").append(createTime);
         sb.append("]");
         return sb.toString();

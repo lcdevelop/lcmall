@@ -18,10 +18,10 @@ public class WxMarketingActivityExtraGroupService {
     @Resource
     private WxMarketingActivityExtraGroupMapper groupMapper;
 
-    public List<WxMarketingActivityExtraGroup> queryByActivityId(Integer activityId) {
+    public List<WxMarketingActivityExtraGroup> queryAll() {
         WxMarketingActivityExtraGroupExample example = new WxMarketingActivityExtraGroupExample();
         WxMarketingActivityExtraGroupExample.Criteria criteria = example.createCriteria();
-        criteria.andActivityIdEqualTo(activityId);
+        criteria.andIdIsNotNull();
         return groupMapper.selectByExample(example);
     }
 }
