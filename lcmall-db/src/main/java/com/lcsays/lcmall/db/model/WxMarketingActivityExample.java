@@ -555,6 +555,66 @@ public class WxMarketingActivityExample {
             return (Criteria) this;
         }
 
+        public Criteria andWhitelistBatchNoIsNull() {
+            addCriterion("whitelist_batch_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoIsNotNull() {
+            addCriterion("whitelist_batch_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoEqualTo(Integer value) {
+            addCriterion("whitelist_batch_no =", value, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoNotEqualTo(Integer value) {
+            addCriterion("whitelist_batch_no <>", value, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoGreaterThan(Integer value) {
+            addCriterion("whitelist_batch_no >", value, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoGreaterThanOrEqualTo(Integer value) {
+            addCriterion("whitelist_batch_no >=", value, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoLessThan(Integer value) {
+            addCriterion("whitelist_batch_no <", value, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoLessThanOrEqualTo(Integer value) {
+            addCriterion("whitelist_batch_no <=", value, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoIn(List<Integer> values) {
+            addCriterion("whitelist_batch_no in", values, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoNotIn(List<Integer> values) {
+            addCriterion("whitelist_batch_no not in", values, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoBetween(Integer value1, Integer value2) {
+            addCriterion("whitelist_batch_no between", value1, value2, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andWhitelistBatchNoNotBetween(Integer value1, Integer value2) {
+            addCriterion("whitelist_batch_no not between", value1, value2, "whitelistBatchNo");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

@@ -70,6 +70,14 @@ const Statistics: React.FC = () => {
         }
       }
     },
+    {
+      title: '数据统计',
+      render: (_, entity) => {
+        return (
+          <a href={'#/marketing/statistics/' + entity.id}>数据统计</a>
+        )
+      }
+    },
   ]
 
   return (

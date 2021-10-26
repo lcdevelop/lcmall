@@ -82,6 +82,7 @@ declare namespace API {
 
   type WxMarketingWhitelist = {
     id: number;
+    batchNo: number;
     phoneNumber: string;
   }
 

@@ -3,7 +3,11 @@ import {PageContainer} from "@ant-design/pro-layout";
 import {couponStatistics} from "@/services/manager/marketing/api";
 import ProTable, {ProColumns} from "@ant-design/pro-table";
 
-const Statistics: React.FC = () => {
+export type StatisticsProps = {
+  match: any;
+};
+
+const Statistics: React.FC<StatisticsProps> = (props: StatisticsProps) => {
 
   const columns: ProColumns<API.CouponStatistics>[] = [
     {
@@ -48,7 +52,14 @@ const Statistics: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={couponStatistics}
+        request={async (params = {}) => {
+          return couponStatistics({
+            activityId: props.match.params.activityId,
+            ...params
+          }).then(res => {
+            return res;
+          })
+        }}
         columns={columns}
         pagination={{
           pageSize: 10

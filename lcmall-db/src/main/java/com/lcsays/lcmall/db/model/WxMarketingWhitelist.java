@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class WxMarketingWhitelist implements Serializable {
     private Integer id;
 
+    private Integer batchNo;
+
     private String phoneNumber;
 
     private static final long serialVersionUID = 1L;
@@ -15,6 +17,14 @@ public class WxMarketingWhitelist implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(Integer batchNo) {
+        this.batchNo = batchNo;
     }
 
     public String getPhoneNumber() {
@@ -32,6 +42,7 @@ public class WxMarketingWhitelist implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", batchNo=").append(batchNo);
         sb.append(", phoneNumber=").append(phoneNumber);
         sb.append("]");
         return sb.toString();

@@ -121,8 +121,12 @@ public class WxMaMarketingController {
         }
 
         WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
+
+        WxMarketingActivity activity = wxMarketingActivityService.queryById(createCouponParam.getActivityId());
+        log.info(activity.toString());
+
         // 不在白名单里不允许领券
-        if (!wxMarketingWhitelistService.contains(wxMaUser.getPhoneNumber())) {
+        if (!wxMarketingWhitelistService.contains(activity.getWhitelistBatchNo(), wxMaUser.getPhoneNumber())) {
             return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "非工行指定手机号用户无法领取");
         }
 
@@ -143,9 +147,6 @@ public class WxMaMarketingController {
 
 
 
-
-        WxMarketingActivity activity = wxMarketingActivityService.queryById(createCouponParam.getActivityId());
-        log.info(activity.toString());
 
         List<FavorCouponsCreateResult> ret = new ArrayList<>();
 

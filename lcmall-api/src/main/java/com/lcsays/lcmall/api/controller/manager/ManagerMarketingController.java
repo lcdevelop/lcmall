@@ -74,15 +74,22 @@ public class ManagerMarketingController {
     public BaseModel<List<WxMarketingWhitelist>> whitelist(HttpSession session,
                                                            @RequestParam("current") Integer current,
                                                            @RequestParam("pageSize") Integer pageSize,
+                                                           @RequestParam Integer activityId,
                                                            String phoneNumber) {
         WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
             if (WxMaUserUtil.checkAuthority(user, wxAppService)) {
+
+                WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+                if (null == activity) {
+                    return BaseModel.error(ErrorCode.PARAM_ERROR);
+                }
+
                 List<WxMarketingWhitelist> data;
                 if (!StringUtils.isEmpty(phoneNumber)) {
-                    data = wxMarketingWhitelistService.queryByPhoneNumber(phoneNumber);
+                    data = wxMarketingWhitelistService.queryByBatchNoAndPhoneNumber(activity.getWhitelistBatchNo(), phoneNumber);
                 } else {
-                    data = wxMarketingWhitelistService.queryAll();
+                    data = wxMarketingWhitelistService.queryByBatchNo(activity.getWhitelistBatchNo());
                 }
                 return BaseModel.success(ApiUtils.pagination(data, current, pageSize), data.size());
             } else {
@@ -412,11 +419,16 @@ public class ManagerMarketingController {
     }
 
     @GetMapping("/couponStatistics")
-    public BaseModel<List<CouponStatistics>> couponStatistics(HttpSession session) {
+    public BaseModel<List<CouponStatistics>> couponStatistics(HttpSession session, @RequestParam Integer activityId) {
         WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
             if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+            if (null == activity) {
+                return BaseModel.error(ErrorCode.PARAM_ERROR);
             }
 
             // 找出当前要统计哪个商户
@@ -442,9 +454,11 @@ public class ManagerMarketingController {
                 }
             }
 
+            String[] stockIds = WxMarketingActivityUtil.getStockIds(activity);
+
             // 加载map(用户id,coupon)表
             Map<Integer, CouponStatistics.CouponsInfo> userCouponsInfoMap = new HashMap<>();
-            for (WxMarketingCoupon coupon: wxMarketingCouponService.queryByWxAppId(curWxAppId)) {
+            for (WxMarketingCoupon coupon: wxMarketingCouponService.queryByStockIds(stockIds)) {
                 Integer wxMaUserId = coupon.getWxMaUserId();
                 if (userCouponsInfoMap.containsKey(wxMaUserId)) {
                     CouponStatistics.CouponsInfo couponsInfo = userCouponsInfoMap.get(wxMaUserId);
@@ -496,7 +510,7 @@ public class ManagerMarketingController {
             }
 
             List<CouponStatistics> ret = new ArrayList<>();
-            for (WxMarketingWhitelist whitelistItem: wxMarketingWhitelistService.queryAll()) {
+            for (WxMarketingWhitelist whitelistItem: wxMarketingWhitelistService.queryByBatchNo(activity.getWhitelistBatchNo())) {
                 CouponStatistics cs = new CouponStatistics();
                 String whitelistPhoneNumber = whitelistItem.getPhoneNumber();
                 cs.setWhitelistPhoneNumber(whitelistPhoneNumber);

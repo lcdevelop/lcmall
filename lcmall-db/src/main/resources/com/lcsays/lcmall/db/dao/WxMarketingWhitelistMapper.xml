@@ -3,6 +3,7 @@
 <mapper namespace="com.lcsays.lcmall.db.dao.WxMarketingWhitelistMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxMarketingWhitelist">
     <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="batch_no" jdbcType="INTEGER" property="batchNo" />
     <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -64,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, phone_number
+    id, batch_no, phone_number
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingWhitelistExample" resultMap="BaseResultMap">
     select
@@ -90,8 +91,8 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_marketing_whitelist (phone_number)
-    values (#{phoneNumber,jdbcType=VARCHAR})
+    insert into wx_marketing_whitelist (batch_no, phone_number)
+    values (#{batchNo,jdbcType=INTEGER}, #{phoneNumber,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingWhitelist">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -99,11 +100,17 @@
     </selectKey>
     insert into wx_marketing_whitelist
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchNo != null">
+        batch_no,
+      </if>
       <if test="phoneNumber != null">
         phone_number,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchNo != null">
+        #{batchNo,jdbcType=INTEGER},
+      </if>
       <if test="phoneNumber != null">
         #{phoneNumber,jdbcType=VARCHAR},
       </if>
@@ -121,6 +128,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
+      <if test="record.batchNo != null">
+        batch_no = #{record.batchNo,jdbcType=INTEGER},
+      </if>
       <if test="record.phoneNumber != null">
         phone_number = #{record.phoneNumber,jdbcType=VARCHAR},
       </if>
@@ -132,6 +142,7 @@
   <update id="updateByExample" parameterType="map">
     update wx_marketing_whitelist
     set id = #{record.id,jdbcType=INTEGER},
+      batch_no = #{record.batchNo,jdbcType=INTEGER},
       phone_number = #{record.phoneNumber,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />

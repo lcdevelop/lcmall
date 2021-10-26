@@ -1,5 +1,6 @@
 package com.lcsays.lcmall.db.service;
 
+import com.lcsays.lcmall.db.dao.WxMarketingActivityMapper;
 import com.lcsays.lcmall.db.dao.WxMarketingStockMapper;
 import com.lcsays.lcmall.db.model.WxMarketingStock;
 import com.lcsays.lcmall.db.model.WxMarketingStockExample;
@@ -54,7 +55,6 @@ public class WxMarketingStockService {
         WxMarketingStockExample example = new WxMarketingStockExample();
         WxMarketingStockExample.Criteria criteria = example.createCriteria();
         criteria.andWxAppIdEqualTo(wxAppId);
-        criteria.andIdIsNotNull();
         for (WxMarketingStock stock: marketingStockMapper.selectByExample(example)) {
             ret.put(stock.getStockId(), stock);
         }

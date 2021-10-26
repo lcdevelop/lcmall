@@ -114,11 +114,16 @@ export async function getWxMarketingStockByStockId(params: {
   });
 }
 
-export async function whitelist(params?: ParamsType, options?: OptionsType) {
-  return new Promise<any>((resolve, reject) => {
-    op<API.WxMarketingWhitelist>(whitelistApiPath, OP_GET, undefined, params, options)
-      .then((res) => {resolve(res);}, (err) => {reject(err);})
-  })
+export async function whitelist(params: {
+  activityId: number,
+}, options?: { [key: string]: any }) {
+  return request<API.Response<API.WxMarketingWhitelist[]>>(whitelistApiPath, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
 }
 
 export async function setCallbacks(params: {
@@ -140,9 +145,14 @@ export async function getCallbacks(options?: { [key: string]: any }) {
   });
 }
 
-export async function couponStatistics(options?: { [key: string]: any }) {
+export async function couponStatistics(params: {
+  activityId: number,
+}, options?: { [key: string]: any }) {
   return request<API.Response<API.CouponStatistics[]>>(couponStatisticsApiPath, {
     method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

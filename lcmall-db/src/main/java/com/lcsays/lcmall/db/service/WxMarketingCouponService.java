@@ -7,6 +7,7 @@ import com.lcsays.lcmall.db.model.WxMarketingCouponExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -46,5 +47,12 @@ public class WxMarketingCouponService {
         criteria.andStockIdEqualTo(record.getStockId());
         criteria.andCouponIdEqualTo(record.getCouponId());
         return marketingCouponMapper.updateByExampleSelective(record, example);
+    }
+
+    public List<WxMarketingCoupon> queryByStockIds(String[] stockIds) {
+        WxMarketingCouponExample example = new WxMarketingCouponExample();
+        WxMarketingCouponExample.Criteria criteria = example.createCriteria();
+        criteria.andStockIdIn(Arrays.asList(stockIds));
+        return marketingCouponMapper.selectByExample(example);
     }
 }

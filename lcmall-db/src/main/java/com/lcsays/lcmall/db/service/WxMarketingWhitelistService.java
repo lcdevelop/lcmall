@@ -18,10 +18,11 @@ public class WxMarketingWhitelistService {
     @Resource
     private WxMarketingWhitelistMapper wxMarketingWhitelistMapper;
 
-    public boolean contains(String phoneNumber) {
+    public boolean contains(Integer batchNo, String phoneNumber) {
         if (null != phoneNumber) {
             WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
             WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
+            criteria.andBatchNoEqualTo(batchNo);
             criteria.andPhoneNumberEqualTo(phoneNumber);
             return wxMarketingWhitelistMapper.countByExample(example) > 0;
         } else {
@@ -29,15 +30,19 @@ public class WxMarketingWhitelistService {
         }
     }
 
-    public List<WxMarketingWhitelist> queryAll() {
+    public List<WxMarketingWhitelist> queryByBatchNo(Integer batchNo) {
         WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
+        WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
+        criteria.andBatchNoEqualTo(batchNo);
         return wxMarketingWhitelistMapper.selectByExample(example);
     }
 
-    public List<WxMarketingWhitelist> queryByPhoneNumber(String phoneNumber) {
+    public List<WxMarketingWhitelist> queryByBatchNoAndPhoneNumber(Integer batchNo, String phoneNumber) {
         WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
         WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
+        criteria.andBatchNoEqualTo(batchNo);
         criteria.andPhoneNumberEqualTo(phoneNumber);
         return wxMarketingWhitelistMapper.selectByExample(example);
     }
+
 }

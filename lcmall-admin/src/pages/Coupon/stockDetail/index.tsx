@@ -12,12 +12,12 @@ import {
 } from "@/services/manager/marketing/api";
 import {ModalForm, ProFormInstance, ProFormText} from "@ant-design/pro-form";
 import styles from './index.less';
-import {InfoCircleOutlined} from "@ant-design/icons";
 
 const { Divider } = ProCard;
 
 export type StockDetailProps = {
   match: any;
+  history: any;
 };
 
 const StockDetail: React.FC<StockDetailProps> = (props) => {
@@ -189,6 +189,7 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
           <div><span className={styles.valueLabel}>可用结束时间</span><span>{stock?.availableEndTime}</span></div>
           <div><span className={styles.valueLabel}>已发券数量</span><span>{stock?.distributedCoupons}</span></div>
         </StatisticCard>
+
       </ProCard.Group>
 
       <Divider />

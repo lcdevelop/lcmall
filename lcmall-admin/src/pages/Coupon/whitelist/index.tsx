@@ -9,6 +9,10 @@ const Whitelist: React.FC = () => {
     {
       title: '手机号',
       dataIndex: 'phoneNumber',
+    },
+    {
+      title: '批号',
+      dataIndex: 'batchNo',
     }
   ]
 
@@ -20,7 +24,16 @@ const Whitelist: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={whitelist}
+        request={
+          async (params = {}) => {
+            return whitelist({
+              activityId: 1,
+              ...params
+            }).then(res => {
+              return res;
+            })
+          }
+        }
         columns={columns}
         pagination={{
           pageSize: 30
