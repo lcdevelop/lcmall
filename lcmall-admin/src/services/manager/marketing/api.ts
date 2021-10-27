@@ -16,6 +16,7 @@ const getCallbacksApiPath = apiPathPrefix + '/getCallbacks';
 const couponStatisticsApiPath = apiPathPrefix + '/couponStatistics';
 const activityApiPath = apiPathPrefix + '/activity';
 const activityExtrasApiPath = apiPathPrefix + '/activityExtras';
+const flowStatisticsApiPath = apiPathPrefix + '/flowStatistics';
 
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
@@ -176,6 +177,19 @@ export async function activityExtras(params: {
   activityId: number
 }, options?: { [key: string]: any }) {
   return request<API.Response<API.WxMarketingActivityExtraGroupEx>>(activityExtrasApiPath, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function flowStatistics(params: {
+  activityId: number,
+  dateStr: string,
+}, options?: { [key: string]: any }) {
+  return request<API.Response<API.FlowStatistics>>(flowStatisticsApiPath, {
     method: 'GET',
     params: {
       ...params,

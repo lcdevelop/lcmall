@@ -41,6 +41,7 @@ export default [
       { path: '/marketing/activity/list', name: '活动(activity)', component: './Coupon/activity'},
       { path: '/marketing/whitelist', name: '白名单', component: './Coupon/whitelist'},
       { path: '/marketing/statistics/:activityId', name: '数据统计', component: './Coupon/statistics', hideInMenu:true},
+      { path: '/marketing/flowstat/:activityId', name: '流量数据', component: './Coupon/flowstat', hideInMenu:true},
       { path: '/marketing/system', name: '系统设置', component: './Coupon/system'},
     ],
   },

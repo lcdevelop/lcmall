@@ -134,4 +134,11 @@ declare namespace API {
     name: string;
     extras: WxMarketingActivityExtra[];
   }
+
+  type FlowStatistics = {
+    pv: number;
+    uv: number;
+    clickPv: number;
+    clickUv: number;
+  }
 }

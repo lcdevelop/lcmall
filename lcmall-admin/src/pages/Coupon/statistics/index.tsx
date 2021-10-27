@@ -2,6 +2,7 @@ import React from 'react';
 import {PageContainer} from "@ant-design/pro-layout";
 import {couponStatistics} from "@/services/manager/marketing/api";
 import ProTable, {ProColumns} from "@ant-design/pro-table";
+import {Button, Divider} from "antd";
 
 export type StatisticsProps = {
   match: any;
@@ -47,7 +48,7 @@ const Statistics: React.FC<StatisticsProps> = (props: StatisticsProps) => {
   return (
     <PageContainer>
       <ProTable<API.CouponStatistics, API.PageParams>
-        headerTitle={'白名单数据统计'}
+        headerTitle={'活动ID:' + props.match.params.activityId + ' 白名单数据统计'}
         rowKey="whitelistPhoneNumber"
         search={{
           labelWidth: 120,

@@ -8,6 +8,7 @@ import com.github.binarywang.wxpay.v3.util.RsaCryptoUtil;
 import com.google.gson.annotations.SerializedName;
 import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.manager.CouponStatistics;
+import com.lcsays.lcmall.api.models.manager.FlowStatistics;
 import com.lcsays.lcmall.api.models.result.BaseModel;
 import com.lcsays.lcmall.api.utils.ApiUtils;
 import com.lcsays.lcmall.api.utils.RequestNo;
@@ -29,10 +30,7 @@ import com.google.gson.GsonBuilder;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: lichuang
@@ -69,6 +67,9 @@ public class ManagerMarketingController {
 
     @Resource
     WxMarketingActivityService wxMarketingActivityService;
+
+    @Resource
+    WxTrackService wxTrackService;
 
     @GetMapping("/whitelist")
     public BaseModel<List<WxMarketingWhitelist>> whitelist(HttpSession session,
@@ -520,6 +521,54 @@ public class ManagerMarketingController {
                     cs.setCouponsInfo(userCouponsInfoMap.get(wxMaUser.getId()));
                 }
                 ret.add(cs);
+            }
+            return BaseModel.success(ret);
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    @GetMapping("/flowStatistics")
+    public BaseModel<FlowStatistics> flowStatistics(HttpSession session,
+                                                          @RequestParam Integer activityId,
+                                                          @RequestParam String dateStr) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+            if (null == activity) {
+                return BaseModel.error(ErrorCode.PARAM_ERROR);
+            }
+
+            Map<String, Integer> eventTypeCounter = new HashMap<>();
+            Map<String, Set<String>> eventTypeSet = new HashMap<>();
+
+            Date begin = TimeUtils.timeStr2Date(dateStr + " 00:00:00");
+            Date end = TimeUtils.timeStr2Date(dateStr + " 23:59:59");
+            for (WxTrack track: wxTrackService.queryByActivityIdAndDateRange(activityId, begin, end)) {
+                if (eventTypeCounter.containsKey(track.getEventType())) {
+                    eventTypeCounter.put(track.getEventType(), eventTypeCounter.get(track.getEventType()) + 1);
+                    eventTypeSet.get(track.getEventType()).add(track.getIp() + track.getUa());
+                } else {
+                    eventTypeCounter.put(track.getEventType(), 1);
+
+                    Set<String> set = new HashSet<>();
+                    set.add(track.getIp() + track.getUa());
+                    eventTypeSet.put(track.getEventType(), set);
+                }
+            }
+
+            FlowStatistics ret = new FlowStatistics();
+            ret.setPv(eventTypeCounter.get("stockIndexPageView"));
+            if (null != eventTypeSet.get("stockIndexPageView")) {
+                ret.setUv(eventTypeSet.get("stockIndexPageView").size());
+            }
+            ret.setClickPv(eventTypeCounter.get("getCouponInternal"));
+            if (null != eventTypeSet.get("getCouponInternal")) {
+                ret.setClickUv(eventTypeSet.get("getCouponInternal").size());
             }
             return BaseModel.success(ret);
         } else {

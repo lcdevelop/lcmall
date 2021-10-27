@@ -55,6 +55,11 @@ public class TimeUtils {
         return Timestamp.valueOf(timeStr);
     }
 
+    public static Date timeStr2Date(String timeStr) {
+        Timestamp t = Timestamp.valueOf(timeStr);
+        return new Date(t.getTime());
+    }
+
     /**
      * timeStr必须是2011-05-09 11:49:45这种格式
      * @param timeStr

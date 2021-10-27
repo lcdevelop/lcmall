@@ -12,19 +12,19 @@ const Statistics: React.FC = () => {
 
   const columns: ProColumns<API.WxMarketingActivity>[] = [
     {
-      title: 'id',
+      title: '活动ID',
       dataIndex: 'id',
     },
     {
-      title: 'name',
+      title: '活动名称',
       dataIndex: 'name',
     },
     {
-      title: 'templateType',
+      title: '界面模板类型',
       dataIndex: 'templateType',
     },
     {
-      title: 'stockIdList',
+      title: '批次列表',
       render: (_, entity) => {
         return entity.stockIdList.split(',').map((value, index) => {
           return (
@@ -36,14 +36,16 @@ const Statistics: React.FC = () => {
       }
     },
     {
-      title: 'createTime',
+      title: '创建时间',
       dataIndex: 'createTime',
     },
     {
-      title: 'urlLink',
+      title: '短信链接',
       render: (_, entity) => {
-        if (entity.urlLink === null || entity.urlLink === '') {
-          return (
+        return (
+          <div>
+            {entity.urlLink}
+            <br />
             <a onClick={() => {
               generateMaLink({
                 appId: initialState?.currentWxUser?.sessionWxApp.appId!,
@@ -63,18 +65,26 @@ const Statistics: React.FC = () => {
                   message.error(res.msg).then();
                 }
               })
-            }}>生成</a>
-          )
-        } else {
-          return <div>{entity.urlLink}</div>
-        }
+            }}>
+              {entity.urlLink === null || entity.urlLink === '' ?
+              "生成"
+              :
+              "重新生成"
+              }
+            </a>
+          </div>
+        )
       }
     },
     {
       title: '数据统计',
       render: (_, entity) => {
         return (
-          <a href={'#/marketing/statistics/' + entity.id}>数据统计</a>
+          <div>
+            <a href={'#/marketing/statistics/' + entity.id}>白名单数据统计</a>
+            <br />
+            <a href={'#/marketing/flowstat/' + entity.id}>流量数据统计</a>
+          </div>
         )
       }
     },
