@@ -6,7 +6,9 @@ import com.lcsays.lcmall.db.model.WxMarketingWhitelistExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: lichuang
@@ -34,6 +36,14 @@ public class WxMarketingWhitelistService {
         WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
         WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
         criteria.andBatchNoEqualTo(batchNo);
+        return wxMarketingWhitelistMapper.selectByExample(example);
+    }
+
+    public List<WxMarketingWhitelist> queryByBatchNoAndPhoneNumbers(Integer batchNo, List<String> phoneNumbers) {
+        WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
+        WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
+        criteria.andBatchNoEqualTo(batchNo);
+        criteria.andPhoneNumberIn(phoneNumbers);
         return wxMarketingWhitelistMapper.selectByExample(example);
     }
 

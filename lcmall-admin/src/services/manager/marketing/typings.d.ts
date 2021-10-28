@@ -97,6 +97,9 @@ declare namespace API {
     status: string;
     transactionMinimum: number;
     couponAmount: number;
+    consumeTime: string;
+    consumeMchid: string;
+    transactionId: string;
   }
 
   type CouponsInfo = {

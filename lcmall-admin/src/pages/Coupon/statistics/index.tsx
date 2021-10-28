@@ -2,7 +2,7 @@ import React from 'react';
 import {PageContainer} from "@ant-design/pro-layout";
 import {couponStatistics} from "@/services/manager/marketing/api";
 import ProTable, {ProColumns} from "@ant-design/pro-table";
-import {Button, Divider} from "antd";
+import {Button, Divider, Popover} from "antd";
 
 export type StatisticsProps = {
   match: any;
@@ -33,9 +33,33 @@ const Statistics: React.FC<StatisticsProps> = (props: StatisticsProps) => {
     },
     {
       title: '核销券数',
-      render: (_, entity) => (
-        entity.couponsInfo?.consumeCount || 0
-      )
+      render: (_, entity) => {
+        if (entity.couponsInfo && entity.couponsInfo?.consumeCount) {
+          return (
+            <Popover content={
+              <div>
+                {entity.couponsInfo.coupons.map((value, index) => {
+                  return (
+                    <div key={index}>
+                      核销商户号: {value.consumeMchid}   核销时间: {value.consumeTime}    核销交易流水号: {value.transactionId}
+                    </div>
+                  )
+                })}
+              </div>
+            }>
+              <a>
+              {entity.couponsInfo?.consumeCount}
+              </a>
+            </Popover>
+          )
+        } else {
+          return (
+            <div>
+            0
+            </div>
+          )
+        }
+      }
     },
     {
       title: '核销金额',

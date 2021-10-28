@@ -1,9 +1,11 @@
 package com.lcsays.lcmall.api.models.manager;
 
+import com.lcsays.lcmall.api.utils.TimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +26,9 @@ public class CouponStatistics {
         private String status;
         private Integer transactionMinimum; // 门槛
         private Integer couponAmount; // 面额
+        private Date consumeTime;
+        private String consumeMchid;
+        private String transactionId;
     }
 
     @Data

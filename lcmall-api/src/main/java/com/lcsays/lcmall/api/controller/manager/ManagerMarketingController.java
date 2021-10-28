@@ -474,6 +474,9 @@ public class ManagerMarketingController {
                         item.setTransactionMinimum(stock.getTransactionMinimum());
                         item.setCouponAmount(stock.getCouponAmount());
                         if ("USED".equals(coupon.getStatus())) {
+                            item.setConsumeMchid(coupon.getConsumeMchid());
+                            item.setConsumeTime(coupon.getConsumeTime());
+                            item.setTransactionId(coupon.getTransactionId());
                             couponsInfo.setConsumeCount(couponsInfo.getConsumeCount() + 1);
                             if (null != stock.getCouponAmount()) {
                                 couponsInfo.setConsumeAmount(couponsInfo.getConsumeAmount() + stock.getCouponAmount());
@@ -499,6 +502,9 @@ public class ManagerMarketingController {
                         item.setTransactionMinimum(stock.getTransactionMinimum());
                         item.setCouponAmount(stock.getCouponAmount());
                         if ("USED".equals(coupon.getStatus())) {
+                            item.setConsumeMchid(coupon.getConsumeMchid());
+                            item.setConsumeTime(coupon.getConsumeTime());
+                            item.setTransactionId(coupon.getTransactionId());
                             couponsInfo.setConsumeCount(1);
                             couponsInfo.setConsumeAmount(stock.getCouponAmount());
                         }
@@ -511,17 +517,22 @@ public class ManagerMarketingController {
             }
 
             List<CouponStatistics> ret = new ArrayList<>();
-            for (WxMarketingWhitelist whitelistItem: wxMarketingWhitelistService.queryByBatchNo(activity.getWhitelistBatchNo())) {
+
+            for (WxMarketingWhitelist whitelistItem:
+                    wxMarketingWhitelistService.queryByBatchNoAndPhoneNumbers(
+                            activity.getWhitelistBatchNo(),
+                            new ArrayList<>(usersWithPhoneNumberMap.keySet())
+                    )) {
                 CouponStatistics cs = new CouponStatistics();
                 String whitelistPhoneNumber = whitelistItem.getPhoneNumber();
                 cs.setWhitelistPhoneNumber(whitelistPhoneNumber);
-                if (usersWithPhoneNumberMap.containsKey(whitelistPhoneNumber)) {
-                    cs.setWxMaUserHasPhoneNumber(true);
-                    WxMaUser wxMaUser = usersWithPhoneNumberMap.get(whitelistPhoneNumber);
-                    cs.setCouponsInfo(userCouponsInfoMap.get(wxMaUser.getId()));
-                }
+                cs.setWxMaUserHasPhoneNumber(true);
+                WxMaUser wxMaUser = usersWithPhoneNumberMap.get(whitelistPhoneNumber);
+                cs.setCouponsInfo(userCouponsInfoMap.get(wxMaUser.getId()));
                 ret.add(cs);
             }
+
+
             return BaseModel.success(ret);
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
