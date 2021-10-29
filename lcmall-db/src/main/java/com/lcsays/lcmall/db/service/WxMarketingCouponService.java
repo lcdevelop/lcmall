@@ -51,8 +51,10 @@ public class WxMarketingCouponService {
 
     public List<WxMarketingCoupon> queryByStockIds(String[] stockIds) {
         WxMarketingCouponExample example = new WxMarketingCouponExample();
+        example.setOrderByClause("`create_time` ASC");
         WxMarketingCouponExample.Criteria criteria = example.createCriteria();
         criteria.andStockIdIn(Arrays.asList(stockIds));
+        criteria.andCreateTimeIsNotNull();
         return marketingCouponMapper.selectByExample(example);
     }
 }

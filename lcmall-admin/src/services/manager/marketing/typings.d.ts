@@ -144,4 +144,9 @@ declare namespace API {
     clickPv: number;
     clickUv: number;
   }
+
+  type TrendStat = {
+    keys: string[];
+    values: number[];
+  }
 }

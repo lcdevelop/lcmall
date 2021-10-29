@@ -14,6 +14,7 @@ const whitelistApiPath = apiPathPrefix + '/whitelist';
 const setCallbacksApiPath = apiPathPrefix + '/setCallbacks';
 const getCallbacksApiPath = apiPathPrefix + '/getCallbacks';
 const couponStatisticsApiPath = apiPathPrefix + '/couponStatistics';
+const trendStatApiPath = apiPathPrefix + '/trendStat';
 const activityApiPath = apiPathPrefix + '/activity';
 const activityExtrasApiPath = apiPathPrefix + '/activityExtras';
 const flowStatisticsApiPath = apiPathPrefix + '/flowStatistics';
@@ -112,7 +113,7 @@ export async function getWxMarketingStockByStockId(params: {
       ...params,
     },
     ...(options || {}),
-  });
+  })
 }
 
 export async function whitelist(params: {
@@ -150,6 +151,18 @@ export async function couponStatistics(params: {
   activityId: number,
 }, options?: { [key: string]: any }) {
   return request<API.Response<API.CouponStatistics[]>>(couponStatisticsApiPath, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function trendStat(params: {
+  activityId: number,
+}, options?: { [key: string]: any }) {
+  return request<API.Response<API.TrendStat>>(trendStatApiPath, {
     method: 'GET',
     params: {
       ...params,

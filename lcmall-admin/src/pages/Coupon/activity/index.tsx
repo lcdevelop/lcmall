@@ -2,8 +2,8 @@ import React, {useRef} from 'react';
 import {PageContainer} from "@ant-design/pro-layout";
 import {activity, generateMaLink, updateActivity} from "@/services/manager/marketing/api";
 import ProTable, {ActionType, ProColumns} from "@ant-design/pro-table";
-import {useModel} from "@@/plugin-model/useModel";
 import {message} from "antd";
+import {useModel} from "@@/plugin-model/useModel";
 
 const Statistics: React.FC = () => {
 
@@ -82,6 +82,8 @@ const Statistics: React.FC = () => {
         return (
           <div>
             <a href={'#/marketing/statistics/' + entity.id}>白名单数据统计</a>
+            <br />
+            <a href={'#/marketing/trendstat/' + entity.id}>趋势统计</a>
             <br />
             <a href={'#/marketing/flowstat/' + entity.id}>流量数据统计</a>
           </div>

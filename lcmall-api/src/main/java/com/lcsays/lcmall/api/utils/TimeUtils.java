@@ -40,6 +40,14 @@ public class TimeUtils {
         return calendar;
     }
 
+    public static String date2YMD(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR)
+                + "-" + calendar.get(Calendar.MONTH)
+                + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
     public static Calendar timestamp2Calendar(Timestamp timestamp) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(timestamp.getTime()));

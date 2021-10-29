@@ -8,6 +8,7 @@ import com.github.binarywang.wxpay.v3.util.RsaCryptoUtil;
 import com.google.gson.annotations.SerializedName;
 import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.manager.CouponStatistics;
+import com.lcsays.lcmall.api.models.manager.TrendStatistics;
 import com.lcsays.lcmall.api.models.manager.FlowStatistics;
 import com.lcsays.lcmall.api.models.result.BaseModel;
 import com.lcsays.lcmall.api.utils.ApiUtils;
@@ -582,6 +583,72 @@ public class ManagerMarketingController {
                 ret.setClickUv(eventTypeSet.get("getCouponInternal").size());
             }
             return BaseModel.success(ret);
+        } else {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    /**
+     * 按时间范围统计
+     * @param session
+     * @param activityId
+     * @return
+     */
+    @GetMapping("/trendStat")
+    public BaseModel<TrendStatistics> trendStat(HttpSession session,
+                                                @RequestParam Integer activityId) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+            if (null == activity) {
+                return BaseModel.error(ErrorCode.PARAM_ERROR);
+            }
+
+            String[] stockIds = WxMarketingActivityUtil.getStockIds(activity);
+            String [] stockIds2 = {"15956311", "15956243", "15968938", "15974650", "15984657", "15989523"};
+            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByStockIds(stockIds);
+
+            // 先按日期平均分格子
+            Map<String, Integer> dateCounter = new TreeMap<>();
+            Date begin = coupons.get(0).getCreateTime();
+            Date end = coupons.get(coupons.size()-1).getCreateTime();
+            Calendar c = Calendar.getInstance();
+            for (Date cur = begin; cur.before(end); ) {
+                String ymd = TimeUtils.date2YMD(cur);
+                dateCounter.put(ymd, 0);
+                c.setTime(cur);
+                c.add(Calendar.DAY_OF_MONTH, 1);
+                cur = c.getTime();
+            }
+
+            // 挨个往格子里加
+            for (WxMarketingCoupon coupon: coupons) {
+                if (coupon.getCreateTime() != null) {
+                    String ymd = TimeUtils.date2YMD(coupon.getCreateTime());
+                    if (dateCounter.containsKey(ymd)) {
+                        dateCounter.put(ymd, dateCounter.get(ymd) + 1);
+                    } else {
+                        dateCounter.put(ymd, 1);
+                    }
+                }
+            }
+
+            List<String> keys = new ArrayList<>();
+            List<Integer> values = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry: dateCounter.entrySet()) {
+                keys.add(entry.getKey());
+                values.add(entry.getValue());
+            }
+
+            TrendStatistics data = new TrendStatistics();
+            data.setKeys(keys);
+            data.setValues(values);
+
+            return BaseModel.success(data);
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
