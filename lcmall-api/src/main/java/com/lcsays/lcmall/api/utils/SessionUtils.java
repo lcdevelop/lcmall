@@ -93,7 +93,9 @@ public class SessionUtils {
     public static com.lcsays.lcmall.db.model.WxMaUser getWxUserFromSession(HttpSession session) {
         com.lcsays.lcmall.db.model.WxMaUser ret
                 = (com.lcsays.lcmall.db.model.WxMaUser) session.getAttribute(WX_USER_SESSION_KEY);
-        UserIdLogConverter.LoggerConfigHolder.set(String.valueOf(ret.getId()));
+        if (null != ret) {
+            UserIdLogConverter.LoggerConfigHolder.set(String.valueOf(ret.getId()));
+        }
         return ret;
     }
 
