@@ -38,6 +38,7 @@ const Stock: React.FC<StockProps> = (props: StockProps) => {
     {
       title: '描述信息',
       dataIndex: 'description',
+      ellipsis: true,
     },
     {
       title: '可用开始时间',

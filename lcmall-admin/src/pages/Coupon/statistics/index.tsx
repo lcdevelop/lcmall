@@ -38,7 +38,9 @@ const Statistics: React.FC<StatisticsProps> = (props: StatisticsProps) => {
           return (
             <Popover content={
               <div>
-                {entity.couponsInfo.coupons.map((value, index) => {
+                {entity.couponsInfo.coupons.filter(value => {
+                  return value.consumeTime !== null
+                }).map((value, index) => {
                   return (
                     <div key={index}>
                       核销商户号: {value.consumeMchid}   核销时间: {value.consumeTime}    核销交易流水号: {value.transactionId}
