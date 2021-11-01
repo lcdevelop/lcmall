@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="true">
-    <conversionRule conversionWord="userId" converterClass="com.lcsays.lcmall.api.utils.UserIdLogConverter" />
+    <conversionRule conversionWord="userId" converterClass="com.lcsays.lcmall.api.config.logger.UserIdLogConverter" />
+    <conversionRule conversionWord="logLevel" converterClass="com.lcsays.lcmall.api.config.logger.LogLevelConverter" />
     <contextName>logback</contextName>
     <property name="log.path" value="logs" />
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>debug</level>
+            <level>info</level>
         </filter>
         <encoder>
-            <pattern>%d %replace(%replace(%replace(%replace(%p){'INFO', 'I'}){'DEBUG', 'D'}){'ERROR', 'E'}){'WARN', 'W'} %yellow(%userId) %cyan(%msg) ###[%file:%line]%n
+            <pattern>%d %logLevel %yellow(%userId) %cyan(%msg) ###[%file:%line]%n
             </pattern>
         </encoder>
     </appender>
