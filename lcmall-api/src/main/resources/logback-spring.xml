@@ -22,7 +22,7 @@
         </rollingPolicy>
 
         <encoder>
-            <pattern>%d %replace(%replace(%replace(%replace(%p){'INFO', 'I'}){'DEBUG', 'D'}){'ERROR', 'E'}){'WARN', 'W'} %yellow(%userId) %cyan(%msg) ###[%file:%line]%n
+            <pattern>%d %logLevel %yellow(%userId) %cyan(%msg) ###[%file:%line]%n
             </pattern>
         </encoder>
     </appender>
