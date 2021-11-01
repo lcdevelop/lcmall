@@ -127,6 +127,8 @@ public class WxMiniappUserController {
                 wxMaUser.setCity(userInfo.getCity());
                 wxMaUser.setLanguage(userInfo.getLanguage());
                 wxMaUserService.update(wxMaUser);
+                // 每当更新了数据库要重新刷到session里
+                SessionUtils.updateWxMaUser2Session(wxMaUserService, session, wxMaUser.getId());
                 return BaseModel.success();
             } else {
                 return BaseModel.error(ErrorCode.NEED_LOGIN);
@@ -135,7 +137,6 @@ public class WxMiniappUserController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
     }
-
 
     @PostMapping("/decryptPhoneNumber")
     public BaseModel<String> decryptPhoneNumber(HttpSession session,
@@ -152,6 +153,8 @@ public class WxMiniappUserController {
                     );
             log.info(phoneNoInfo.toString());
             wxMaUserService.updatePhoneNumber(wxMaUser.getId(), phoneNoInfo.getPhoneNumber());
+            // 每当更新了数据库要重新刷到session里
+            SessionUtils.updateWxMaUser2Session(wxMaUserService, session, wxMaUser.getId());
             return BaseModel.success();
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);

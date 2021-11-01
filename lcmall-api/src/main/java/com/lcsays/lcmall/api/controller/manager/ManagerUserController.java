@@ -109,6 +109,8 @@ public class ManagerUserController {
             }
             u.setRole(role);
             wxMaUserService.update(u);
+            // 每当更新了数据库要重新刷到session里
+            SessionUtils.updateWxMaUser2Session(wxMaUserService, session, u.getId());
             return BaseModel.success();
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);

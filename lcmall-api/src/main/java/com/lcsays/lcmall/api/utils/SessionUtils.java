@@ -1,6 +1,7 @@
 package com.lcsays.lcmall.api.utils;
 
 import com.lcsays.lcmall.api.models.weixin.WxMaUser;
+import com.lcsays.lcmall.db.service.WxMaUserService;
 import lombok.Data;
 
 import javax.servlet.http.HttpSession;
@@ -90,5 +91,10 @@ public class SessionUtils {
 
     public static com.lcsays.lcmall.db.model.WxMaUser getWxUserFromSession(HttpSession session) {
         return (com.lcsays.lcmall.db.model.WxMaUser)session.getAttribute(WX_USER_SESSION_KEY);
+    }
+
+    public static void updateWxMaUser2Session(WxMaUserService service, HttpSession session, Integer wxMaUserId) {
+        com.lcsays.lcmall.db.model.WxMaUser wxMaUser = service.getWxMaUserById(wxMaUserId);
+        saveWxUserToSession(session, wxMaUser);
     }
 }
