@@ -12,6 +12,18 @@ public class WxMaUser implements Serializable {
 
     private String unionid;
 
+    private String phoneNumber;
+
+    private Integer sessionWxAppId;
+
+    private String sessionKey;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private String role;
+
     private String nickname;
 
     private String avatarUrl;
@@ -23,18 +35,6 @@ public class WxMaUser implements Serializable {
     private String country;
 
     private String city;
-
-    private String sessionKey;
-
-    private Integer sessionWxAppId;
-
-    private String role;
-
-    private Date createTime;
-
-    private Date updateTime;
-
-    private String phoneNumber;
 
     private static final long serialVersionUID = 1L;
 
@@ -68,6 +68,54 @@ public class WxMaUser implements Serializable {
 
     public void setUnionid(String unionid) {
         this.unionid = unionid;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Integer getSessionWxAppId() {
+        return sessionWxAppId;
+    }
+
+    public void setSessionWxAppId(Integer sessionWxAppId) {
+        this.sessionWxAppId = sessionWxAppId;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getNickname() {
@@ -118,54 +166,6 @@ public class WxMaUser implements Serializable {
         this.city = city;
     }
 
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
-    }
-
-    public Integer getSessionWxAppId() {
-        return sessionWxAppId;
-    }
-
-    public void setSessionWxAppId(Integer sessionWxAppId) {
-        this.sessionWxAppId = sessionWxAppId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -176,18 +176,18 @@ public class WxMaUser implements Serializable {
         sb.append(", wxAppId=").append(wxAppId);
         sb.append(", openid=").append(openid);
         sb.append(", unionid=").append(unionid);
+        sb.append(", phoneNumber=").append(phoneNumber);
+        sb.append(", sessionWxAppId=").append(sessionWxAppId);
+        sb.append(", sessionKey=").append(sessionKey);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", role=").append(role);
         sb.append(", nickname=").append(nickname);
         sb.append(", avatarUrl=").append(avatarUrl);
         sb.append(", gender=").append(gender);
         sb.append(", language=").append(language);
         sb.append(", country=").append(country);
         sb.append(", city=").append(city);
-        sb.append(", sessionKey=").append(sessionKey);
-        sb.append(", sessionWxAppId=").append(sessionWxAppId);
-        sb.append(", role=").append(role);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", phoneNumber=").append(phoneNumber);
         sb.append("]");
         return sb.toString();
     }

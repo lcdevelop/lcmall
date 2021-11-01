@@ -20,7 +20,7 @@ public class WxAppService {
 
     public List<WxApp> appList() {
         WxAppExample example = new WxAppExample();
-        example.or().andAppIdIsNotNull();
+        example.createCriteria().andIsDelEqualTo(false);
         return wxAppMapper.selectByExample(example);
     }
 

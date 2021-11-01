@@ -80,6 +80,7 @@ const Login: React.FC = () => {
         return (
           <Col key={value.id} span={4}>
             <Card
+              bordered={true}
               hoverable
               className={styles.card}
               cover={<img alt="example" className={styles.cardImage} src={value.image} />}

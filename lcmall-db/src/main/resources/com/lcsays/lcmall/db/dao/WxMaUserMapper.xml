@@ -6,18 +6,18 @@
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
     <result column="openid" jdbcType="VARCHAR" property="openid" />
     <result column="unionid" jdbcType="VARCHAR" property="unionid" />
+    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="session_wx_app_id" jdbcType="INTEGER" property="sessionWxAppId" />
+    <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="gender" jdbcType="VARCHAR" property="gender" />
     <result column="language" jdbcType="VARCHAR" property="language" />
     <result column="country" jdbcType="VARCHAR" property="country" />
     <result column="city" jdbcType="VARCHAR" property="city" />
-    <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
-    <result column="session_wx_app_id" jdbcType="INTEGER" property="sessionWxAppId" />
-    <result column="role" jdbcType="VARCHAR" property="role" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -78,8 +78,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, wx_app_id, openid, unionid, nickname, avatar_url, gender, language, country, 
-    city, session_key, session_wx_app_id, role, create_time, update_time, phone_number
+    id, wx_app_id, openid, unionid, phone_number, session_wx_app_id, session_key, create_time, 
+    update_time, role, nickname, avatar_url, gender, language, country, city
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMaUserExample" resultMap="BaseResultMap">
     select
@@ -106,16 +106,16 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into wx_ma_user (wx_app_id, openid, unionid, 
+      phone_number, session_wx_app_id, session_key, 
+      create_time, update_time, role, 
       nickname, avatar_url, gender, 
-      language, country, city, 
-      session_key, session_wx_app_id, role, 
-      create_time, update_time, phone_number
+      language, country, city
       )
     values (#{wxAppId,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{unionid,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{sessionWxAppId,jdbcType=INTEGER}, #{sessionKey,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{role,jdbcType=VARCHAR}, 
       #{nickname,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
-      #{language,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{sessionKey,jdbcType=VARCHAR}, #{sessionWxAppId,jdbcType=INTEGER}, #{role,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{phoneNumber,jdbcType=VARCHAR}
+      #{language,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMaUser">
@@ -132,6 +132,24 @@
       </if>
       <if test="unionid != null">
         unionid,
+      </if>
+      <if test="phoneNumber != null">
+        phone_number,
+      </if>
+      <if test="sessionWxAppId != null">
+        session_wx_app_id,
+      </if>
+      <if test="sessionKey != null">
+        session_key,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="role != null">
+        role,
       </if>
       <if test="nickname != null">
         nickname,
@@ -151,24 +169,6 @@
       <if test="city != null">
         city,
       </if>
-      <if test="sessionKey != null">
-        session_key,
-      </if>
-      <if test="sessionWxAppId != null">
-        session_wx_app_id,
-      </if>
-      <if test="role != null">
-        role,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="phoneNumber != null">
-        phone_number,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="wxAppId != null">
@@ -179,6 +179,24 @@
       </if>
       <if test="unionid != null">
         #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionWxAppId != null">
+        #{sessionWxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="sessionKey != null">
+        #{sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=VARCHAR},
       </if>
       <if test="nickname != null">
         #{nickname,jdbcType=VARCHAR},
@@ -197,24 +215,6 @@
       </if>
       <if test="city != null">
         #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="sessionKey != null">
-        #{sessionKey,jdbcType=VARCHAR},
-      </if>
-      <if test="sessionWxAppId != null">
-        #{sessionWxAppId,jdbcType=INTEGER},
-      </if>
-      <if test="role != null">
-        #{role,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="phoneNumber != null">
-        #{phoneNumber,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -239,6 +239,24 @@
       <if test="record.unionid != null">
         unionid = #{record.unionid,jdbcType=VARCHAR},
       </if>
+      <if test="record.phoneNumber != null">
+        phone_number = #{record.phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sessionWxAppId != null">
+        session_wx_app_id = #{record.sessionWxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="record.sessionKey != null">
+        session_key = #{record.sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.role != null">
+        role = #{record.role,jdbcType=VARCHAR},
+      </if>
       <if test="record.nickname != null">
         nickname = #{record.nickname,jdbcType=VARCHAR},
       </if>
@@ -257,24 +275,6 @@
       <if test="record.city != null">
         city = #{record.city,jdbcType=VARCHAR},
       </if>
-      <if test="record.sessionKey != null">
-        session_key = #{record.sessionKey,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sessionWxAppId != null">
-        session_wx_app_id = #{record.sessionWxAppId,jdbcType=INTEGER},
-      </if>
-      <if test="record.role != null">
-        role = #{record.role,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.phoneNumber != null">
-        phone_number = #{record.phoneNumber,jdbcType=VARCHAR},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -286,18 +286,18 @@
       wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
       openid = #{record.openid,jdbcType=VARCHAR},
       unionid = #{record.unionid,jdbcType=VARCHAR},
+      phone_number = #{record.phoneNumber,jdbcType=VARCHAR},
+      session_wx_app_id = #{record.sessionWxAppId,jdbcType=INTEGER},
+      session_key = #{record.sessionKey,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      role = #{record.role,jdbcType=VARCHAR},
       nickname = #{record.nickname,jdbcType=VARCHAR},
       avatar_url = #{record.avatarUrl,jdbcType=VARCHAR},
       gender = #{record.gender,jdbcType=VARCHAR},
       language = #{record.language,jdbcType=VARCHAR},
       country = #{record.country,jdbcType=VARCHAR},
-      city = #{record.city,jdbcType=VARCHAR},
-      session_key = #{record.sessionKey,jdbcType=VARCHAR},
-      session_wx_app_id = #{record.sessionWxAppId,jdbcType=INTEGER},
-      role = #{record.role,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      phone_number = #{record.phoneNumber,jdbcType=VARCHAR}
+      city = #{record.city,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

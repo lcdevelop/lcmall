@@ -11,6 +11,7 @@
     <result column="wxa_code_url" jdbcType="VARCHAR" property="wxaCodeUrl" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
+    <result column="is_del" jdbcType="BIT" property="isDel" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, app_id, original_id, image, auth, wxa_code_url, type, mch_id
+    id, name, app_id, original_id, image, auth, wxa_code_url, type, mch_id, is_del
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxAppExample" resultMap="BaseResultMap">
     select
@@ -99,10 +100,10 @@
     </selectKey>
     insert into wx_app (name, app_id, original_id, 
       image, auth, wxa_code_url, 
-      type, mch_id)
+      type, mch_id, is_del)
     values (#{name,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{originalId,jdbcType=VARCHAR}, 
       #{image,jdbcType=VARCHAR}, #{auth,jdbcType=INTEGER}, #{wxaCodeUrl,jdbcType=VARCHAR}, 
-      #{type,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR})
+      #{type,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR}, #{isDel,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxApp">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -134,6 +135,9 @@
       <if test="mchId != null">
         mch_id,
       </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -159,6 +163,9 @@
       </if>
       <if test="mchId != null">
         #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -198,6 +205,9 @@
       <if test="record.mchId != null">
         mch_id = #{record.mchId,jdbcType=VARCHAR},
       </if>
+      <if test="record.isDel != null">
+        is_del = #{record.isDel,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -213,7 +223,8 @@
       auth = #{record.auth,jdbcType=INTEGER},
       wxa_code_url = #{record.wxaCodeUrl,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
-      mch_id = #{record.mchId,jdbcType=VARCHAR}
+      mch_id = #{record.mchId,jdbcType=VARCHAR},
+      is_del = #{record.isDel,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

@@ -21,6 +21,8 @@ public class WxApp implements Serializable {
 
     private String mchId;
 
+    private Boolean isDel;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -95,6 +97,14 @@ public class WxApp implements Serializable {
         this.mchId = mchId;
     }
 
+    public Boolean getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Boolean isDel) {
+        this.isDel = isDel;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -110,6 +120,7 @@ public class WxApp implements Serializable {
         sb.append(", wxaCodeUrl=").append(wxaCodeUrl);
         sb.append(", type=").append(type);
         sb.append(", mchId=").append(mchId);
+        sb.append(", isDel=").append(isDel);
         sb.append("]");
         return sb.toString();
     }
