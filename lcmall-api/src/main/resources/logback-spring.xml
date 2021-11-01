@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="true">
+    <conversionRule conversionWord="userId" converterClass="com.lcsays.lcmall.api.utils.UserIdLogConverter" />
     <contextName>logback</contextName>
     <property name="log.path" value="logs" />
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>info</level>
+            <level>debug</level>
         </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss} [%thread] %-5level%logger{36} [%file:%line] - %msg%n
+            <pattern>%d %replace(%replace(%replace(%replace(%p){'INFO', 'I'}){'DEBUG', 'D'}){'ERROR', 'E'}){'WARN', 'W'} %yellow(%userId) %cyan(%msg) ###[%file:%line]%n
             </pattern>
         </encoder>
     </appender>
@@ -20,7 +21,7 @@
         </rollingPolicy>
 
         <encoder>
-            <pattern>%date %-5level [%file:%line] - %msg%n
+            <pattern>%d %replace(%replace(%replace(%replace(%p){'INFO', 'I'}){'DEBUG', 'D'}){'ERROR', 'E'}){'WARN', 'W'} %yellow(%userId) %cyan(%msg) ###[%file:%line]%n
             </pattern>
         </encoder>
     </appender>
