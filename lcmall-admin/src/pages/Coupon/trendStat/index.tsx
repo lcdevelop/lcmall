@@ -13,7 +13,7 @@ const TrendStat: React.FC<TrendStatProps> = (props: TrendStatProps) => {
   const [data, setData] = useState<number[]>();
 
   useEffect(() => {
-    trendStat({activityId: 4}).then(res => {
+    trendStat({activityId: props.match.params.activityId}).then(res => {
       if (res.code === 200) {
         setDate(res.data!.keys);
         setData(res.data!.values);
@@ -31,7 +31,7 @@ const TrendStat: React.FC<TrendStatProps> = (props: TrendStatProps) => {
       },
       title: {
         left: 'center',
-        text: '领券趋势统计'
+        text: '活动ID:' + props.match.params.activityId + ' 领券趋势统计'
       },
       toolbox: {
         feature: {
