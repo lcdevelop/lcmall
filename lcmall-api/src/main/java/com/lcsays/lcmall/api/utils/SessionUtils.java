@@ -90,11 +90,17 @@ public class SessionUtils {
         session.setAttribute(WX_USER_SESSION_KEY, wxMaUser);
     }
 
+    public static com.lcsays.lcmall.db.model.WxMaUser updateLoggerVarUserId(HttpSession session) {
+        return getWxUserFromSession(session);
+    }
+
     public static com.lcsays.lcmall.db.model.WxMaUser getWxUserFromSession(HttpSession session) {
         com.lcsays.lcmall.db.model.WxMaUser ret
                 = (com.lcsays.lcmall.db.model.WxMaUser) session.getAttribute(WX_USER_SESSION_KEY);
         if (null != ret) {
             UserIdLogConverter.LoggerConfigHolder.set(String.valueOf(ret.getId()));
+        } else {
+            UserIdLogConverter.LoggerConfigHolder.set("-");
         }
         return ret;
     }

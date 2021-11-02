@@ -83,7 +83,9 @@ public class WxMaMarketingController {
     }
 
     @GetMapping("/activityExtras")
-    public BaseModel<List<WxMarketingActivityExtraGroupEx>> activityExtras(@RequestParam Integer activityId) {
+    public BaseModel<List<WxMarketingActivityExtraGroupEx>> activityExtras(HttpSession session, @RequestParam Integer activityId) {
+        SessionUtils.updateLoggerVarUserId(session);
+
         WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
 
         // 取出所有的group信息，并构造id到group的字典
@@ -237,9 +239,12 @@ public class WxMaMarketingController {
     }
 
     @GetMapping("/generateUrlLink")
-    public BaseModel<String> generateUrlLink(@PathVariable String appId,
+    public BaseModel<String> generateUrlLink(HttpSession session,
+                                             @PathVariable String appId,
                                              @RequestParam Integer activityId,
                                              @RequestParam Integer templateType) {
+        SessionUtils.updateLoggerVarUserId(session);
+
         WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
         if (null == activity) {
             return BaseModel.error(ErrorCode.PARAM_ERROR);

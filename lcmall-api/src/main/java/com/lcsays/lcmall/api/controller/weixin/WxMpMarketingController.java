@@ -103,12 +103,14 @@ public class WxMpMarketingController {
      * @return
      */
     @PostMapping("/payNotify")
-    public WxResp payNotify(@PathVariable String appId,
+    public WxResp payNotify(HttpSession session,
+                            @PathVariable String appId,
                             @RequestHeader("wechatpay-timestamp") String timestamp,
                             @RequestHeader("wechatpay-nonce") String nonce,
                             @RequestHeader("wechatpay-signature") String signature,
                             @RequestHeader("wechatpay-serial") String serial,
                             @RequestBody String notifyData) {
+        SessionUtils.updateLoggerVarUserId(session);
 
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null != wxApp) {
