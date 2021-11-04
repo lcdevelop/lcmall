@@ -27,7 +27,7 @@ public class WxTrackService {
     public List<WxTrack> queryByActivityIdAndDateRange(Integer activityId, Date begin, Date end) {
         WxTrackExample example = new WxTrackExample();
         WxTrackExample.Criteria criteria = example.createCriteria();
-        criteria.andMsgLike("pages/stock/index?activityId=" + activityId + "&%");
+        criteria.andMsgLike("%activityId=" + activityId + "%");
         criteria.andCreateTimeBetween(begin, end);
         return wxTrackMapper.selectByExample(example);
     }

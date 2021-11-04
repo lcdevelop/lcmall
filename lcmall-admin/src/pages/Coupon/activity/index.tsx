@@ -85,7 +85,7 @@ const Statistics: React.FC = () => {
             <br />
             <a href={'#/marketing/trendstat/' + entity.id}>趋势统计</a>
             <br />
-            <a href={'#/marketing/flowstat/' + entity.id}>流量数据统计</a>
+            <a href={'#/marketing/flowstat/' + entity.id}>日维度统计</a>
           </div>
         )
       }

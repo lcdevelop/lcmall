@@ -143,6 +143,7 @@ declare namespace API {
     uv: number;
     clickPv: number;
     clickUv: number;
+    consumeCount: number;
   }
 
   type TrendStat = {

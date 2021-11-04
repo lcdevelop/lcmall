@@ -1,5 +1,7 @@
 package com.lcsays.lcmall.api.controller.manager;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.github.binarywang.wxpay.bean.marketing.*;
 import com.github.binarywang.wxpay.bean.marketing.enums.StockTypeEnum;
 import com.github.binarywang.wxpay.exception.WxPayException;
@@ -23,14 +25,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.Serializable;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -555,7 +561,9 @@ public class ManagerMarketingController {
                 return BaseModel.error(ErrorCode.PARAM_ERROR);
             }
 
+            // 用于统计pv
             Map<String, Integer> eventTypeCounter = new HashMap<>();
+            // 用于统计uv
             Map<String, Set<String>> eventTypeSet = new HashMap<>();
 
             Date begin = TimeUtils.timeStr2Date(dateStr + " 00:00:00");
@@ -573,6 +581,11 @@ public class ManagerMarketingController {
                 }
             }
 
+            Set<String> stockIdSet = WxMarketingActivityUtil.getStockIdsSet(activity);
+            String[] uniqStockIds = new String[stockIdSet.size()];
+            stockIdSet.toArray(uniqStockIds);
+            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByStockIdsAndTimeRange(uniqStockIds, begin, end);
+
             FlowStatistics ret = new FlowStatistics();
             ret.setPv(eventTypeCounter.get("stockIndexPageView"));
             if (null != eventTypeSet.get("stockIndexPageView")) {
@@ -582,6 +595,7 @@ public class ManagerMarketingController {
             if (null != eventTypeSet.get("getCouponInternal")) {
                 ret.setClickUv(eventTypeSet.get("getCouponInternal").size());
             }
+            ret.setConsumeCount(coupons.size());
             return BaseModel.success(ret);
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
@@ -653,6 +667,99 @@ public class ManagerMarketingController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
     }
+
+    @GetMapping("/downloadXls")
+    public void downloadXls(HttpSession session,
+                            HttpServletResponse response,
+                            @RequestParam Integer activityId,
+                            @RequestParam String dateStr) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return;
+            }
+
+            WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+            if (null == activity) {
+                return;
+            }
+
+            Set<String> stockIdSet = WxMarketingActivityUtil.getStockIdsSet(activity);
+            String[] uniqStockIds = new String[stockIdSet.size()];
+            stockIdSet.toArray(uniqStockIds);
+
+
+            Date begin = TimeUtils.timeStr2Date(dateStr + " 00:00:00");
+            Date end = TimeUtils.timeStr2Date(dateStr + " 23:59:59");
+
+            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByStockIdsAndTimeRange(uniqStockIds, begin, end);
+
+            WxApp wxApp = WxMaUserUtil.getSessionWxApp(user, wxAppService);
+            Integer curWxAppId = wxApp.getId();
+            Map<Integer, WxMaUser> usersWithPhoneNumberMap = new HashMap<>();
+            for (WxMaUser u: wxMaUserService.listUsersWithPhoneNumberByWxAppId(curWxAppId)) {
+                usersWithPhoneNumberMap.put(u.getId(), u);
+            }
+
+            String fileName = "/tmp/" + dateStr + "." + activityId + ".xlsx";
+            ExcelWriter ew = ExcelUtil.getWriter(fileName);
+            List<Map<String, String>> list = new ArrayList<>();
+
+            for (WxMarketingCoupon coupon: coupons) {
+                Map<String, String> map = new HashMap<>();
+                if (usersWithPhoneNumberMap.containsKey(coupon.getWxMaUserId())) {
+                    map.put("电话号码", usersWithPhoneNumberMap.get(coupon.getWxMaUserId()).getPhoneNumber());
+                    map.put("批次号", coupon.getStockId());
+                    map.put("券号", coupon.getCouponId());
+                    if ("USED".equals(coupon.getStatus())) {
+                        map.put("消费状态", "已消费");
+                        map.put("消费时间", TimeUtils.date2Str(coupon.getConsumeTime()));
+                        map.put("消费商户号", coupon.getConsumeMchid());
+                        map.put("交易流水号", coupon.getTransactionId());
+                    } else {
+                        map.put("消费状态", "未消费");
+                        map.put("消费时间", "");
+                        map.put("消费商户号", "");
+                        map.put("交易流水号", "");
+                    }
+
+                }
+                list.add(map);
+            }
+
+            ew.write(list);
+            ew.close();
+
+            File file = new File(fileName);
+            InputStream in;
+            try {
+                in = new FileInputStream(file);
+                int tempbyte;
+
+                response.setContentType("application/force-download");
+                response.setHeader("content-type", "application/octet-stream");
+                response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+                try {
+                    OutputStream outputStream = response.getOutputStream();
+                    while ((tempbyte = in.read()) != -1) {
+                        outputStream.write(tempbyte);
+                    }
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                in.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            file.delete();
+        }
+    }
+
 
     @NoArgsConstructor
     @Data

@@ -57,4 +57,14 @@ public class WxMarketingCouponService {
         criteria.andCreateTimeIsNotNull();
         return marketingCouponMapper.selectByExample(example);
     }
+
+    public List<WxMarketingCoupon> queryByStockIdsAndTimeRange(String[] stockIds, Date begin, Date end) {
+        WxMarketingCouponExample example = new WxMarketingCouponExample();
+        example.setOrderByClause("`create_time` ASC");
+        WxMarketingCouponExample.Criteria criteria = example.createCriteria();
+        criteria.andStockIdIn(Arrays.asList(stockIds));
+        criteria.andCreateTimeBetween(begin, end);
+        return marketingCouponMapper.selectByExample(example);
+    }
+
 }

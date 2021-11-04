@@ -15,6 +15,7 @@ public class TimeUtils {
 
     private static final SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+08:00'");
     private static final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+08:00'");
+    private static final SimpleDateFormat format3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static Calendar getBeginOfToday() {
         Calendar today = Calendar.getInstance();
@@ -46,6 +47,10 @@ public class TimeUtils {
         return calendar.get(Calendar.YEAR)
                 + "-" + (calendar.get(Calendar.MONTH) + 1)
                 + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static String date2Str(Date date) {
+        return format3.format(date);
     }
 
     public static Calendar timestamp2Calendar(Timestamp timestamp) {

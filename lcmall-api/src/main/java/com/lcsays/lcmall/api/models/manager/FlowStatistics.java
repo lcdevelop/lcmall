@@ -16,4 +16,5 @@ public class FlowStatistics {
     Integer uv; // stockIndexPageView
     Integer clickPv; // getCouponInternal
     Integer clickUv; // getCouponInternal
+    Integer consumeCount;
 }
