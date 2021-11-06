@@ -18,7 +18,6 @@ const trendStatApiPath = apiPathPrefix + '/trendStat';
 const activityApiPath = apiPathPrefix + '/activity';
 const activityExtrasApiPath = apiPathPrefix + '/activityExtras';
 const flowStatisticsApiPath = apiPathPrefix + '/flowStatistics';
-const downloadXlsApiPath = apiPathPrefix + '/downloadXls';
 
 export async function stock(params?: ParamsType, options?: OptionsType) {
   return new Promise<any>((resolve, reject) => {
@@ -204,19 +203,6 @@ export async function flowStatistics(params: {
   dateStr: string,
 }, options?: { [key: string]: any }) {
   return request<API.Response<API.FlowStatistics>>(flowStatisticsApiPath, {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-
-export async function downloadXls(params: {
-  activityId: number,
-  dateStr: string,
-}, options?: { [key: string]: any }) {
-  return request<any>(downloadXlsApiPath, {
     method: 'GET',
     params: {
       ...params,

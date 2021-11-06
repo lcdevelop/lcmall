@@ -22,6 +22,15 @@ const Statistics: React.FC = () => {
     {
       title: '界面模板类型',
       dataIndex: 'templateType',
+      render: (_, entity) => {
+        if (entity.templateType === 1) {
+          return "苏恒模板"
+        } else if (entity.templateType === 2) {
+          return "赵婉莹模板"
+        } else {
+          return entity.templateType
+        }
+      }
     },
     {
       title: '批次列表',
@@ -48,7 +57,7 @@ const Statistics: React.FC = () => {
             <br />
             <a onClick={() => {
               generateMaLink({
-                appId: initialState?.currentWxUser?.sessionWxApp.appId!,
+                appId: initialState?.currentWxUser?.sessionWxApp.appId || '',
                 activityId: entity.id,
                 templateType: entity.templateType,
               }).then(res => {
@@ -81,11 +90,11 @@ const Statistics: React.FC = () => {
       render: (_, entity) => {
         return (
           <div>
+            <a href={'#/marketing/flowstat/' + entity.id}>日维度统计</a>
+            <br />
             <a href={'#/marketing/statistics/' + entity.id}>白名单数据统计</a>
             <br />
             <a href={'#/marketing/trendstat/' + entity.id}>趋势统计</a>
-            <br />
-            <a href={'#/marketing/flowstat/' + entity.id}>日维度统计</a>
           </div>
         )
       }

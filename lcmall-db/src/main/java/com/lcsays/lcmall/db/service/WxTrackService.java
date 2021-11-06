@@ -31,4 +31,26 @@ public class WxTrackService {
         criteria.andCreateTimeBetween(begin, end);
         return wxTrackMapper.selectByExample(example);
     }
+
+    public List<WxTrack> queryByActivityId(Integer activityId) {
+        WxTrackExample example = new WxTrackExample();
+        WxTrackExample.Criteria criteria = example.createCriteria();
+        criteria.andMsgLike("%activityId=" + activityId + "&%");
+        WxTrackExample.Criteria criteria2 = example.createCriteria();
+        criteria2.andMsgLike("%activityId=" + activityId);
+        example.or(criteria2);
+        return wxTrackMapper.selectByExample(example);
+    }
+
+    public List<WxTrack> queryByActivityIdAndEventType(Integer activityId, String eventType) {
+        WxTrackExample example = new WxTrackExample();
+        WxTrackExample.Criteria criteria = example.createCriteria();
+        criteria.andEventTypeEqualTo(eventType);
+        criteria.andMsgLike("%activityId=" + activityId + "&%");
+        WxTrackExample.Criteria criteria2 = example.createCriteria();
+        criteria2.andEventTypeEqualTo(eventType);
+        criteria2.andMsgLike("%activityId=" + activityId);
+        example.or(criteria2);
+        return wxTrackMapper.selectByExample(example);
+    }
 }

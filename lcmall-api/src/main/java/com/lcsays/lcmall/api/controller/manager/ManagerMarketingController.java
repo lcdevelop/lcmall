@@ -25,18 +25,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -562,31 +559,60 @@ public class ManagerMarketingController {
             }
 
             // 用于统计pv
+            Map<String, Integer> totalEventTypeCounter = new HashMap<>();
             Map<String, Integer> eventTypeCounter = new HashMap<>();
             // 用于统计uv
+            Map<String, Set<String>> totalEventTypeSet = new HashMap<>();
             Map<String, Set<String>> eventTypeSet = new HashMap<>();
 
             Date begin = TimeUtils.timeStr2Date(dateStr + " 00:00:00");
             Date end = TimeUtils.timeStr2Date(dateStr + " 23:59:59");
-            for (WxTrack track: wxTrackService.queryByActivityIdAndDateRange(activityId, begin, end)) {
-                if (eventTypeCounter.containsKey(track.getEventType())) {
-                    eventTypeCounter.put(track.getEventType(), eventTypeCounter.get(track.getEventType()) + 1);
-                    eventTypeSet.get(track.getEventType()).add(track.getIp() + track.getUa());
-                } else {
-                    eventTypeCounter.put(track.getEventType(), 1);
+            for (WxTrack track: wxTrackService.queryByActivityId(activityId)) {
+                // 累计数据
+                accumulateEventType(totalEventTypeCounter, totalEventTypeSet, track);
 
-                    Set<String> set = new HashSet<>();
-                    set.add(track.getIp() + track.getUa());
-                    eventTypeSet.put(track.getEventType(), set);
+                // 当天数据
+                if (track.getCreateTime().after(begin) && track.getCreateTime().before(end)) {
+                    accumulateEventType(eventTypeCounter, eventTypeSet, track);
                 }
             }
 
             Set<String> stockIdSet = WxMarketingActivityUtil.getStockIdsSet(activity);
             String[] uniqStockIds = new String[stockIdSet.size()];
             stockIdSet.toArray(uniqStockIds);
-            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByStockIdsAndTimeRange(uniqStockIds, begin, end);
 
+            int totalCouponCount = 0;
+            int couponCount = 0;
+            int totalConsumeCount = 0;
+            int consumeCount = 0;
+            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByStockIds(uniqStockIds);
+            for (WxMarketingCoupon coupon: coupons) {
+                totalCouponCount++;
+                if ("USED".equals(coupon.getStatus())) {
+                    totalConsumeCount++;
+                }
+
+                if (coupon.getCreateTime().after(begin) && coupon.getCreateTime().before(end)) {
+                    couponCount++;
+                }
+
+                if (null != coupon.getConsumeTime() && coupon.getConsumeTime().after(begin) && coupon.getConsumeTime().before(end)) {
+                    if ("USED".equals(coupon.getStatus())) {
+                        consumeCount++;
+                    }
+                }
+            }
+
+            // 拿着上面累计下来的数据更新最终结构
             FlowStatistics ret = new FlowStatistics();
+            ret.setTotalPv(totalEventTypeCounter.get("stockIndexPageView"));
+            if (null != totalEventTypeSet.get("stockIndexPageView")) {
+                ret.setTotalUv(totalEventTypeSet.get("stockIndexPageView").size());
+            }
+            ret.setTotalClickPv(totalEventTypeCounter.get("getCouponInternal"));
+            if (null != totalEventTypeSet.get("getCouponInternal")) {
+                ret.setTotalClickUv(totalEventTypeSet.get("getCouponInternal").size());
+            }
             ret.setPv(eventTypeCounter.get("stockIndexPageView"));
             if (null != eventTypeSet.get("stockIndexPageView")) {
                 ret.setUv(eventTypeSet.get("stockIndexPageView").size());
@@ -595,10 +621,28 @@ public class ManagerMarketingController {
             if (null != eventTypeSet.get("getCouponInternal")) {
                 ret.setClickUv(eventTypeSet.get("getCouponInternal").size());
             }
-            ret.setConsumeCount(coupons.size());
+
+            ret.setTotalCouponCount(totalCouponCount);
+            ret.setTotalConsumeCount(totalConsumeCount);
+            ret.setCouponCount(couponCount);
+            ret.setConsumeCount(consumeCount);
+
             return BaseModel.success(ret);
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    private void accumulateEventType(Map<String, Integer> eventTypeCounter, Map<String, Set<String>> eventTypeSet, WxTrack track) {
+        if (eventTypeCounter.containsKey(track.getEventType())) {
+            eventTypeCounter.put(track.getEventType(), eventTypeCounter.get(track.getEventType()) + 1);
+            eventTypeSet.get(track.getEventType()).add(track.getIp() + track.getUa());
+        } else {
+            eventTypeCounter.put(track.getEventType(), 1);
+
+            Set<String> set = new HashSet<>();
+            set.add(track.getIp() + track.getUa());
+            eventTypeSet.put(track.getEventType(), set);
         }
     }
 
@@ -671,8 +715,7 @@ public class ManagerMarketingController {
     @GetMapping("/downloadXls")
     public void downloadXls(HttpSession session,
                             HttpServletResponse response,
-                            @RequestParam Integer activityId,
-                            @RequestParam String dateStr) {
+                            @RequestParam Integer activityId) {
         WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
             if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
@@ -688,11 +731,8 @@ public class ManagerMarketingController {
             String[] uniqStockIds = new String[stockIdSet.size()];
             stockIdSet.toArray(uniqStockIds);
 
-
-            Date begin = TimeUtils.timeStr2Date(dateStr + " 00:00:00");
-            Date end = TimeUtils.timeStr2Date(dateStr + " 23:59:59");
-
-            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByStockIdsAndTimeRange(uniqStockIds, begin, end);
+            // 获取优惠券情况
+            List<WxMarketingCoupon> coupons = wxMarketingCouponService.queryByStockIds(uniqStockIds);
 
             WxApp wxApp = WxMaUserUtil.getSessionWxApp(user, wxAppService);
             Integer curWxAppId = wxApp.getId();
@@ -701,7 +741,17 @@ public class ManagerMarketingController {
                 usersWithPhoneNumberMap.put(u.getId(), u);
             }
 
-            String fileName = "/tmp/" + dateStr + "." + activityId + ".xlsx";
+
+            // 获取页面浏览情况
+            Map<Integer, WxMaUser> usersWithTracksMap = new HashMap<>();
+            List<WxTrack> loginedTracks = wxTrackService.queryByActivityIdAndEventType(activityId, "stockIndexPageViewLogined");
+            for (WxTrack track: loginedTracks) {
+                if (usersWithPhoneNumberMap.containsKey(track.getWxMaUserId())) {
+                    usersWithTracksMap.put(track.getWxMaUserId(), usersWithPhoneNumberMap.get(track.getWxMaUserId()));
+                }
+            }
+
+            String fileName = "/tmp/" + activityId + ".xlsx";
             ExcelWriter ew = ExcelUtil.getWriter(fileName);
             List<Map<String, String>> list = new ArrayList<>();
 
@@ -709,8 +759,12 @@ public class ManagerMarketingController {
                 Map<String, String> map = new HashMap<>();
                 if (usersWithPhoneNumberMap.containsKey(coupon.getWxMaUserId())) {
                     map.put("电话号码", usersWithPhoneNumberMap.get(coupon.getWxMaUserId()).getPhoneNumber());
+                    map.put("点击链接成功/失败", "成功");
+                    map.put("领取成功/失败", "成功");
+                    map.put("领取失败原因", "");
                     map.put("批次号", coupon.getStockId());
                     map.put("券号", coupon.getCouponId());
+                    map.put("领券时间", TimeUtils.date2Str(coupon.getCreateTime()));
                     if ("USED".equals(coupon.getStatus())) {
                         map.put("消费状态", "已消费");
                         map.put("消费时间", TimeUtils.date2Str(coupon.getConsumeTime()));
@@ -723,7 +777,38 @@ public class ManagerMarketingController {
                         map.put("交易流水号", "");
                     }
 
+                    if (usersWithTracksMap.containsKey(coupon.getWxMaUserId())) {
+                        usersWithTracksMap.remove(coupon.getWxMaUserId());
+                    }
                 }
+                list.add(map);
+            }
+
+            Set<String> whiteListPhoneNumberSet = new HashSet<>();
+            for (WxMarketingWhitelist whiteList: wxMarketingWhitelistService.queryByBatchNo(activity.getWhitelistBatchNo())) {
+                whiteListPhoneNumberSet.add(whiteList.getPhoneNumber());
+            }
+
+
+            // 剩下那些没有coupon但有track的
+            for (Integer wxMaUserId: usersWithTracksMap.keySet()) {
+                WxMaUser wxMaUser = usersWithTracksMap.get(wxMaUserId);
+                Map<String, String> map = new HashMap<>();
+                map.put("电话号码", wxMaUser.getPhoneNumber());
+                map.put("点击链接成功/失败", "成功");
+                map.put("领取成功/失败", "失败");
+                if (whiteListPhoneNumberSet.contains(wxMaUser.getPhoneNumber())) {
+                    map.put("领取失败原因", "");
+                } else {
+                    map.put("领取失败原因", "不在白名单中");
+                }
+                map.put("批次号", "");
+                map.put("券号", "");
+                map.put("领券时间", "");
+                map.put("消费状态", "");
+                map.put("消费时间", "");
+                map.put("消费商户号", "");
+                map.put("交易流水号", "");
                 list.add(map);
             }
 
@@ -750,8 +835,6 @@ public class ManagerMarketingController {
                     e.printStackTrace();
                 }
                 in.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

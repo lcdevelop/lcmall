@@ -139,10 +139,18 @@ declare namespace API {
   }
 
   type FlowStatistics = {
+    totalPv: number;
+    totalUv: number;
+    totalClickPv: number;
+    totalClickUv: number;
+    totalCouponCount: number;
+    totalConsumeCount: number;
+
     pv: number;
     uv: number;
     clickPv: number;
     clickUv: number;
+    couponCount: number;
     consumeCount: number;
   }
 
