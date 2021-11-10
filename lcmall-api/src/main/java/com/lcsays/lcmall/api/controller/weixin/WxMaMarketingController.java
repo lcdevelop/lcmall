@@ -177,6 +177,9 @@ public class WxMaMarketingController {
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error(e.getMessage());
+                if ("NOT_ENOUGH".equals(e.getErrCode())) {
+                    return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, "券已领完，感谢参与");
+                }
                 return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
             }
         }
