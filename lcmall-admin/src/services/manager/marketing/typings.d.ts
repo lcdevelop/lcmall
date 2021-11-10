@@ -20,6 +20,7 @@ declare namespace API {
     maxCouponsPerUser: number;
     naturalPersonLimit: boolean;
     preventApiAbuse: boolean;
+    fixedNormalCoupon: FixedNormalCoupon;
   }
 
   type CutToMessage = {

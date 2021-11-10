@@ -1,14 +1,17 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {PageContainer} from "@ant-design/pro-layout";
 import {activity, generateMaLink, updateActivity} from "@/services/manager/marketing/api";
 import ProTable, {ActionType, ProColumns} from "@ant-design/pro-table";
-import {message} from "antd";
+import {Button, message} from "antd";
 import {useModel} from "@@/plugin-model/useModel";
+import {PlusOutlined} from "@ant-design/icons";
+import CreateActivityForm from "@/pages/Coupon/activity/components/CreateActivityForm";
 
 const Statistics: React.FC = () => {
 
   const { initialState } = useModel('@@initialState');
   const actionRef = useRef<ActionType>();
+  const [createModalVisible, handleCreateModalVisible] = useState<boolean>(false);
 
   const columns: ProColumns<API.WxMarketingActivity>[] = [
     {
@@ -110,6 +113,17 @@ const Statistics: React.FC = () => {
           labelWidth: 120,
         }}
         request={activity}
+        toolBarRender={() => [
+          <Button
+            type="primary"
+            key="primary"
+            onClick={() => {
+              handleCreateModalVisible(true);
+            }}
+          >
+            <PlusOutlined /> 新建
+          </Button>,
+        ]}
         columns={columns}
         pagination={{
           pageSize: 10
@@ -117,6 +131,12 @@ const Statistics: React.FC = () => {
         scroll={{x: "100%"}}
         actionRef={actionRef}
       />
+
+      <CreateActivityForm
+        visible={createModalVisible}
+      >
+
+      </CreateActivityForm>
     </PageContainer>
   );
 };

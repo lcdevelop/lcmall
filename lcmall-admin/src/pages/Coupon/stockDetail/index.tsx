@@ -28,9 +28,14 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const updateFormRef = useRef<ProFormInstance<API.WxMarketingStock>>();
 
-  useEffect(() => {
-    fetchStockDetail();
-  }, [])
+
+  const fetchCardID = (stockId: string) => {
+    getWxMarketingStockByStockId({stockId: stockId}).then((res: API.Response<API.WxMarketingStock>) => {
+      if (res.code === 200) {
+        setCardId(res.data!.cardId);
+      }
+    })
+  }
 
   const fetchStockDetail = () => {
     stockDetail(
@@ -44,13 +49,11 @@ const StockDetail: React.FC<StockDetailProps> = (props) => {
     })
   }
 
-  const fetchCardID = (stockId: string) => {
-    getWxMarketingStockByStockId({stockId: stockId}).then((res:API.Response<API.WxMarketingStock>) => {
-      if (res.code === 200) {
-        setCardId(res.data!.cardId);
-      }
-    })
-  }
+  useEffect(() => {
+    fetchStockDetail();
+  }, [])
+
+
 
   const onStartStock = () => {
     if (undefined !== stock && null !== stock.stockId) {
