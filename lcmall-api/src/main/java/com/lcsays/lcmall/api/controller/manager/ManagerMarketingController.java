@@ -843,6 +843,27 @@ public class ManagerMarketingController {
         }
     }
 
+    @GetMapping("/userTracks")
+    public BaseModel<List<WxTrack>> userTracks(HttpSession session, @RequestParam String phoneNumber) {
+        WxMaUser user = SessionUtils.getWxUserFromSession(session);
+        if (null != user) {
+            if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
+                return BaseModel.error(ErrorCode.NO_AUTHORITY);
+            }
+
+            WxMaUser wxMaUser = wxMaUserService.queryUserByWxAppIdAndPhoneNumber(user.getSessionWxAppId(), phoneNumber);
+
+            if (null != wxMaUser) {
+                List<WxTrack> tracks = wxTrackService.queryByWxMaUserId(wxMaUser.getId());
+                return BaseModel.success(tracks);
+            } else {
+                return BaseModel.error(ErrorCode.NO_RESULT);
+            }
+        } else {
+            return BaseModel.error(ErrorCode.PARAM_ERROR);
+        }
+    }
+
 
     @NoArgsConstructor
     @Data

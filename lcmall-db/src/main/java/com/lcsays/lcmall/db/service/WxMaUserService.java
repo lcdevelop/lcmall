@@ -102,4 +102,17 @@ public class WxMaUserService {
         criteria.andPhoneNumberIsNotNull();
         return wxMaUserMapper.selectByExample(example);
     }
+
+    public WxMaUser queryUserByWxAppIdAndPhoneNumber(Integer wxAppId, String phoneNumber) {
+        WxMaUserExample example = new WxMaUserExample();
+        WxMaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andWxAppIdEqualTo(wxAppId);
+        criteria.andPhoneNumberEqualTo(phoneNumber);
+        List<WxMaUser> ret = wxMaUserMapper.selectByExample(example);
+        if (ret.size() == 1) {
+            return ret.get(0);
+        } else {
+            return null;
+        }
+    }
 }

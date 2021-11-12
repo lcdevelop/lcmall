@@ -53,4 +53,11 @@ public class WxTrackService {
         example.or(criteria2);
         return wxTrackMapper.selectByExample(example);
     }
+
+    public List<WxTrack> queryByWxMaUserId(Integer wxMaUserId) {
+        WxTrackExample example = new WxTrackExample();
+        WxTrackExample.Criteria criteria = example.createCriteria();
+        criteria.andWxMaUserIdEqualTo(wxMaUserId);
+        return wxTrackMapper.selectByExample(example);
+    }
 }
