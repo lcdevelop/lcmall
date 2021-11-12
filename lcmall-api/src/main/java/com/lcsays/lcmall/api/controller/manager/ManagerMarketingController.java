@@ -861,7 +861,7 @@ public class ManagerMarketingController {
                 return BaseModel.error(ErrorCode.NO_RESULT);
             }
         } else {
-            return BaseModel.error(ErrorCode.PARAM_ERROR);
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
     }
 
