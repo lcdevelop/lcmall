@@ -845,6 +845,7 @@ public class ManagerMarketingController {
 
     @GetMapping("/userTracks")
     public BaseModel<List<WxTrack>> userTracks(HttpSession session, @RequestParam String phoneNumber) {
+        log.info("userTracks");
         WxMaUser user = SessionUtils.getWxUserFromSession(session);
         if (null != user) {
             if (!WxMaUserUtil.checkAuthority(user, wxAppService)) {
