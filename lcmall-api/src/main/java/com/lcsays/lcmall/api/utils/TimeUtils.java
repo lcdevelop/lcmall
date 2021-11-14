@@ -44,9 +44,21 @@ public class TimeUtils {
     public static String date2YMD(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        return calendar.get(Calendar.YEAR)
-                + "-" + (calendar.get(Calendar.MONTH) + 1)
-                + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int month = (calendar.get(Calendar.MONTH) + 1);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String ret = String.valueOf(year);
+        ret += "-";
+        if (month < 10) {
+            ret += "0";
+        }
+        ret += month;
+        ret += "-";
+        if (day < 10) {
+            ret += "0";
+        }
+        ret += day;
+        return ret;
     }
 
     public static String date2Str(Date date) {
