@@ -564,9 +564,15 @@ public class ManagerMarketingController {
             // 用于统计uv
             Map<String, Set<String>> totalEventTypeSet = new HashMap<>();
             Map<String, Set<String>> eventTypeSet = new HashMap<>();
-
-            Date begin = TimeUtils.timeStr2Date(dateStr + " 00:00:00");
-            Date end = TimeUtils.timeStr2Date(dateStr + " 23:59:59");
+            Date begin;
+            Date end;
+            try {
+                begin = TimeUtils.timeStr2Date(dateStr + " 00:00:00");
+                end = TimeUtils.timeStr2Date(dateStr + " 23:59:59");
+            } catch (Exception e) {
+                log.error("dateStr: " + dateStr);
+                throw e;
+            }
             for (WxTrack track: wxTrackService.queryByActivityId(activityId)) {
                 // 累计数据
                 accumulateEventType(totalEventTypeCounter, totalEventTypeSet, track);
