@@ -12,6 +12,7 @@ public enum ErrorCode {
     ORDER_PAID(405, "order paid"),
     DELETE_FORBIDDEN(406, "you can not delete"),
     NO_AUTHORITY(407, "you have no authority"),
+    GAME_OVER(408, "game is over"),
     WX_SERVICE_ERROR(501, "weixin service error"),
     DAO_ERROR(502, "database operation error"),
     UNKNOWN_ERROR(503, "unknown error"),
