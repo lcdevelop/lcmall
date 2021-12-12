@@ -8,15 +8,7 @@ public class WxMaUser implements Serializable {
 
     private Integer wxAppId;
 
-    private String openid;
-
-    private String unionid;
-
     private String phoneNumber;
-
-    private Integer sessionWxAppId;
-
-    private String sessionKey;
 
     private Date createTime;
 
@@ -25,6 +17,14 @@ public class WxMaUser implements Serializable {
     private String role;
 
     private String nickname;
+
+    private Integer sessionWxAppId;
+
+    private String sessionKey;
+
+    private String openid;
+
+    private String unionid;
 
     private String avatarUrl;
 
@@ -54,44 +54,12 @@ public class WxMaUser implements Serializable {
         this.wxAppId = wxAppId;
     }
 
-    public String getOpenid() {
-        return openid;
-    }
-
-    public void setOpenid(String openid) {
-        this.openid = openid;
-    }
-
-    public String getUnionid() {
-        return unionid;
-    }
-
-    public void setUnionid(String unionid) {
-        this.unionid = unionid;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public Integer getSessionWxAppId() {
-        return sessionWxAppId;
-    }
-
-    public void setSessionWxAppId(Integer sessionWxAppId) {
-        this.sessionWxAppId = sessionWxAppId;
-    }
-
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
     }
 
     public Date getCreateTime() {
@@ -124,6 +92,38 @@ public class WxMaUser implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Integer getSessionWxAppId() {
+        return sessionWxAppId;
+    }
+
+    public void setSessionWxAppId(Integer sessionWxAppId) {
+        this.sessionWxAppId = sessionWxAppId;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
+
+    public String getUnionid() {
+        return unionid;
+    }
+
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
     }
 
     public String getAvatarUrl() {
@@ -174,15 +174,15 @@ public class WxMaUser implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", wxAppId=").append(wxAppId);
-        sb.append(", openid=").append(openid);
-        sb.append(", unionid=").append(unionid);
         sb.append(", phoneNumber=").append(phoneNumber);
-        sb.append(", sessionWxAppId=").append(sessionWxAppId);
-        sb.append(", sessionKey=").append(sessionKey);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", role=").append(role);
         sb.append(", nickname=").append(nickname);
+        sb.append(", sessionWxAppId=").append(sessionWxAppId);
+        sb.append(", sessionKey=").append(sessionKey);
+        sb.append(", openid=").append(openid);
+        sb.append(", unionid=").append(unionid);
         sb.append(", avatarUrl=").append(avatarUrl);
         sb.append(", gender=").append(gender);
         sb.append(", language=").append(language);
