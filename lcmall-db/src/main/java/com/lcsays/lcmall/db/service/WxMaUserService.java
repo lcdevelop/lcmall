@@ -18,13 +18,15 @@ public class WxMaUserService {
     @Resource
     private WxMaUserMapper wxMaUserMapper;
 
-    public int updatePhoneNumber(Integer userId, String phoneNumber) {
+    public int updatePhoneNumber(Integer userId, String phoneNumber, String userPhone, String userPhoneEncrypt) {
         WxMaUserExample example = new WxMaUserExample();
         WxMaUserExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(userId);
 
         WxMaUser wxMaUser = new WxMaUser();
         wxMaUser.setPhoneNumber(phoneNumber);
+        wxMaUser.setUserPhone(userPhone);
+        wxMaUser.setUserPhoneEncrypt(userPhoneEncrypt);
         wxMaUser.setUpdateTime(new Date());
         return wxMaUserMapper.updateByExampleSelective(wxMaUser, example);
     }

@@ -129,7 +129,7 @@ public class WxMaMarketingController {
 
         // 不在白名单里不允许领券
         if (!wxMarketingWhitelistService.contains(activity.getWhitelistBatchNo(), wxMaUser.getPhoneNumber())) {
-            return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "非工行指定手机号用户无法领取");
+            return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "抱歉，您未达标");
         }
 
 //        if ("development".equals(environment.getProperty("env"))) {

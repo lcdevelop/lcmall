@@ -5,6 +5,8 @@
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
     <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+    <result column="user_phone_encrypt" jdbcType="VARCHAR" property="userPhoneEncrypt" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="role" jdbcType="VARCHAR" property="role" />
@@ -78,8 +80,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, wx_app_id, phone_number, create_time, update_time, role, nickname, session_wx_app_id, 
-    session_key, openid, unionid, avatar_url, gender, language, country, city
+    id, wx_app_id, phone_number, user_phone, user_phone_encrypt, create_time, update_time, 
+    role, nickname, session_wx_app_id, session_key, openid, unionid, avatar_url, gender, 
+    language, country, city
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMaUserExample" resultMap="BaseResultMap">
     select
@@ -105,18 +108,18 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_ma_user (wx_app_id, phone_number, create_time, 
-      update_time, role, nickname, 
-      session_wx_app_id, session_key, openid, 
-      unionid, avatar_url, gender, 
-      language, country, city
-      )
-    values (#{wxAppId,jdbcType=INTEGER}, #{phoneNumber,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{role,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
-      #{sessionWxAppId,jdbcType=INTEGER}, #{sessionKey,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, 
-      #{unionid,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
-      #{language,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}
-      )
+    insert into wx_ma_user (wx_app_id, phone_number, user_phone, 
+      user_phone_encrypt, create_time, update_time, 
+      role, nickname, session_wx_app_id, 
+      session_key, openid, unionid, 
+      avatar_url, gender, language, 
+      country, city)
+    values (#{wxAppId,jdbcType=INTEGER}, #{phoneNumber,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, 
+      #{userPhoneEncrypt,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{role,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{sessionWxAppId,jdbcType=INTEGER}, 
+      #{sessionKey,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{unionid,jdbcType=VARCHAR}, 
+      #{avatarUrl,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, #{language,jdbcType=VARCHAR}, 
+      #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMaUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -129,6 +132,12 @@
       </if>
       <if test="phoneNumber != null">
         phone_number,
+      </if>
+      <if test="userPhone != null">
+        user_phone,
+      </if>
+      <if test="userPhoneEncrypt != null">
+        user_phone_encrypt,
       </if>
       <if test="createTime != null">
         create_time,
@@ -176,6 +185,12 @@
       </if>
       <if test="phoneNumber != null">
         #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhoneEncrypt != null">
+        #{userPhoneEncrypt,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -236,6 +251,12 @@
       <if test="record.phoneNumber != null">
         phone_number = #{record.phoneNumber,jdbcType=VARCHAR},
       </if>
+      <if test="record.userPhone != null">
+        user_phone = #{record.userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPhoneEncrypt != null">
+        user_phone_encrypt = #{record.userPhoneEncrypt,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -285,6 +306,8 @@
     set id = #{record.id,jdbcType=INTEGER},
       wx_app_id = #{record.wxAppId,jdbcType=INTEGER},
       phone_number = #{record.phoneNumber,jdbcType=VARCHAR},
+      user_phone = #{record.userPhone,jdbcType=VARCHAR},
+      user_phone_encrypt = #{record.userPhoneEncrypt,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       role = #{record.role,jdbcType=VARCHAR},

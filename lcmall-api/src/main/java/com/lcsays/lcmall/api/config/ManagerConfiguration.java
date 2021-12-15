@@ -11,4 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "manager")
 public class ManagerConfiguration {
     private String platformAppId;
+    private String sensitiveSalt;
+    private String sensitiveKey;
 }

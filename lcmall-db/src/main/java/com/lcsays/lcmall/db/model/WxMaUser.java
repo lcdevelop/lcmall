@@ -10,6 +10,10 @@ public class WxMaUser implements Serializable {
 
     private String phoneNumber;
 
+    private String userPhone;
+
+    private String userPhoneEncrypt;
+
     private Date createTime;
 
     private Date updateTime;
@@ -60,6 +64,22 @@ public class WxMaUser implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getUserPhoneEncrypt() {
+        return userPhoneEncrypt;
+    }
+
+    public void setUserPhoneEncrypt(String userPhoneEncrypt) {
+        this.userPhoneEncrypt = userPhoneEncrypt;
     }
 
     public Date getCreateTime() {
@@ -175,6 +195,8 @@ public class WxMaUser implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", wxAppId=").append(wxAppId);
         sb.append(", phoneNumber=").append(phoneNumber);
+        sb.append(", userPhone=").append(userPhone);
+        sb.append(", userPhoneEncrypt=").append(userPhoneEncrypt);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", role=").append(role);

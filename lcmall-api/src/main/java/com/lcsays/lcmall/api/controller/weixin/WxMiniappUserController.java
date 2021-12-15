@@ -4,8 +4,10 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.lcsays.lcmall.api.config.ManagerConfiguration;
 import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.result.BaseModel;
+import com.lcsays.lcmall.api.utils.SensitiveInfoUtils;
 import com.lcsays.lcmall.api.utils.SessionUtils;
 import com.lcsays.lcmall.db.model.EcAddress;
 import com.lcsays.lcmall.db.model.WxApp;
@@ -50,6 +52,9 @@ public class WxMiniappUserController {
 
     @Resource
     WxTrackService wxTrackService;
+
+    @Resource
+    ManagerConfiguration managerConfiguration;
 
     @Data
     private static class DecryptPhoneNumberParam {
@@ -152,10 +157,23 @@ public class WxMiniappUserController {
                             decryptPhoneNumberParam.getIv()
                     );
             log.info(phoneNoInfo.toString());
-            wxMaUserService.updatePhoneNumber(wxMaUser.getId(), phoneNoInfo.getPhoneNumber());
-            // 每当更新了数据库要重新刷到session里
-            SessionUtils.updateWxMaUser2Session(wxMaUserService, session, wxMaUser.getId());
-            return BaseModel.success();
+
+            String phoneNumber = phoneNoInfo.getPhoneNumber();
+
+            try {
+                String safePhoneNumber = phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7, 11);
+                String userPhoneEncrypt = SensitiveInfoUtils.encrypt(phoneNumber, managerConfiguration.getSensitiveSalt(), managerConfiguration.getSensitiveKey());
+
+                wxMaUserService.updatePhoneNumber(wxMaUser.getId(), phoneNoInfo.getPhoneNumber(), safePhoneNumber, userPhoneEncrypt);
+                // 每当更新了数据库要重新刷到session里
+                SessionUtils.updateWxMaUser2Session(wxMaUserService, session, wxMaUser.getId());
+                return BaseModel.success();
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("decryptPhoneNumber exception " + e.getMessage());
+                return BaseModel.error(ErrorCode.UNKNOWN_ERROR);
+            }
+
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }

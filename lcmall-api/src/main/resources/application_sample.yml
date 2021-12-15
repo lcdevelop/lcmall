@@ -54,3 +54,5 @@ oss:
 
 manager:
     platformAppId: wx******
+    sensitiveSalt: a******
+    sensitiveKey: a****** # 固定16位

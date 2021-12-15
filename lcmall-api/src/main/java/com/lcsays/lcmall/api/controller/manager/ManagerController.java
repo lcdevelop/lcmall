@@ -46,7 +46,8 @@ public class ManagerController {
 
     private OSSConfiguration ossConfiguration;
 
-    private ManagerConfiguration managerConfiguration;
+    @Resource
+    ManagerConfiguration managerConfiguration;
 
     @GetMapping("/appList")
     public BaseModel<List<WxAppEx>> appList(HttpSession session) {

@@ -295,6 +295,146 @@ public class WxMaUserExample {
             return (Criteria) this;
         }
 
+        public Criteria andUserPhoneIsNull() {
+            addCriterion("user_phone is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneIsNotNull() {
+            addCriterion("user_phone is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEqualTo(String value) {
+            addCriterion("user_phone =", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneNotEqualTo(String value) {
+            addCriterion("user_phone <>", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneGreaterThan(String value) {
+            addCriterion("user_phone >", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneGreaterThanOrEqualTo(String value) {
+            addCriterion("user_phone >=", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneLessThan(String value) {
+            addCriterion("user_phone <", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneLessThanOrEqualTo(String value) {
+            addCriterion("user_phone <=", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneLike(String value) {
+            addCriterion("user_phone like", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneNotLike(String value) {
+            addCriterion("user_phone not like", value, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneIn(List<String> values) {
+            addCriterion("user_phone in", values, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneNotIn(List<String> values) {
+            addCriterion("user_phone not in", values, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneBetween(String value1, String value2) {
+            addCriterion("user_phone between", value1, value2, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneNotBetween(String value1, String value2) {
+            addCriterion("user_phone not between", value1, value2, "userPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptIsNull() {
+            addCriterion("user_phone_encrypt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptIsNotNull() {
+            addCriterion("user_phone_encrypt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptEqualTo(String value) {
+            addCriterion("user_phone_encrypt =", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptNotEqualTo(String value) {
+            addCriterion("user_phone_encrypt <>", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptGreaterThan(String value) {
+            addCriterion("user_phone_encrypt >", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptGreaterThanOrEqualTo(String value) {
+            addCriterion("user_phone_encrypt >=", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptLessThan(String value) {
+            addCriterion("user_phone_encrypt <", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptLessThanOrEqualTo(String value) {
+            addCriterion("user_phone_encrypt <=", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptLike(String value) {
+            addCriterion("user_phone_encrypt like", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptNotLike(String value) {
+            addCriterion("user_phone_encrypt not like", value, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptIn(List<String> values) {
+            addCriterion("user_phone_encrypt in", values, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptNotIn(List<String> values) {
+            addCriterion("user_phone_encrypt not in", values, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptBetween(String value1, String value2) {
+            addCriterion("user_phone_encrypt between", value1, value2, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserPhoneEncryptNotBetween(String value1, String value2) {
+            addCriterion("user_phone_encrypt not between", value1, value2, "userPhoneEncrypt");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;
