@@ -129,8 +129,11 @@ public class WxMaMarketingController {
 
         // 不在白名单里不允许领券
         if (!wxMarketingWhitelistService.contains(activity.getWhitelistBatchNo(), wxMaUser.getPhoneNumber())) {
-//            return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "抱歉，您未达标");
-            return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "活动已结束");
+            if (activity.getId() == 11 || activity.getId() == 12) {
+                return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "活动已结束");
+            } else {
+                return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "抱歉，您未达标");
+            }
         }
 
 //        if ("development".equals(environment.getProperty("env"))) {
@@ -179,8 +182,11 @@ public class WxMaMarketingController {
                 e.printStackTrace();
                 log.error(e.getMessage());
                 if ("NOT_ENOUGH".equals(e.getErrCode())) {
-//                    return BaseModel.errorWithMsg(ErrorCode.GAME_OVER, "很遗憾，券已领完，感谢关注");
-                    return BaseModel.errorWithMsg(ErrorCode.GAME_OVER, "活动已结束");
+                    if (activity.getId() == 11 || activity.getId() == 12) {
+                        return BaseModel.errorWithMsg(ErrorCode.GAME_OVER, "活动已结束");
+                    } else {
+                        return BaseModel.errorWithMsg(ErrorCode.GAME_OVER, "很遗憾，券已领完，感谢关注");
+                    }
                 }
                 return BaseModel.errorWithMsg(ErrorCode.WX_SERVICE_ERROR, e.getMessage());
             }
