@@ -16,6 +16,7 @@ public enum ErrorCode {
     WX_SERVICE_ERROR(501, "weixin service error"),
     DAO_ERROR(502, "database operation error"),
     UNKNOWN_ERROR(503, "unknown error"),
+    ENCRYPT_ERROR(504, "encrypt error"),
     NEED_LOGIN(700, "need login"),
     SUCCESS(200, "success");
 

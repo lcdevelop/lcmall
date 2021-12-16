@@ -33,16 +33,15 @@ public class JdbcTools {
         Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection(connectionString, user, pass);
 
-//        updateUserTable(conn, salt, key);
-//        updateWhiteListTable(conn, salt, key);
+        updateUserTable(conn, salt, key);
 
-        int begin = 2740000;
-        int finish = 2929845;
-        int step = 10000;
-        while (begin < finish) {
-            updateWhiteListTable(conn, salt, key, begin, begin + step);
-            begin += step;
-        }
+//        int begin = 2740000;
+//        int finish = 2929845;
+//        int step = 10000;
+//        while (begin < finish) {
+//            updateWhiteListTable(conn, salt, key, begin, begin + step);
+//            begin += step;
+//        }
 
         conn.close();
 

@@ -8,15 +8,13 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.v3.util.RsaCryptoUtil;
 import com.google.gson.annotations.SerializedName;
+import com.lcsays.lcmall.api.config.ManagerConfiguration;
 import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.manager.CouponStatistics;
 import com.lcsays.lcmall.api.models.manager.TrendStatistics;
 import com.lcsays.lcmall.api.models.manager.FlowStatistics;
 import com.lcsays.lcmall.api.models.result.BaseModel;
-import com.lcsays.lcmall.api.utils.ApiUtils;
-import com.lcsays.lcmall.api.utils.RequestNo;
-import com.lcsays.lcmall.api.utils.SessionUtils;
-import com.lcsays.lcmall.api.utils.TimeUtils;
+import com.lcsays.lcmall.api.utils.*;
 import com.lcsays.lcmall.db.model.*;
 import com.lcsays.lcmall.db.service.*;
 import com.lcsays.lcmall.db.util.WxMaUserUtil;
@@ -75,6 +73,9 @@ public class ManagerMarketingController {
     @Resource
     WxTrackService wxTrackService;
 
+    @Resource
+    ManagerConfiguration managerConfiguration;
+
     @GetMapping("/whitelist")
     public BaseModel<List<WxMarketingWhitelist>> whitelist(HttpSession session,
                                                            @RequestParam("current") Integer current,
@@ -92,7 +93,14 @@ public class ManagerMarketingController {
 
                 List<WxMarketingWhitelist> data;
                 if (!StringUtils.isEmpty(phoneNumber)) {
-                    data = wxMarketingWhitelistService.queryByBatchNoAndPhoneNumber(activity.getWhitelistBatchNo(), phoneNumber);
+                    try {
+                        String userPhoneEncrypt = SensitiveInfoUtils.encrypt(phoneNumber, managerConfiguration.getSensitiveSalt(), managerConfiguration.getSensitiveKey());
+                        data = wxMarketingWhitelistService.queryByBatchNoAndUserPhoneEncrypt(activity.getWhitelistBatchNo(), userPhoneEncrypt);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        log.error("encrypt error: " + phoneNumber + " " + e.getMessage());
+                        return BaseModel.error(ErrorCode.ENCRYPT_ERROR);
+                    }
                 } else {
                     data = wxMarketingWhitelistService.queryByBatchNo(activity.getWhitelistBatchNo());
                 }
@@ -441,9 +449,9 @@ public class ManagerMarketingController {
             Integer curWxAppId = wxApp.getId();
 
             // 加载map(电话,用户)表
-            Map<String, WxMaUser> usersWithPhoneNumberMap = new HashMap<>();
+            Map<String, WxMaUser> usersWithUserPhoneEncryptMap = new HashMap<>();
             for (WxMaUser u: wxMaUserService.listUsersWithPhoneNumberByWxAppId(curWxAppId)) {
-                usersWithPhoneNumberMap.put(u.getPhoneNumber(), u);
+                usersWithUserPhoneEncryptMap.put(u.getUserPhoneEncrypt(), u);
             }
 
             // 加载map(stockId, Stock)表
@@ -523,15 +531,23 @@ public class ManagerMarketingController {
             List<CouponStatistics> ret = new ArrayList<>();
 
             for (WxMarketingWhitelist whitelistItem:
-                    wxMarketingWhitelistService.queryByBatchNoAndPhoneNumbers(
+                    wxMarketingWhitelistService.queryByBatchNoAndUserPhoneEncrypts(
                             activity.getWhitelistBatchNo(),
-                            new ArrayList<>(usersWithPhoneNumberMap.keySet())
+                            new ArrayList<>(usersWithUserPhoneEncryptMap.keySet())
                     )) {
                 CouponStatistics cs = new CouponStatistics();
-                String whitelistPhoneNumber = whitelistItem.getPhoneNumber();
+                String userPhoneEncrypt = whitelistItem.getUserPhoneEncrypt();
+
+                String whitelistPhoneNumber = null;
+                try {
+                    whitelistPhoneNumber = SensitiveInfoUtils.decrypt(userPhoneEncrypt, managerConfiguration.getSensitiveSalt(), managerConfiguration.getSensitiveKey());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("decrypt error: " + whitelistItem.getId() + " " + e.getMessage());
+                }
                 cs.setWhitelistPhoneNumber(whitelistPhoneNumber);
                 cs.setWxMaUserHasPhoneNumber(true);
-                WxMaUser wxMaUser = usersWithPhoneNumberMap.get(whitelistPhoneNumber);
+                WxMaUser wxMaUser = usersWithUserPhoneEncryptMap.get(userPhoneEncrypt);
                 cs.setCouponsInfo(userCouponsInfoMap.get(wxMaUser.getId()));
                 ret.add(cs);
             }
@@ -858,14 +874,22 @@ public class ManagerMarketingController {
                 return BaseModel.error(ErrorCode.NO_AUTHORITY);
             }
 
-            WxMaUser wxMaUser = wxMaUserService.queryUserByWxAppIdAndPhoneNumber(user.getSessionWxAppId(), phoneNumber);
+            try {
+                String userPhoneEncrypt = SensitiveInfoUtils.encrypt(phoneNumber, managerConfiguration.getSensitiveSalt(), managerConfiguration.getSensitiveKey());
+                WxMaUser wxMaUser = wxMaUserService.queryUserByWxAppIdAndUserPhoneEncrypt(user.getSessionWxAppId(), userPhoneEncrypt);
 
-            if (null != wxMaUser) {
-                List<WxTrack> tracks = wxTrackService.queryByWxMaUserId(wxMaUser.getId());
-                return BaseModel.success(tracks);
-            } else {
-                return BaseModel.error(ErrorCode.NO_RESULT);
+                if (null != wxMaUser) {
+                    List<WxTrack> tracks = wxTrackService.queryByWxMaUserId(wxMaUser.getId());
+                    return BaseModel.success(tracks);
+                } else {
+                    return BaseModel.error(ErrorCode.NO_RESULT);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("encrypt fail " + e.getMessage());
+                return BaseModel.error(ErrorCode.ENCRYPT_ERROR);
             }
+
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }

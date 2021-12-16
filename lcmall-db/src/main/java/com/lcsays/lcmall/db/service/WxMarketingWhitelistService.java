@@ -39,19 +39,19 @@ public class WxMarketingWhitelistService {
         return wxMarketingWhitelistMapper.selectByExample(example);
     }
 
-    public List<WxMarketingWhitelist> queryByBatchNoAndPhoneNumbers(Integer batchNo, List<String> phoneNumbers) {
+    public List<WxMarketingWhitelist> queryByBatchNoAndUserPhoneEncrypts(Integer batchNo, List<String> userPhoneEncrypts) {
         WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
         WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
         criteria.andBatchNoEqualTo(batchNo);
-        criteria.andPhoneNumberIn(phoneNumbers);
+        criteria.andUserPhoneEncryptIn(userPhoneEncrypts);
         return wxMarketingWhitelistMapper.selectByExample(example);
     }
 
-    public List<WxMarketingWhitelist> queryByBatchNoAndPhoneNumber(Integer batchNo, String phoneNumber) {
+    public List<WxMarketingWhitelist> queryByBatchNoAndUserPhoneEncrypt(Integer batchNo, String userPhoneEncrypt) {
         WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
         WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
         criteria.andBatchNoEqualTo(batchNo);
-        criteria.andPhoneNumberEqualTo(phoneNumber);
+        criteria.andUserPhoneEncryptEqualTo(userPhoneEncrypt);
         return wxMarketingWhitelistMapper.selectByExample(example);
     }
 

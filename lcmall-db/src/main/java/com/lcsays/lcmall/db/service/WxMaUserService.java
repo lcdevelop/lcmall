@@ -101,15 +101,15 @@ public class WxMaUserService {
         WxMaUserExample example = new WxMaUserExample();
         WxMaUserExample.Criteria criteria = example.createCriteria();
         criteria.andWxAppIdEqualTo(wxAppId);
-        criteria.andPhoneNumberIsNotNull();
+        criteria.andUserPhoneIsNotNull();
         return wxMaUserMapper.selectByExample(example);
     }
 
-    public WxMaUser queryUserByWxAppIdAndPhoneNumber(Integer wxAppId, String phoneNumber) {
+    public WxMaUser queryUserByWxAppIdAndUserPhoneEncrypt(Integer wxAppId, String userPhoneEncrypt) {
         WxMaUserExample example = new WxMaUserExample();
         WxMaUserExample.Criteria criteria = example.createCriteria();
         criteria.andWxAppIdEqualTo(wxAppId);
-        criteria.andPhoneNumberEqualTo(phoneNumber);
+        criteria.andUserPhoneEncryptEqualTo(userPhoneEncrypt);
         List<WxMaUser> ret = wxMaUserMapper.selectByExample(example);
         if (ret.size() == 1) {
             return ret.get(0);
