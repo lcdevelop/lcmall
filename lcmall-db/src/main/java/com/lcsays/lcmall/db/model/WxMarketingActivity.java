@@ -20,6 +20,8 @@ public class WxMarketingActivity implements Serializable {
 
     private Integer whitelistBatchNo;
 
+    private Integer finished;
+
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
@@ -88,6 +90,14 @@ public class WxMarketingActivity implements Serializable {
         this.whitelistBatchNo = whitelistBatchNo;
     }
 
+    public Integer getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Integer finished) {
+        this.finished = finished;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -110,6 +120,7 @@ public class WxMarketingActivity implements Serializable {
         sb.append(", urlLink=").append(urlLink);
         sb.append(", extraVersion=").append(extraVersion);
         sb.append(", whitelistBatchNo=").append(whitelistBatchNo);
+        sb.append(", finished=").append(finished);
         sb.append(", createTime=").append(createTime);
         sb.append("]");
         return sb.toString();

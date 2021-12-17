@@ -228,6 +228,10 @@ public class WxMaMarketingController {
         WxMaUser wxMaUser = SessionUtils.getWxUserFromSession(session);
 
         WxMarketingActivity activity = wxMarketingActivityService.queryById(activityId);
+        if (1 == activity.getFinished()) {
+            return BaseModel.error(ErrorCode.GAME_OVER);
+        }
+
         String[] stockIds = WxMarketingActivityUtil.getStockIds(activity);
         Map<String, Integer> stockIdCountsMap = new HashMap<>();
         for (String stockId: stockIds) {

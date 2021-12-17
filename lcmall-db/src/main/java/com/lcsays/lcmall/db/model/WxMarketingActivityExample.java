@@ -615,6 +615,66 @@ public class WxMarketingActivityExample {
             return (Criteria) this;
         }
 
+        public Criteria andFinishedIsNull() {
+            addCriterion("finished is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedIsNotNull() {
+            addCriterion("finished is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedEqualTo(Integer value) {
+            addCriterion("finished =", value, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedNotEqualTo(Integer value) {
+            addCriterion("finished <>", value, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedGreaterThan(Integer value) {
+            addCriterion("finished >", value, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedGreaterThanOrEqualTo(Integer value) {
+            addCriterion("finished >=", value, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedLessThan(Integer value) {
+            addCriterion("finished <", value, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedLessThanOrEqualTo(Integer value) {
+            addCriterion("finished <=", value, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedIn(List<Integer> values) {
+            addCriterion("finished in", values, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedNotIn(List<Integer> values) {
+            addCriterion("finished not in", values, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedBetween(Integer value1, Integer value2) {
+            addCriterion("finished between", value1, value2, "finished");
+            return (Criteria) this;
+        }
+
+        public Criteria andFinishedNotBetween(Integer value1, Integer value2) {
+            addCriterion("finished not between", value1, value2, "finished");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;
