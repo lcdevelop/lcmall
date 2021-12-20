@@ -225,7 +225,6 @@ public class WxMiniappUserController {
             ret.setCountry(wxMaUser.getCountry());
             ret.setCity(wxMaUser.getCity());
             ret.setLanguage(wxMaUser.getLanguage());
-            ret.setPhoneNumber(wxMaUser.getPhoneNumber());
             ret.setRole(wxMaUser.getRole());
 
             return BaseModel.success(ret);

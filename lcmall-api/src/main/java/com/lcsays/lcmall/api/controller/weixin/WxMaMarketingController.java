@@ -128,7 +128,7 @@ public class WxMaMarketingController {
         log.info(activity.toString());
 
         // 不在白名单里不允许领券
-        if (!wxMarketingWhitelistService.contains(activity.getWhitelistBatchNo(), wxMaUser.getPhoneNumber())) {
+        if (!wxMarketingWhitelistService.contains(activity.getWhitelistBatchNo(), wxMaUser.getUserPhoneEncrypt())) {
             if (activity.getId() == 11 || activity.getId() == 12) {
                 return BaseModel.errorWithMsg(ErrorCode.NO_RESULT, "活动已结束");
             } else {

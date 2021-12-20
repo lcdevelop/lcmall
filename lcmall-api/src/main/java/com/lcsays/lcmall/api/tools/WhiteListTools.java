@@ -135,7 +135,10 @@ public class WhiteListTools {
 
     public static void main(String[] args) throws Exception {
         WhiteListTools tools = new WhiteListTools();
+        // 批量从文件导入用户电话号码
 //        tools.loadWhiteList(args);
+
+        // 把userPhone为空的重新根据phoneNumber补充好
         tools.updateUserPhone(args);
     }
 }

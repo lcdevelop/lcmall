@@ -20,12 +20,12 @@ public class WxMarketingWhitelistService {
     @Resource
     private WxMarketingWhitelistMapper wxMarketingWhitelistMapper;
 
-    public boolean contains(Integer batchNo, String phoneNumber) {
-        if (null != phoneNumber) {
+    public boolean contains(Integer batchNo, String userPhoneEncrypt) {
+        if (null != userPhoneEncrypt) {
             WxMarketingWhitelistExample example = new WxMarketingWhitelistExample();
             WxMarketingWhitelistExample.Criteria criteria = example.createCriteria();
             criteria.andBatchNoEqualTo(batchNo);
-            criteria.andPhoneNumberEqualTo(phoneNumber);
+            criteria.andUserPhoneEncryptEqualTo(userPhoneEncrypt);
             return wxMarketingWhitelistMapper.countByExample(example) > 0;
         } else {
             return false;

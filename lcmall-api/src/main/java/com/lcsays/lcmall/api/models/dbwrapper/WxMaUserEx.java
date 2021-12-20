@@ -35,6 +35,5 @@ public class WxMaUserEx extends WxMaUser {
         this.setRole(wxMaUser.getRole());
         this.setCreateTime(wxMaUser.getCreateTime());
         this.setUpdateTime(wxMaUser.getUpdateTime());
-        this.setPhoneNumber(wxMaUser.getPhoneNumber());
     }
 }
