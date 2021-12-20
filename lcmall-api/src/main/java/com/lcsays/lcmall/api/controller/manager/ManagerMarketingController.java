@@ -19,6 +19,7 @@ import com.lcsays.lcmall.db.model.*;
 import com.lcsays.lcmall.db.service.*;
 import com.lcsays.lcmall.db.util.WxMaUserUtil;
 import com.lcsays.lcmall.db.util.WxMarketingActivityUtil;
+import com.lcsays.lcmall.db.util.WxTrackUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -102,7 +103,7 @@ public class ManagerMarketingController {
                         return BaseModel.error(ErrorCode.ENCRYPT_ERROR);
                     }
                 } else {
-                    data = wxMarketingWhitelistService.queryByBatchNo(activity.getWhitelistBatchNo());
+                    data = new ArrayList<>();
                 }
                 return BaseModel.success(ApiUtils.pagination(data, current, pageSize), data.size());
             } else {
@@ -880,6 +881,9 @@ public class ManagerMarketingController {
 
                 if (null != wxMaUser) {
                     List<WxTrack> tracks = wxTrackService.queryByWxMaUserId(wxMaUser.getId());
+                    for (WxTrack track: tracks) {
+                        WxTrackUtil.normalizeTime(track);
+                    }
                     return BaseModel.success(tracks);
                 } else {
                     return BaseModel.error(ErrorCode.NO_RESULT);
