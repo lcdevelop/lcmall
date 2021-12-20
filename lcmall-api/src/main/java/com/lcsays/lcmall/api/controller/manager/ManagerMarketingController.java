@@ -780,7 +780,7 @@ public class ManagerMarketingController {
             for (WxMarketingCoupon coupon: coupons) {
                 Map<String, String> map = new HashMap<>();
                 if (usersWithPhoneNumberMap.containsKey(coupon.getWxMaUserId())) {
-                    map.put("电话号码", usersWithPhoneNumberMap.get(coupon.getWxMaUserId()).getPhoneNumber());
+                    map.put("电话号码", usersWithPhoneNumberMap.get(coupon.getWxMaUserId()).getUserPhone());
                     map.put("点击链接成功/失败", "成功");
                     map.put("领取成功/失败", "成功");
                     map.put("领取失败原因", "");
@@ -806,9 +806,9 @@ public class ManagerMarketingController {
                 list.add(map);
             }
 
-            Set<String> whiteListPhoneNumberSet = new HashSet<>();
+            Set<String> whiteListUserPhoneSet = new HashSet<>();
             for (WxMarketingWhitelist whiteList: wxMarketingWhitelistService.queryByBatchNo(activity.getWhitelistBatchNo())) {
-                whiteListPhoneNumberSet.add(whiteList.getPhoneNumber());
+                whiteListUserPhoneSet.add(whiteList.getUserPhone());
             }
 
 
@@ -816,10 +816,10 @@ public class ManagerMarketingController {
             for (Integer wxMaUserId: usersWithTracksMap.keySet()) {
                 WxMaUser wxMaUser = usersWithTracksMap.get(wxMaUserId);
                 Map<String, String> map = new HashMap<>();
-                map.put("电话号码", wxMaUser.getPhoneNumber());
+                map.put("电话号码", wxMaUser.getUserPhone());
                 map.put("点击链接成功/失败", "成功");
                 map.put("领取成功/失败", "失败");
-                if (whiteListPhoneNumberSet.contains(wxMaUser.getPhoneNumber())) {
+                if (whiteListUserPhoneSet.contains(wxMaUser.getUserPhone())) {
                     map.put("领取失败原因", "");
                 } else {
                     map.put("领取失败原因", "不在白名单中");

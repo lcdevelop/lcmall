@@ -164,7 +164,7 @@ public class WxMiniappUserController {
                 String safePhoneNumber = phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7, 11);
                 String userPhoneEncrypt = SensitiveInfoUtils.encrypt(phoneNumber, managerConfiguration.getSensitiveSalt(), managerConfiguration.getSensitiveKey());
 
-                wxMaUserService.updatePhoneNumber(wxMaUser.getId(), phoneNoInfo.getPhoneNumber(), safePhoneNumber, userPhoneEncrypt);
+                wxMaUserService.updatePhoneNumber(wxMaUser.getId(), safePhoneNumber, userPhoneEncrypt);
                 // 每当更新了数据库要重新刷到session里
                 SessionUtils.updateWxMaUser2Session(wxMaUserService, session, wxMaUser.getId());
                 return BaseModel.success();
