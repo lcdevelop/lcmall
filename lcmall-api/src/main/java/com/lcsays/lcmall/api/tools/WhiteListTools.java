@@ -43,7 +43,7 @@ public class WhiteListTools {
 
             String connectionString = "jdbc:mysql://" + host + ":3306/" + db + "?useUnicode=true";
             System.out.println(connectionString);
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(connectionString, user, pass);
 
             Map<Integer, String> id2phone = new HashMap<>();
@@ -102,7 +102,7 @@ public class WhiteListTools {
 
             String connectionString = "jdbc:mysql://" + host + ":3306/" + db + "?useUnicode=true";
             System.out.println(connectionString);
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(connectionString, user, pass);
 
             List<String> phoneNumbers = new ArrayList<>();
@@ -136,9 +136,9 @@ public class WhiteListTools {
     public static void main(String[] args) throws Exception {
         WhiteListTools tools = new WhiteListTools();
         // 批量从文件导入用户电话号码
-//        tools.loadWhiteList(args);
+        tools.loadWhiteList(args);
 
         // 把userPhone为空的重新根据phoneNumber补充好
-        tools.updateUserPhone(args);
+//        tools.updateUserPhone(args);
     }
 }

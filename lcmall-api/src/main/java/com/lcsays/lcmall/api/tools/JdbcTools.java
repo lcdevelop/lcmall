@@ -30,7 +30,7 @@ public class JdbcTools {
 
         String connectionString = "jdbc:mysql://" + host + ":3306/" + db + "?useUnicode=true";
         System.out.println(connectionString);
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn = DriverManager.getConnection(connectionString, user, pass);
 
         updateUserTable(conn, salt, key);
