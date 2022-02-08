@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration debug="true">
+<configuration debug="false">
     <conversionRule conversionWord="userId" converterClass="com.lcsays.lcmall.api.config.logger.UserIdLogConverter" />
     <conversionRule conversionWord="logLevel" converterClass="com.lcsays.lcmall.api.config.logger.LogLevelConverter" />
     <contextName>logback</contextName>

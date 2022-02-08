@@ -29,7 +29,8 @@ public class ScanHandler extends AbstractHandler {
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map,
-                                    WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
+                                    WxMpService wxMpService, WxSessionManager wxSessionManager)
+            throws WxErrorException {
         WxMpUser userInfo = wxMpService.getUserService().userInfo(wxMpXmlMessage.getFromUser());
         log.info(userInfo.toString());
 
@@ -37,8 +38,11 @@ public class ScanHandler extends AbstractHandler {
         String appId = wxMpService.getWxMpConfigStorage().getAppId();
         WxApp wxApp = wxAppService.queryByAppId(appId);
         if (null == wxApp) {
+            log.warn("wxApp is null " + appId);
             return null;
         }
+
+        log.info(String.valueOf(wxApp));
 
         // 找自己，找到就更新，找不到就创建
         WxMaUser wxMaUser = wxMaUserService.getWxMaUserByOpenid(wxApp, userInfo.getOpenId());
@@ -52,7 +56,7 @@ public class ScanHandler extends AbstractHandler {
 
             wxMaUser.setOpenid(userInfo.getOpenId());
             wxMaUser.setUnionid(userInfo.getUnionId());
-            String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]","");
+            String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
             wxMaUser.setNickname(nickname);
             wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
             wxMaUser.setGender(userInfo.getSexDesc());
@@ -74,7 +78,7 @@ public class ScanHandler extends AbstractHandler {
 
             wxMaUser.setOpenid(userInfo.getOpenId());
             wxMaUser.setUnionid(userInfo.getUnionId());
-            String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]","");
+            String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
             wxMaUser.setNickname(nickname);
             wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
             wxMaUser.setGender(userInfo.getSexDesc());
