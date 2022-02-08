@@ -57,8 +57,16 @@ public class ScanHandler extends AbstractHandler {
             wxMaUser.setOpenid(userInfo.getOpenId());
             wxMaUser.setUnionid(userInfo.getUnionId());
             String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
-            wxMaUser.setNickname(nickname);
-            wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+            if ("".equals(nickname)) {
+                wxMaUser.setNickname("unknown");
+            } else {
+                wxMaUser.setNickname(nickname);
+            }
+            if ("".equals(userInfo.getHeadImgUrl())) {
+                wxMaUser.setAvatarUrl("unknown");
+            } else {
+                wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+            }
             wxMaUser.setGender(userInfo.getSexDesc());
             wxMaUser.setCountry(userInfo.getCountry());
             wxMaUser.setCity(userInfo.getCity());
@@ -79,8 +87,16 @@ public class ScanHandler extends AbstractHandler {
             wxMaUser.setOpenid(userInfo.getOpenId());
             wxMaUser.setUnionid(userInfo.getUnionId());
             String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
-            wxMaUser.setNickname(nickname);
-            wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+            if ("".equals(nickname)) {
+                wxMaUser.setNickname("unknown");
+            } else {
+                wxMaUser.setNickname(nickname);
+            }
+            if ("".equals(userInfo.getHeadImgUrl())) {
+                wxMaUser.setAvatarUrl("unknown");
+            } else {
+                wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+            }
             wxMaUser.setGender(userInfo.getSexDesc());
             wxMaUser.setCountry(userInfo.getCountry());
             wxMaUser.setCity(userInfo.getCity());

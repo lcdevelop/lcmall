@@ -45,10 +45,12 @@ public class SubscribeHandler extends AbstractHandler {
                     return null;
                 }
 // 找自己，找到就更新，找不到就创建
-                com.lcsays.lcmall.db.model.WxMaUser wxMaUser = wxMaUserService.getWxMaUserByOpenid(wxApp, userInfo.getOpenId());
+                com.lcsays.lcmall.db.model.WxMaUser wxMaUser =
+                        wxMaUserService.getWxMaUserByOpenid(wxApp, userInfo.getOpenId());
                 if (null != wxMaUser) {
                     // eventKey是在生成扫描二维码时构造的，形如：wx45fad2175569e690_bad2089f-0185-4744-b923-8e596ca3
-                    SessionUtils.RawSessionIdInfo info = SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
+                    SessionUtils.RawSessionIdInfo info =
+                            SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
                     log.info("RawSessionIdInfo: " + info);
                     wxMaUser.setSessionKey(info.getSessionId());
                     com.lcsays.lcmall.db.model.WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
@@ -56,9 +58,18 @@ public class SubscribeHandler extends AbstractHandler {
 
                     wxMaUser.setOpenid(userInfo.getOpenId());
                     wxMaUser.setUnionid(userInfo.getUnionId());
-                    String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]","");
-                    wxMaUser.setNickname(nickname);
-                    wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+                    String nickname = userInfo.getNickname()
+                            .replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
+                    if ("".equals(nickname)) {
+                        wxMaUser.setNickname("unknown");
+                    } else {
+                        wxMaUser.setNickname(nickname);
+                    }
+                    if ("".equals(userInfo.getHeadImgUrl())) {
+                        wxMaUser.setAvatarUrl("unknown");
+                    } else {
+                        wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+                    }
                     wxMaUser.setGender(userInfo.getSexDesc());
                     wxMaUser.setCountry(userInfo.getCountry());
                     wxMaUser.setCity(userInfo.getCity());
@@ -71,16 +82,25 @@ public class SubscribeHandler extends AbstractHandler {
                     wxMaUser = new com.lcsays.lcmall.db.model.WxMaUser();
                     wxMaUser.setWxAppId(wxApp.getId());
 
-                    SessionUtils.RawSessionIdInfo info = SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
+                    SessionUtils.RawSessionIdInfo info =
+                            SessionUtils.extractRawSessionIdInfo(wxMpXmlMessage.getEventKey());
                     wxMaUser.setSessionKey(info.getSessionId());
                     com.lcsays.lcmall.db.model.WxApp sessionWxApp = wxAppService.queryByAppId(info.getSessionAppId());
                     wxMaUser.setSessionWxAppId(sessionWxApp.getId());
-
                     wxMaUser.setOpenid(userInfo.getOpenId());
                     wxMaUser.setUnionid(userInfo.getUnionId());
-                    String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]","");
-                    wxMaUser.setNickname(nickname);
-                    wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+                    String nickname = userInfo.getNickname()
+                            .replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
+                    if ("".equals(nickname)) {
+                        wxMaUser.setNickname("unknown");
+                    } else {
+                        wxMaUser.setNickname(nickname);
+                    }
+                    if ("".equals(userInfo.getHeadImgUrl())) {
+                        wxMaUser.setAvatarUrl("unknown");
+                    } else {
+                        wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
+                    }
                     wxMaUser.setGender(userInfo.getSexDesc());
                     wxMaUser.setCountry(userInfo.getCountry());
                     wxMaUser.setCity(userInfo.getCity());
