@@ -48,9 +48,10 @@ public class MenuHandler extends AbstractHandler {
                         request.setMchid(wxApp.getMchId());
                         request.setDescription("this is Description");
                         request.setOutTradeNo(RequestNo.randomWithCurTime("wxpay"));
-                        request.setNotifyUrl("https://cloud.codemeteors.com/api/wx/" + wxApp.getAppId() + "/pay/order_notify");
+                        request.setNotifyUrl("https://cloud.codemeteors.com/api/wx/"
+                                + wxApp.getAppId() + "/pay/order_notify");
                         WxPayUnifiedOrderV3Request.Amount amount = new WxPayUnifiedOrderV3Request.Amount();
-                        amount.setTotal(610);
+                        amount.setTotal(1);
                         request.setAmount(amount);
                         String result = wxPayService.switchoverTo(wxApp.getMchId())
                                 .createOrderV3(TradeTypeEnum.NATIVE, request);
