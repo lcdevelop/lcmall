@@ -60,11 +60,13 @@ public class ManagerController {
             try {
                 // 这里形成的sessionId也就是回调的eventKey格式类似：wxfe9faf8c8e3a5830_68822c00-7ca8-4762-9ffc-d1bd455fe49d
                 String sceneStr = SessionUtils.addPrefix(shortSid, app.getAppId());
-                WxMpQrCodeTicket ticket = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId()).getQrcodeService().qrCodeCreateTmpTicket(
+                WxMpQrCodeTicket ticket = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId())
+                        .getQrcodeService().qrCodeCreateTmpTicket(
                         sceneStr,
                         10000
                 );
-                String url = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId()).getQrcodeService().qrCodePictureUrl(ticket.getTicket());
+                String url = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId()).getQrcodeService()
+                        .qrCodePictureUrl(ticket.getTicket());
                 WxAppEx wxAppEx = new WxAppEx();
                 wxAppEx.copyFrom(app);
                 wxAppEx.setQrCodePictureUrl(url);

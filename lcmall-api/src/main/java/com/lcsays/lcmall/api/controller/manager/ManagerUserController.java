@@ -1,5 +1,6 @@
 package com.lcsays.lcmall.api.controller.manager;
 
+import com.lcsays.lcmall.api.config.ManagerConfiguration;
 import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.dbwrapper.WxMaUserEx;
 import com.lcsays.lcmall.api.models.result.BaseModel;
@@ -13,8 +14,13 @@ import com.lcsays.lcmall.db.service.WxMaUserService;
 import com.lcsays.lcmall.db.util.WxMaUserUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import org.springframework.web.bind.annotation.*;
+import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +49,9 @@ public class ManagerUserController {
 
     @Resource
     WxAppService wxAppService;
+
+    @Resource
+    ManagerConfiguration managerConfiguration;
 
     @GetMapping("/refreshSession")
     public BaseModel<String> refreshSession(HttpSession session) {
@@ -86,6 +95,28 @@ public class ManagerUserController {
             }
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+    }
+
+    @GetMapping("/loginQrCodePictureUrl")
+    public BaseModel<String> loginQrCodePictureUrl(HttpSession session) {
+        String shortSid = SessionUtils.normalizeSessionId(session);
+        log.info("shortSid: " + shortSid);
+        try {
+            // 这里形成的sessionId也就是回调的eventKey格式类似：wxfe9faf8c8e3a5830_68822c00-7ca8-4762-9ffc-d1bd455fe49d
+            String sceneStr = SessionUtils.addPrefix(shortSid, managerConfiguration.getPlatformAppId());
+            WxMpQrCodeTicket ticket = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId())
+                    .getQrcodeService().qrCodeCreateTmpTicket(
+                            sceneStr,
+                            10000
+                    );
+            String url = wxMpService.switchoverTo(managerConfiguration.getPlatformAppId()).getQrcodeService()
+                    .qrCodePictureUrl(ticket.getTicket());
+            return BaseModel.success(url);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return BaseModel.error(ErrorCode.WX_SERVICE_ERROR);
         }
     }
 

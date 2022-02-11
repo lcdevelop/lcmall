@@ -58,12 +58,12 @@ public class ScanHandler extends AbstractHandler {
             wxMaUser.setUnionid(userInfo.getUnionId());
             String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
             if ("".equals(nickname)) {
-                wxMaUser.setNickname("unknown");
+                wxMaUser.setNickname("匿名用户");
             } else {
                 wxMaUser.setNickname(nickname);
             }
             if ("".equals(userInfo.getHeadImgUrl())) {
-                wxMaUser.setAvatarUrl("unknown");
+                wxMaUser.setAvatarUrl("匿名用户");
             } else {
                 wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
             }
@@ -88,12 +88,12 @@ public class ScanHandler extends AbstractHandler {
             wxMaUser.setUnionid(userInfo.getUnionId());
             String nickname = userInfo.getNickname().replaceAll("[\ud800\udc00-\udbff\udfff\ud800-\udfff]", "");
             if ("".equals(nickname)) {
-                wxMaUser.setNickname("unknown");
+                wxMaUser.setNickname("匿名用户");
             } else {
                 wxMaUser.setNickname(nickname);
             }
             if ("".equals(userInfo.getHeadImgUrl())) {
-                wxMaUser.setAvatarUrl("unknown");
+                wxMaUser.setAvatarUrl("匿名用户");
             } else {
                 wxMaUser.setAvatarUrl(userInfo.getHeadImgUrl());
             }
