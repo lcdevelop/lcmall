@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lcsays.lcmall.db.dao.WxAppMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxApp">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="app_id" jdbcType="VARCHAR" property="appId" />
     <result column="original_id" jdbcType="VARCHAR" property="originalId" />
@@ -88,6 +88,31 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_app
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeyWithLogicalDelete" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_app
+    where id = #{id,jdbcType=INTEGER}
+      and is_del = 
+    <choose>
+      <when test="andLogicalDeleted">
+        1
+      </when>
+      <otherwise>
+        0
+      </otherwise>
+    </choose>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wx_app
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxAppExample">
     delete from wx_app
     <if test="_parameter != null">
@@ -228,5 +253,61 @@
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.WxApp">
+    update wx_app
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="originalId != null">
+        original_id = #{originalId,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null">
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="auth != null">
+        auth = #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="wxaCodeUrl != null">
+        wxa_code_url = #{wxaCodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null">
+        mch_id = #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.WxApp">
+    update wx_app
+    set name = #{name,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      original_id = #{originalId,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      auth = #{auth,jdbcType=INTEGER},
+      wxa_code_url = #{wxaCodeUrl,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      mch_id = #{mchId,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="logicalDeleteByExample" parameterType="map">
+    update wx_app set is_del = 1
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+    update wx_app set is_del = 1
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

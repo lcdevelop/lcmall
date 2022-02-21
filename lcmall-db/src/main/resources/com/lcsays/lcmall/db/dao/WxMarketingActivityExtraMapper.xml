@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lcsays.lcmall.db.dao.WxMarketingActivityExtraMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxMarketingActivityExtra">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="style_type" jdbcType="INTEGER" property="styleType" />
@@ -83,6 +83,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_marketing_activity_extra
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wx_marketing_activity_extra
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExtraExample">
     delete from wx_marketing_activity_extra
     <if test="_parameter != null">
@@ -171,5 +181,31 @@
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExtra">
+    update wx_marketing_activity_extra
+    <set>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="styleType != null">
+        style_type = #{styleType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.WxMarketingActivityExtra">
+    update wx_marketing_activity_extra
+    set group_id = #{groupId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      style_type = #{styleType,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

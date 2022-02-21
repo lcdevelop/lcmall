@@ -6,6 +6,7 @@ import com.lcsays.lcmall.api.models.dbwrapper.WxMaUserEx;
 import com.lcsays.lcmall.api.models.result.BaseModel;
 import com.lcsays.lcmall.api.service.weixin.UserService;
 import com.lcsays.lcmall.api.utils.ApiUtils;
+import com.lcsays.lcmall.api.utils.CookieTokenUtils;
 import com.lcsays.lcmall.api.utils.SessionUtils;
 import com.lcsays.lcmall.db.model.WxApp;
 import com.lcsays.lcmall.db.model.WxMaUser;
@@ -23,10 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author: lichuang
@@ -37,6 +41,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/manager/user")
 public class ManagerUserController {
+
+    private static final String TOKEN_KEY = "token";
 
     @Resource
     WxMpService wxMpService;
@@ -60,7 +66,9 @@ public class ManagerUserController {
     }
 
     @GetMapping("/checkLogined")
-    public BaseModel<WxMaUser> checkLogined(HttpSession session) {
+    public BaseModel<WxMaUser> checkLogined(HttpSession session,
+                                            HttpServletRequest request,
+                                            HttpServletResponse response) {
         String shortSid = SessionUtils.normalizeSessionId(session);
         log.debug("checkLogined shortSid: " + shortSid);
         WxMaUser wxMaUser = wxMaUserService.getWxMaUserBySessionKey(shortSid);
@@ -68,6 +76,11 @@ public class ManagerUserController {
             if (WxMaUserUtil.checkAuthority(wxMaUser, wxAppService)) {
                 SessionUtils.saveWxUserToSession(session, wxMaUser);
                 WxMaUserUtil.clearSecret(wxMaUser);
+
+                String token = CookieTokenUtils.setTokenValue(response);
+                wxMaUser.setToken(token);
+                log.info(token);
+                wxMaUserService.update(wxMaUser);
                 return BaseModel.success(wxMaUser);
             } else {
                 wxMaUser.setSessionWxAppId(null);
@@ -77,6 +90,28 @@ public class ManagerUserController {
         } else {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
+    }
+
+    /**
+     * 通过token判断的登出
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("/logoutT")
+    public BaseModel<String> logoutT(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        for (Cookie cookie: request.getCookies()) {
+            if (cookie.getName().equals(TOKEN_KEY)) {
+                String tokenValue = cookie.getValue();
+                WxMaUser wxMaUser = wxMaUserService.queryUsersByToken(tokenValue);
+                if (null != wxMaUser) {
+                    session.invalidate();
+                    CookieTokenUtils.deleteTokenValue(response);
+                    return BaseModel.success();
+                }
+            }
+        }
+        return BaseModel.error(ErrorCode.NEED_LOGIN);
     }
 
     @GetMapping("/currentUser")
@@ -98,10 +133,31 @@ public class ManagerUserController {
         }
     }
 
+    /**
+     * 通过token判断的当前用户
+     * @param request
+     * @return
+     */
+    @GetMapping("/currentUserT")
+    public BaseModel<WxMaUserEx>  currentUserT(HttpServletRequest request) {
+        String tokenValue = CookieTokenUtils.getTokenValue(request);
+        if (null != tokenValue) {
+            log.info(tokenValue);
+            WxMaUser wxMaUser = wxMaUserService.queryUsersByToken(tokenValue);
+            if (null != wxMaUser) {
+                WxMaUserEx wxMaUserEx = new WxMaUserEx();
+                wxMaUserEx.copyFrom(wxMaUser);
+                WxApp wxApp = wxAppService.queryById(wxMaUser.getSessionWxAppId());
+                wxMaUserEx.setSessionWxApp(wxApp);
+                return BaseModel.success(wxMaUserEx);
+            }
+        }
+        return BaseModel.error(ErrorCode.NEED_LOGIN);
+    }
+
     @GetMapping("/loginQrCodePictureUrl")
     public BaseModel<String> loginQrCodePictureUrl(HttpSession session) {
         String shortSid = SessionUtils.normalizeSessionId(session);
-        log.info("shortSid: " + shortSid);
         try {
             // 这里形成的sessionId也就是回调的eventKey格式类似：wxfe9faf8c8e3a5830_68822c00-7ca8-4762-9ffc-d1bd455fe49d
             String sceneStr = SessionUtils.addPrefix(shortSid, managerConfiguration.getPlatformAppId());

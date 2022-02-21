@@ -10,13 +10,21 @@ public interface EcCartMapper {
 
     int deleteByExample(EcCartExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(EcCart record);
 
     int insertSelective(EcCart record);
 
     List<EcCart> selectByExample(EcCartExample example);
 
+    EcCart selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") EcCart record, @Param("example") EcCartExample example);
 
     int updateByExample(@Param("record") EcCart record, @Param("example") EcCartExample example);
+
+    int updateByPrimaryKeySelective(EcCart record);
+
+    int updateByPrimaryKey(EcCart record);
 }

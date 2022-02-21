@@ -10,13 +10,21 @@ public interface EcPriceMapper {
 
     int deleteByExample(EcPriceExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(EcPrice record);
 
     int insertSelective(EcPrice record);
 
     List<EcPrice> selectByExample(EcPriceExample example);
 
+    EcPrice selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") EcPrice record, @Param("example") EcPriceExample example);
 
     int updateByExample(@Param("record") EcPrice record, @Param("example") EcPriceExample example);
+
+    int updateByPrimaryKeySelective(EcPrice record);
+
+    int updateByPrimaryKey(EcPrice record);
 }

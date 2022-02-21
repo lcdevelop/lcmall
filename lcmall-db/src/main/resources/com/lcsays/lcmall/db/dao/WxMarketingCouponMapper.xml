@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lcsays.lcmall.db.dao.WxMarketingCouponMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxMarketingCoupon">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
     <result column="wx_ma_user_id" jdbcType="INTEGER" property="wxMaUserId" />
     <result column="stock_id" jdbcType="VARCHAR" property="stockId" />
@@ -89,6 +89,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_marketing_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wx_marketing_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxMarketingCouponExample">
     delete from wx_marketing_coupon
     <if test="_parameter != null">
@@ -231,5 +241,51 @@
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.WxMarketingCoupon">
+    update wx_marketing_coupon
+    <set>
+      <if test="wxAppId != null">
+        wx_app_id = #{wxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="wxMaUserId != null">
+        wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        stock_id = #{stockId,jdbcType=VARCHAR},
+      </if>
+      <if test="couponId != null">
+        coupon_id = #{couponId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consumeTime != null">
+        consume_time = #{consumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consumeMchid != null">
+        consume_mchid = #{consumeMchid,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null">
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.WxMarketingCoupon">
+    update wx_marketing_coupon
+    set wx_app_id = #{wxAppId,jdbcType=INTEGER},
+      wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
+      stock_id = #{stockId,jdbcType=VARCHAR},
+      coupon_id = #{couponId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      consume_time = #{consumeTime,jdbcType=TIMESTAMP},
+      consume_mchid = #{consumeMchid,jdbcType=VARCHAR},
+      transaction_id = #{transactionId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

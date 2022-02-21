@@ -3,24 +3,28 @@ package com.lcsays.lcmall.db.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class EcProduct implements Serializable {
+public class WxEvertabsTab implements Serializable {
     public static final Byte IS_DELETED = IsDel.IS_DELETED.value();
 
     public static final Byte NOT_DELETED = IsDel.NOT_DELETED.value();
 
     private Integer id;
 
-    private String name;
+    private Integer workspaceId;
 
-    private String description;
+    private Integer localId;
 
-    private Integer categoryId;
+    private String url;
+
+    private String title;
+
+    private Integer order;
 
     private Byte isDel;
 
     private Date createTime;
 
-    private Date updateTime;
+    private String favIconUrl;
 
     private static final long serialVersionUID = 1L;
 
@@ -32,28 +36,44 @@ public class EcProduct implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getWorkspaceId() {
+        return workspaceId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setWorkspaceId(Integer workspaceId) {
+        this.workspaceId = workspaceId;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getLocalId() {
+        return localId;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setLocalId(Integer localId) {
+        this.localId = localId;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     public void andLogicalDeleted(boolean deleted) {
@@ -76,12 +96,12 @@ public class EcProduct implements Serializable {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public String getFavIconUrl() {
+        return favIconUrl;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setFavIconUrl(String favIconUrl) {
+        this.favIconUrl = favIconUrl;
     }
 
     @Override
@@ -93,12 +113,14 @@ public class EcProduct implements Serializable {
         sb.append(", IS_DELETED=").append(IS_DELETED);
         sb.append(", NOT_DELETED=").append(NOT_DELETED);
         sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", description=").append(description);
-        sb.append(", categoryId=").append(categoryId);
+        sb.append(", workspaceId=").append(workspaceId);
+        sb.append(", localId=").append(localId);
+        sb.append(", url=").append(url);
+        sb.append(", title=").append(title);
+        sb.append(", order=").append(order);
         sb.append(", isDel=").append(isDel);
         sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
+        sb.append(", favIconUrl=").append(favIconUrl);
         sb.append("]");
         return sb.toString();
     }

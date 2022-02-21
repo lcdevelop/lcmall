@@ -500,6 +500,10 @@ public class EcAddressExample {
         protected Criteria() {
             super();
         }
+
+        public Criteria andLogicalDeleted(boolean deleted) {
+            return deleted ? andIsDelEqualTo(EcAddress.IsDel.IS_DELETED.value()) : andIsDelNotEqualTo(EcAddress.IsDel.IS_DELETED.value());
+        }
     }
 
     public static class Criterion {

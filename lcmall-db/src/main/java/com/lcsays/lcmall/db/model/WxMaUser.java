@@ -40,6 +40,8 @@ public class WxMaUser implements Serializable {
 
     private String city;
 
+    private String token;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -186,6 +188,14 @@ public class WxMaUser implements Serializable {
         this.city = city;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -210,6 +220,7 @@ public class WxMaUser implements Serializable {
         sb.append(", language=").append(language);
         sb.append(", country=").append(country);
         sb.append(", city=").append(city);
+        sb.append(", token=").append(token);
         sb.append("]");
         return sb.toString();
     }

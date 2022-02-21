@@ -10,6 +10,8 @@ public interface GgIntroMapper {
 
     int deleteByExample(GgIntroExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(GgIntro record);
 
     int insertSelective(GgIntro record);
@@ -18,9 +20,17 @@ public interface GgIntroMapper {
 
     List<GgIntro> selectByExample(GgIntroExample example);
 
+    GgIntro selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") GgIntro record, @Param("example") GgIntroExample example);
 
     int updateByExampleWithBLOBs(@Param("record") GgIntro record, @Param("example") GgIntroExample example);
 
     int updateByExample(@Param("record") GgIntro record, @Param("example") GgIntroExample example);
+
+    int updateByPrimaryKeySelective(GgIntro record);
+
+    int updateByPrimaryKeyWithBLOBs(GgIntro record);
+
+    int updateByPrimaryKey(GgIntro record);
 }

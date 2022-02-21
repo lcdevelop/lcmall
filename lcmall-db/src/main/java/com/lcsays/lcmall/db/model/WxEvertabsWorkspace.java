@@ -3,7 +3,7 @@ package com.lcsays.lcmall.db.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class EcProduct implements Serializable {
+public class WxEvertabsWorkspace implements Serializable {
     public static final Byte IS_DELETED = IsDel.IS_DELETED.value();
 
     public static final Byte NOT_DELETED = IsDel.NOT_DELETED.value();
@@ -12,15 +12,13 @@ public class EcProduct implements Serializable {
 
     private String name;
 
-    private String description;
+    private Boolean isTemp;
 
-    private Integer categoryId;
+    private Integer wxMaUserId;
 
     private Byte isDel;
 
     private Date createTime;
-
-    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -40,20 +38,20 @@ public class EcProduct implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public Boolean getIsTemp() {
+        return isTemp;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setIsTemp(Boolean isTemp) {
+        this.isTemp = isTemp;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public Integer getWxMaUserId() {
+        return wxMaUserId;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setWxMaUserId(Integer wxMaUserId) {
+        this.wxMaUserId = wxMaUserId;
     }
 
     public void andLogicalDeleted(boolean deleted) {
@@ -76,14 +74,6 @@ public class EcProduct implements Serializable {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -94,11 +84,10 @@ public class EcProduct implements Serializable {
         sb.append(", NOT_DELETED=").append(NOT_DELETED);
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
-        sb.append(", description=").append(description);
-        sb.append(", categoryId=").append(categoryId);
+        sb.append(", isTemp=").append(isTemp);
+        sb.append(", wxMaUserId=").append(wxMaUserId);
         sb.append(", isDel=").append(isDel);
         sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
         sb.append("]");
         return sb.toString();
     }

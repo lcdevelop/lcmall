@@ -10,13 +10,21 @@ public interface EcCategoryMapper {
 
     int deleteByExample(EcCategoryExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(EcCategory record);
 
     int insertSelective(EcCategory record);
 
     List<EcCategory> selectByExample(EcCategoryExample example);
 
+    EcCategory selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") EcCategory record, @Param("example") EcCategoryExample example);
 
     int updateByExample(@Param("record") EcCategory record, @Param("example") EcCategoryExample example);
+
+    int updateByPrimaryKeySelective(EcCategory record);
+
+    int updateByPrimaryKey(EcCategory record);
 }

@@ -1051,6 +1051,10 @@ public class EcOrderExample {
         protected Criteria() {
             super();
         }
+
+        public Criteria andLogicalDeleted(boolean deleted) {
+            return deleted ? andIsDelEqualTo(EcOrder.IsDel.IS_DELETED.value()) : andIsDelNotEqualTo(EcOrder.IsDel.IS_DELETED.value());
+        }
     }
 
     public static class Criterion {

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EcProductExample {
+public class WxEvertabsWorkspaceExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public EcProductExample() {
+    public WxEvertabsWorkspaceExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -235,133 +235,123 @@ public class EcProductExample {
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionIsNull() {
-            addCriterion("description is null");
+        public Criteria andIsTempIsNull() {
+            addCriterion("is_temp is null");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionIsNotNull() {
-            addCriterion("description is not null");
+        public Criteria andIsTempIsNotNull() {
+            addCriterion("is_temp is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionEqualTo(String value) {
-            addCriterion("description =", value, "description");
+        public Criteria andIsTempEqualTo(Boolean value) {
+            addCriterion("is_temp =", value, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotEqualTo(String value) {
-            addCriterion("description <>", value, "description");
+        public Criteria andIsTempNotEqualTo(Boolean value) {
+            addCriterion("is_temp <>", value, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionGreaterThan(String value) {
-            addCriterion("description >", value, "description");
+        public Criteria andIsTempGreaterThan(Boolean value) {
+            addCriterion("is_temp >", value, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionGreaterThanOrEqualTo(String value) {
-            addCriterion("description >=", value, "description");
+        public Criteria andIsTempGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_temp >=", value, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionLessThan(String value) {
-            addCriterion("description <", value, "description");
+        public Criteria andIsTempLessThan(Boolean value) {
+            addCriterion("is_temp <", value, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionLessThanOrEqualTo(String value) {
-            addCriterion("description <=", value, "description");
+        public Criteria andIsTempLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_temp <=", value, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionLike(String value) {
-            addCriterion("description like", value, "description");
+        public Criteria andIsTempIn(List<Boolean> values) {
+            addCriterion("is_temp in", values, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotLike(String value) {
-            addCriterion("description not like", value, "description");
+        public Criteria andIsTempNotIn(List<Boolean> values) {
+            addCriterion("is_temp not in", values, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionIn(List<String> values) {
-            addCriterion("description in", values, "description");
+        public Criteria andIsTempBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_temp between", value1, value2, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotIn(List<String> values) {
-            addCriterion("description not in", values, "description");
+        public Criteria andIsTempNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_temp not between", value1, value2, "isTemp");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionBetween(String value1, String value2) {
-            addCriterion("description between", value1, value2, "description");
+        public Criteria andWxMaUserIdIsNull() {
+            addCriterion("wx_ma_user_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotBetween(String value1, String value2) {
-            addCriterion("description not between", value1, value2, "description");
+        public Criteria andWxMaUserIdIsNotNull() {
+            addCriterion("wx_ma_user_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdIsNull() {
-            addCriterion("category_id is null");
+        public Criteria andWxMaUserIdEqualTo(Integer value) {
+            addCriterion("wx_ma_user_id =", value, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdIsNotNull() {
-            addCriterion("category_id is not null");
+        public Criteria andWxMaUserIdNotEqualTo(Integer value) {
+            addCriterion("wx_ma_user_id <>", value, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdEqualTo(Integer value) {
-            addCriterion("category_id =", value, "categoryId");
+        public Criteria andWxMaUserIdGreaterThan(Integer value) {
+            addCriterion("wx_ma_user_id >", value, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdNotEqualTo(Integer value) {
-            addCriterion("category_id <>", value, "categoryId");
+        public Criteria andWxMaUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("wx_ma_user_id >=", value, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdGreaterThan(Integer value) {
-            addCriterion("category_id >", value, "categoryId");
+        public Criteria andWxMaUserIdLessThan(Integer value) {
+            addCriterion("wx_ma_user_id <", value, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("category_id >=", value, "categoryId");
+        public Criteria andWxMaUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("wx_ma_user_id <=", value, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdLessThan(Integer value) {
-            addCriterion("category_id <", value, "categoryId");
+        public Criteria andWxMaUserIdIn(List<Integer> values) {
+            addCriterion("wx_ma_user_id in", values, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdLessThanOrEqualTo(Integer value) {
-            addCriterion("category_id <=", value, "categoryId");
+        public Criteria andWxMaUserIdNotIn(List<Integer> values) {
+            addCriterion("wx_ma_user_id not in", values, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdIn(List<Integer> values) {
-            addCriterion("category_id in", values, "categoryId");
+        public Criteria andWxMaUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("wx_ma_user_id between", value1, value2, "wxMaUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIdNotIn(List<Integer> values) {
-            addCriterion("category_id not in", values, "categoryId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryIdBetween(Integer value1, Integer value2) {
-            addCriterion("category_id between", value1, value2, "categoryId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("category_id not between", value1, value2, "categoryId");
+        public Criteria andWxMaUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("wx_ma_user_id not between", value1, value2, "wxMaUserId");
             return (Criteria) this;
         }
 
@@ -484,66 +474,6 @@ public class EcProductExample {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
-
-        public Criteria andUpdateTimeIsNull() {
-            addCriterion("update_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeIsNotNull() {
-            addCriterion("update_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeEqualTo(Date value) {
-            addCriterion("update_time =", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeNotEqualTo(Date value) {
-            addCriterion("update_time <>", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeGreaterThan(Date value) {
-            addCriterion("update_time >", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("update_time >=", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeLessThan(Date value) {
-            addCriterion("update_time <", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
-            addCriterion("update_time <=", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeIn(List<Date> values) {
-            addCriterion("update_time in", values, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeNotIn(List<Date> values) {
-            addCriterion("update_time not in", values, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
-            addCriterion("update_time between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
-            addCriterion("update_time not between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
     }
 
     public static class Criteria extends GeneratedCriteria {
@@ -553,7 +483,7 @@ public class EcProductExample {
         }
 
         public Criteria andLogicalDeleted(boolean deleted) {
-            return deleted ? andIsDelEqualTo(EcProduct.IsDel.IS_DELETED.value()) : andIsDelNotEqualTo(EcProduct.IsDel.IS_DELETED.value());
+            return deleted ? andIsDelEqualTo(WxEvertabsWorkspace.IsDel.IS_DELETED.value()) : andIsDelNotEqualTo(WxEvertabsWorkspace.IsDel.IS_DELETED.value());
         }
     }
 

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lcsays.lcmall.db.dao.EcCartMapper">
-  <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.EcCart">
+<mapper namespace="com.lcsays.lcmall.db.dao.WxEvertabsWorkspaceMapper">
+  <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxEvertabsWorkspace">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_temp" jdbcType="BIT" property="isTemp" />
     <result column="wx_ma_user_id" jdbcType="INTEGER" property="wxMaUserId" />
-    <result column="sku_id" jdbcType="INTEGER" property="skuId" />
-    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,15 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, wx_ma_user_id, sku_id, count
+    id, name, is_temp, wx_ma_user_id, is_del, create_time
   </sql>
-  <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.EcCartExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspaceExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ec_cart
+    from wx_evertabs_workspace
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -85,76 +87,109 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from ec_cart
+    from wx_evertabs_workspace
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByPrimaryKeyWithLogicalDelete" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_evertabs_workspace
+    where id = #{id,jdbcType=INTEGER}
+      and is_del = 
+    <choose>
+      <when test="andLogicalDeleted">
+        1
+      </when>
+      <otherwise>
+        0
+      </otherwise>
+    </choose>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ec_cart
+    delete from wx_evertabs_workspace
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.EcCartExample">
-    delete from ec_cart
+  <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspaceExample">
+    delete from wx_evertabs_workspace
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.lcsays.lcmall.db.model.EcCart">
+  <insert id="insert" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspace">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ec_cart (wx_ma_user_id, sku_id, count
-      )
-    values (#{wxMaUserId,jdbcType=INTEGER}, #{skuId,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}
-      )
+    insert into wx_evertabs_workspace (name, is_temp, wx_ma_user_id, 
+      is_del, create_time)
+    values (#{name,jdbcType=VARCHAR}, #{isTemp,jdbcType=BIT}, #{wxMaUserId,jdbcType=INTEGER}, 
+      #{isDel,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.EcCart">
+  <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspace">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ec_cart
+    insert into wx_evertabs_workspace
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="isTemp != null">
+        is_temp,
+      </if>
       <if test="wxMaUserId != null">
         wx_ma_user_id,
       </if>
-      <if test="skuId != null">
-        sku_id,
+      <if test="isDel != null">
+        is_del,
       </if>
-      <if test="count != null">
-        count,
+      <if test="createTime != null">
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isTemp != null">
+        #{isTemp,jdbcType=BIT},
+      </if>
       <if test="wxMaUserId != null">
         #{wxMaUserId,jdbcType=INTEGER},
       </if>
-      <if test="skuId != null">
-        #{skuId,jdbcType=INTEGER},
+      <if test="isDel != null">
+        #{isDel,jdbcType=TINYINT},
       </if>
-      <if test="count != null">
-        #{count,jdbcType=INTEGER},
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.lcsays.lcmall.db.model.EcCartExample" resultType="java.lang.Long">
-    select count(*) from ec_cart
+  <select id="countByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspaceExample" resultType="java.lang.Long">
+    select count(*) from wx_evertabs_workspace
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update ec_cart
+    update wx_evertabs_workspace
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isTemp != null">
+        is_temp = #{record.isTemp,jdbcType=BIT},
+      </if>
       <if test="record.wxMaUserId != null">
         wx_ma_user_id = #{record.wxMaUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.skuId != null">
-        sku_id = #{record.skuId,jdbcType=INTEGER},
+      <if test="record.isDel != null">
+        is_del = #{record.isDel,jdbcType=TINYINT},
       </if>
-      <if test="record.count != null">
-        count = #{record.count,jdbcType=INTEGER},
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -162,35 +197,55 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update ec_cart
+    update wx_evertabs_workspace
     set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      is_temp = #{record.isTemp,jdbcType=BIT},
       wx_ma_user_id = #{record.wxMaUserId,jdbcType=INTEGER},
-      sku_id = #{record.skuId,jdbcType=INTEGER},
-      count = #{record.count,jdbcType=INTEGER}
+      is_del = #{record.isDel,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.EcCart">
-    update ec_cart
+  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspace">
+    update wx_evertabs_workspace
     <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isTemp != null">
+        is_temp = #{isTemp,jdbcType=BIT},
+      </if>
       <if test="wxMaUserId != null">
         wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
       </if>
-      <if test="skuId != null">
-        sku_id = #{skuId,jdbcType=INTEGER},
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=TINYINT},
       </if>
-      <if test="count != null">
-        count = #{count,jdbcType=INTEGER},
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.EcCart">
-    update ec_cart
-    set wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
-      sku_id = #{skuId,jdbcType=INTEGER},
-      count = #{count,jdbcType=INTEGER}
+  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspace">
+    update wx_evertabs_workspace
+    set name = #{name,jdbcType=VARCHAR},
+      is_temp = #{isTemp,jdbcType=BIT},
+      wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="logicalDeleteByExample" parameterType="map">
+    update wx_evertabs_workspace set is_del = 1
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+    update wx_evertabs_workspace set is_del = 1
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

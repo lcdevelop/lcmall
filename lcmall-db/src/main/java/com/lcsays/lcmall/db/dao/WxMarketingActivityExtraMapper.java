@@ -10,13 +10,21 @@ public interface WxMarketingActivityExtraMapper {
 
     int deleteByExample(WxMarketingActivityExtraExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(WxMarketingActivityExtra record);
 
     int insertSelective(WxMarketingActivityExtra record);
 
     List<WxMarketingActivityExtra> selectByExample(WxMarketingActivityExtraExample example);
 
+    WxMarketingActivityExtra selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") WxMarketingActivityExtra record, @Param("example") WxMarketingActivityExtraExample example);
 
     int updateByExample(@Param("record") WxMarketingActivityExtra record, @Param("example") WxMarketingActivityExtraExample example);
+
+    int updateByPrimaryKeySelective(WxMarketingActivityExtra record);
+
+    int updateByPrimaryKey(WxMarketingActivityExtra record);
 }

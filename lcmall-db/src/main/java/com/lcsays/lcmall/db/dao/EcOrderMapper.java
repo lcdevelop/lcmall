@@ -10,13 +10,27 @@ public interface EcOrderMapper {
 
     int deleteByExample(EcOrderExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(EcOrder record);
 
     int insertSelective(EcOrder record);
 
     List<EcOrder> selectByExample(EcOrderExample example);
 
+    EcOrder selectByPrimaryKey(Integer id);
+
+    EcOrder selectByPrimaryKeyWithLogicalDelete(@Param("id") Integer id, @Param("andLogicalDeleted") boolean andLogicalDeleted);
+
     int updateByExampleSelective(@Param("record") EcOrder record, @Param("example") EcOrderExample example);
 
     int updateByExample(@Param("record") EcOrder record, @Param("example") EcOrderExample example);
+
+    int updateByPrimaryKeySelective(EcOrder record);
+
+    int updateByPrimaryKey(EcOrder record);
+
+    int logicalDeleteByExample(@Param("example") EcOrderExample example);
+
+    int logicalDeleteByPrimaryKey(Integer id);
 }

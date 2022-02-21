@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcsays.lcmall.db.dao.WxEvertabsTabMapper">
+  <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxEvertabsTab">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="workspace_id" jdbcType="INTEGER" property="workspaceId" />
+    <result column="local_id" jdbcType="INTEGER" property="localId" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="order" jdbcType="INTEGER" property="order" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.lcsays.lcmall.db.model.WxEvertabsTab">
+    <result column="fav_icon_url" jdbcType="LONGVARCHAR" property="favIconUrl" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, workspace_id, local_id, url, title, order, is_del, create_time
+  </sql>
+  <sql id="Blob_Column_List">
+    fav_icon_url
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTabExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_evertabs_tab
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTabExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wx_evertabs_tab
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_evertabs_tab
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeyWithLogicalDelete" parameterType="map" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_evertabs_tab
+    where id = #{id,jdbcType=INTEGER}
+      and is_del = 
+    <choose>
+      <when test="andLogicalDeleted">
+        1
+      </when>
+      <otherwise>
+        0
+      </otherwise>
+    </choose>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wx_evertabs_tab
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTabExample">
+    delete from wx_evertabs_tab
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wx_evertabs_tab (workspace_id, local_id, url, 
+      title, order, is_del, 
+      create_time, fav_icon_url)
+    values (#{workspaceId,jdbcType=INTEGER}, #{localId,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{order,jdbcType=INTEGER}, #{isDel,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{favIconUrl,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wx_evertabs_tab
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="workspaceId != null">
+        workspace_id,
+      </if>
+      <if test="localId != null">
+        local_id,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="order != null">
+        order,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="favIconUrl != null">
+        fav_icon_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="workspaceId != null">
+        #{workspaceId,jdbcType=INTEGER},
+      </if>
+      <if test="localId != null">
+        #{localId,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="order != null">
+        #{order,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="favIconUrl != null">
+        #{favIconUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTabExample" resultType="java.lang.Long">
+    select count(*) from wx_evertabs_tab
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wx_evertabs_tab
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.workspaceId != null">
+        workspace_id = #{record.workspaceId,jdbcType=INTEGER},
+      </if>
+      <if test="record.localId != null">
+        local_id = #{record.localId,jdbcType=INTEGER},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.order != null">
+        order = #{record.order,jdbcType=INTEGER},
+      </if>
+      <if test="record.isDel != null">
+        is_del = #{record.isDel,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.favIconUrl != null">
+        fav_icon_url = #{record.favIconUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update wx_evertabs_tab
+    set id = #{record.id,jdbcType=INTEGER},
+      workspace_id = #{record.workspaceId,jdbcType=INTEGER},
+      local_id = #{record.localId,jdbcType=INTEGER},
+      url = #{record.url,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      order = #{record.order,jdbcType=INTEGER},
+      is_del = #{record.isDel,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      fav_icon_url = #{record.favIconUrl,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wx_evertabs_tab
+    set id = #{record.id,jdbcType=INTEGER},
+      workspace_id = #{record.workspaceId,jdbcType=INTEGER},
+      local_id = #{record.localId,jdbcType=INTEGER},
+      url = #{record.url,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      order = #{record.order,jdbcType=INTEGER},
+      is_del = #{record.isDel,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
+    update wx_evertabs_tab
+    <set>
+      <if test="workspaceId != null">
+        workspace_id = #{workspaceId,jdbcType=INTEGER},
+      </if>
+      <if test="localId != null">
+        local_id = #{localId,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="order != null">
+        order = #{order,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="favIconUrl != null">
+        fav_icon_url = #{favIconUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
+    update wx_evertabs_tab
+    set workspace_id = #{workspaceId,jdbcType=INTEGER},
+      local_id = #{localId,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      order = #{order,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      fav_icon_url = #{favIconUrl,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
+    update wx_evertabs_tab
+    set workspace_id = #{workspaceId,jdbcType=INTEGER},
+      local_id = #{localId,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      order = #{order,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="logicalDeleteByExample" parameterType="map">
+    update wx_evertabs_tab set is_del = 1
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+    update wx_evertabs_tab set is_del = 1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

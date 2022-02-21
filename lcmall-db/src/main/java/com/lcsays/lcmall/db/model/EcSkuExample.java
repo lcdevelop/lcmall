@@ -500,6 +500,10 @@ public class EcSkuExample {
         protected Criteria() {
             super();
         }
+
+        public Criteria andLogicalDeleted(boolean deleted) {
+            return deleted ? andIsDelEqualTo(EcSku.IsDel.IS_DELETED.value()) : andIsDelNotEqualTo(EcSku.IsDel.IS_DELETED.value());
+        }
     }
 
     public static class Criterion {

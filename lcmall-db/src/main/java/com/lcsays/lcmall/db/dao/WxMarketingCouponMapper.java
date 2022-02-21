@@ -10,13 +10,21 @@ public interface WxMarketingCouponMapper {
 
     int deleteByExample(WxMarketingCouponExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(WxMarketingCoupon record);
 
     int insertSelective(WxMarketingCoupon record);
 
     List<WxMarketingCoupon> selectByExample(WxMarketingCouponExample example);
 
+    WxMarketingCoupon selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") WxMarketingCoupon record, @Param("example") WxMarketingCouponExample example);
 
     int updateByExample(@Param("record") WxMarketingCoupon record, @Param("example") WxMarketingCouponExample example);
+
+    int updateByPrimaryKeySelective(WxMarketingCoupon record);
+
+    int updateByPrimaryKey(WxMarketingCoupon record);
 }

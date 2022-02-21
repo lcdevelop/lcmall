@@ -780,6 +780,10 @@ public class WxAppExample {
         protected Criteria() {
             super();
         }
+
+        public Criteria andLogicalDeleted(boolean deleted) {
+            return deleted ? andIsDelEqualTo(WxApp.IsDel.IS_DELETED.value()) : andIsDelNotEqualTo(WxApp.IsDel.IS_DELETED.value());
+        }
     }
 
     public static class Criterion {

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class EcOrder implements Serializable {
+    public static final Integer IS_DELETED = IsDel.IS_DELETED.value();
+
+    public static final Integer NOT_DELETED = IsDel.NOT_DELETED.value();
+
     private Integer id;
 
     private Integer wxAppId;
@@ -124,6 +128,10 @@ public class EcOrder implements Serializable {
         this.expressNo = expressNo;
     }
 
+    public void andLogicalDeleted(boolean deleted) {
+        setIsDel(deleted ? IsDel.IS_DELETED.value() : IsDel.NOT_DELETED.value());
+    }
+
     public Integer getIsDel() {
         return isDel;
     }
@@ -162,6 +170,8 @@ public class EcOrder implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
+        sb.append(", IS_DELETED=").append(IS_DELETED);
+        sb.append(", NOT_DELETED=").append(NOT_DELETED);
         sb.append(", id=").append(id);
         sb.append(", wxAppId=").append(wxAppId);
         sb.append(", wxMaUserId=").append(wxMaUserId);
@@ -179,5 +189,53 @@ public class EcOrder implements Serializable {
         sb.append(", successTime=").append(successTime);
         sb.append("]");
         return sb.toString();
+    }
+
+    public enum IsDel {
+        NOT_DELETED(new Integer("0"), "未删除"),
+        IS_DELETED(new Integer("1"), "已删除");
+
+        private final Integer value;
+
+        private final String name;
+
+        IsDel(Integer value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+
+        public Integer getValue() {
+            return this.value;
+        }
+
+        public Integer value() {
+            return this.value;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public static IsDel parseValue(Integer value) {
+            if (value != null) {
+                for (IsDel item : values()) {
+                    if (item.value.equals(value)) {
+                        return item;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static IsDel parseName(String name) {
+            if (name != null) {
+                for (IsDel item : values()) {
+                    if (item.name.equals(name)) {
+                        return item;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

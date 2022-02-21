@@ -89,6 +89,18 @@ public class WxMaUserService {
         return wxMaUserMapper.selectByExample(example);
     }
 
+    public WxMaUser queryUsersByToken(String token) {
+        WxMaUserExample example = new WxMaUserExample();
+        WxMaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andTokenEqualTo(token);
+        List<WxMaUser> ret = wxMaUserMapper.selectByExample(example);
+        if (ret.size() == 1) {
+            return ret.get(0);
+        } else {
+            return null;
+        }
+    }
+
     public List<WxMaUser> listUsers() {
         WxMaUserExample example = new WxMaUserExample();
         WxMaUserExample.Criteria criteria = example.createCriteria();

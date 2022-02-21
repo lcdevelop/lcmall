@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lcsays.lcmall.db.dao.EcOrderMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.EcOrder">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
     <result column="wx_ma_user_id" jdbcType="INTEGER" property="wxMaUserId" />
     <result column="address_id" jdbcType="INTEGER" property="addressId" />
@@ -95,6 +95,31 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ec_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeyWithLogicalDelete" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ec_order
+    where id = #{id,jdbcType=INTEGER}
+      and is_del = 
+    <choose>
+      <when test="andLogicalDeleted">
+        1
+      </when>
+      <otherwise>
+        0
+      </otherwise>
+    </choose>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ec_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.EcOrderExample">
     delete from ec_order
     <if test="_parameter != null">
@@ -289,5 +314,81 @@
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.EcOrder">
+    update ec_order
+    <set>
+      <if test="wxAppId != null">
+        wx_app_id = #{wxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="wxMaUserId != null">
+        wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
+      </if>
+      <if test="addressId != null">
+        address_id = #{addressId,jdbcType=INTEGER},
+      </if>
+      <if test="outTradeNo != null">
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null">
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null">
+        total_fee = #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="tradeStatus != null">
+        trade_status = #{tradeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="expressTypeId != null">
+        express_type_id = #{expressTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="expressNo != null">
+        express_no = #{expressNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="successTime != null">
+        success_time = #{successTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.EcOrder">
+    update ec_order
+    set wx_app_id = #{wxAppId,jdbcType=INTEGER},
+      wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
+      address_id = #{addressId,jdbcType=INTEGER},
+      out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      transaction_id = #{transactionId,jdbcType=VARCHAR},
+      total_fee = #{totalFee,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      trade_status = #{tradeStatus,jdbcType=VARCHAR},
+      express_type_id = #{expressTypeId,jdbcType=INTEGER},
+      express_no = #{expressNo,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      success_time = #{successTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="logicalDeleteByExample" parameterType="map">
+    update ec_order set is_del = 1
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+    update ec_order set is_del = 1
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

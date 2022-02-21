@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lcsays.lcmall.db.dao.WxMaUserMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxMaUser">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="wx_app_id" jdbcType="INTEGER" property="wxAppId" />
     <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
     <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
@@ -20,6 +20,7 @@
     <result column="language" jdbcType="VARCHAR" property="language" />
     <result column="country" jdbcType="VARCHAR" property="country" />
     <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -82,7 +83,7 @@
   <sql id="Base_Column_List">
     id, wx_app_id, phone_number, user_phone, user_phone_encrypt, create_time, update_time, 
     role, nickname, session_wx_app_id, session_key, openid, unionid, avatar_url, gender, 
-    language, country, city
+    language, country, city, token
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxMaUserExample" resultMap="BaseResultMap">
     select
@@ -98,6 +99,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_ma_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wx_ma_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxMaUserExample">
     delete from wx_ma_user
     <if test="_parameter != null">
@@ -113,13 +124,15 @@
       role, nickname, session_wx_app_id, 
       session_key, openid, unionid, 
       avatar_url, gender, language, 
-      country, city)
+      country, city, token
+      )
     values (#{wxAppId,jdbcType=INTEGER}, #{phoneNumber,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, 
       #{userPhoneEncrypt,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{role,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{sessionWxAppId,jdbcType=INTEGER}, 
       #{sessionKey,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{unionid,jdbcType=VARCHAR}, 
       #{avatarUrl,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, #{language,jdbcType=VARCHAR}, 
-      #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR})
+      #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxMaUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -178,6 +191,9 @@
       <if test="city != null">
         city,
       </if>
+      <if test="token != null">
+        token,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="wxAppId != null">
@@ -230,6 +246,9 @@
       </if>
       <if test="city != null">
         #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -296,6 +315,9 @@
       <if test="record.city != null">
         city = #{record.city,jdbcType=VARCHAR},
       </if>
+      <if test="record.token != null">
+        token = #{record.token,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -320,9 +342,92 @@
       gender = #{record.gender,jdbcType=VARCHAR},
       language = #{record.language,jdbcType=VARCHAR},
       country = #{record.country,jdbcType=VARCHAR},
-      city = #{record.city,jdbcType=VARCHAR}
+      city = #{record.city,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lcsays.lcmall.db.model.WxMaUser">
+    update wx_ma_user
+    <set>
+      <if test="wxAppId != null">
+        wx_app_id = #{wxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="phoneNumber != null">
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhoneEncrypt != null">
+        user_phone_encrypt = #{userPhoneEncrypt,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionWxAppId != null">
+        session_wx_app_id = #{sessionWxAppId,jdbcType=INTEGER},
+      </if>
+      <if test="sessionKey != null">
+        session_key = #{sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null">
+        unionid = #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.WxMaUser">
+    update wx_ma_user
+    set wx_app_id = #{wxAppId,jdbcType=INTEGER},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      user_phone = #{userPhone,jdbcType=VARCHAR},
+      user_phone_encrypt = #{userPhoneEncrypt,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      role = #{role,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      session_wx_app_id = #{sessionWxAppId,jdbcType=INTEGER},
+      session_key = #{sessionKey,jdbcType=VARCHAR},
+      openid = #{openid,jdbcType=VARCHAR},
+      unionid = #{unionid,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      language = #{language,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

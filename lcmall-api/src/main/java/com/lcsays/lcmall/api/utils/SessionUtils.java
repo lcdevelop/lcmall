@@ -83,7 +83,7 @@ public class SessionUtils {
     }
 
     public static WxMaUser getUserFromSession(HttpSession session) {
-        return (WxMaUser)session.getAttribute(USER_SESSION_KEY);
+        return (WxMaUser) session.getAttribute(USER_SESSION_KEY);
     }
 
     public static void saveWxUserToSession(HttpSession session, com.lcsays.lcmall.db.model.WxMaUser wxMaUser) {

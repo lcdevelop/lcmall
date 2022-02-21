@@ -10,13 +10,21 @@ public interface WxMarketingWhitelistMapper {
 
     int deleteByExample(WxMarketingWhitelistExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(WxMarketingWhitelist record);
 
     int insertSelective(WxMarketingWhitelist record);
 
     List<WxMarketingWhitelist> selectByExample(WxMarketingWhitelistExample example);
 
+    WxMarketingWhitelist selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") WxMarketingWhitelist record, @Param("example") WxMarketingWhitelistExample example);
 
     int updateByExample(@Param("record") WxMarketingWhitelist record, @Param("example") WxMarketingWhitelistExample example);
+
+    int updateByPrimaryKeySelective(WxMarketingWhitelist record);
+
+    int updateByPrimaryKey(WxMarketingWhitelist record);
 }
