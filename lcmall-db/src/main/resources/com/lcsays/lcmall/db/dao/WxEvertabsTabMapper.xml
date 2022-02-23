@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lcsays.lcmall.db.dao.WxEvertabsTabMapper">
   <resultMap id="BaseResultMap" type="com.lcsays.lcmall.db.model.WxEvertabsTab">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="pk_id" jdbcType="INTEGER" property="pkId" />
     <result column="workspace_id" jdbcType="INTEGER" property="workspaceId" />
-    <result column="local_id" jdbcType="INTEGER" property="localId" />
+    <result column="id" jdbcType="INTEGER" property="id" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="order" jdbcType="INTEGER" property="order" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
     <result column="is_del" jdbcType="TINYINT" property="isDel" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -73,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, workspace_id, local_id, url, title, order, is_del, create_time
+    pk_id, workspace_id, id, url, title, sort, is_del, create_time
   </sql>
   <sql id="Blob_Column_List">
     fav_icon_url
@@ -114,7 +114,7 @@
     ,
     <include refid="Blob_Column_List" />
     from wx_evertabs_tab
-    where id = #{id,jdbcType=INTEGER}
+    where pk_id = #{pkId,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKeyWithLogicalDelete" parameterType="map" resultMap="ResultMapWithBLOBs">
     select 
@@ -122,7 +122,7 @@
     ,
     <include refid="Blob_Column_List" />
     from wx_evertabs_tab
-    where id = #{id,jdbcType=INTEGER}
+    where pk_id = #{pkId,jdbcType=INTEGER}
       and is_del = 
     <choose>
       <when test="andLogicalDeleted">
@@ -135,7 +135,7 @@
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from wx_evertabs_tab
-    where id = #{id,jdbcType=INTEGER}
+    where pk_id = #{pkId,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTabExample">
     delete from wx_evertabs_tab
@@ -144,18 +144,18 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+    <selectKey keyProperty="pkId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_evertabs_tab (workspace_id, local_id, url, 
-      title, order, is_del, 
+    insert into wx_evertabs_tab (workspace_id, id, url, 
+      title, sort, is_del, 
       create_time, fav_icon_url)
-    values (#{workspaceId,jdbcType=INTEGER}, #{localId,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
-      #{title,jdbcType=VARCHAR}, #{order,jdbcType=INTEGER}, #{isDel,jdbcType=TINYINT}, 
+    values (#{workspaceId,jdbcType=INTEGER}, #{id,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{isDel,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{favIconUrl,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+    <selectKey keyProperty="pkId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into wx_evertabs_tab
@@ -163,8 +163,8 @@
       <if test="workspaceId != null">
         workspace_id,
       </if>
-      <if test="localId != null">
-        local_id,
+      <if test="id != null">
+        id,
       </if>
       <if test="url != null">
         url,
@@ -172,8 +172,8 @@
       <if test="title != null">
         title,
       </if>
-      <if test="order != null">
-        order,
+      <if test="sort != null">
+        sort,
       </if>
       <if test="isDel != null">
         is_del,
@@ -189,8 +189,8 @@
       <if test="workspaceId != null">
         #{workspaceId,jdbcType=INTEGER},
       </if>
-      <if test="localId != null">
-        #{localId,jdbcType=INTEGER},
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
@@ -198,8 +198,8 @@
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="order != null">
-        #{order,jdbcType=INTEGER},
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
       </if>
       <if test="isDel != null">
         #{isDel,jdbcType=TINYINT},
@@ -221,14 +221,14 @@
   <update id="updateByExampleSelective" parameterType="map">
     update wx_evertabs_tab
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
+      <if test="record.pkId != null">
+        pk_id = #{record.pkId,jdbcType=INTEGER},
       </if>
       <if test="record.workspaceId != null">
         workspace_id = #{record.workspaceId,jdbcType=INTEGER},
       </if>
-      <if test="record.localId != null">
-        local_id = #{record.localId,jdbcType=INTEGER},
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.url != null">
         url = #{record.url,jdbcType=VARCHAR},
@@ -236,8 +236,8 @@
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.order != null">
-        order = #{record.order,jdbcType=INTEGER},
+      <if test="record.sort != null">
+        sort = #{record.sort,jdbcType=INTEGER},
       </if>
       <if test="record.isDel != null">
         is_del = #{record.isDel,jdbcType=TINYINT},
@@ -255,12 +255,12 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update wx_evertabs_tab
-    set id = #{record.id,jdbcType=INTEGER},
+    set pk_id = #{record.pkId,jdbcType=INTEGER},
       workspace_id = #{record.workspaceId,jdbcType=INTEGER},
-      local_id = #{record.localId,jdbcType=INTEGER},
+      id = #{record.id,jdbcType=INTEGER},
       url = #{record.url,jdbcType=VARCHAR},
       title = #{record.title,jdbcType=VARCHAR},
-      order = #{record.order,jdbcType=INTEGER},
+      sort = #{record.sort,jdbcType=INTEGER},
       is_del = #{record.isDel,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       fav_icon_url = #{record.favIconUrl,jdbcType=LONGVARCHAR}
@@ -270,12 +270,12 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update wx_evertabs_tab
-    set id = #{record.id,jdbcType=INTEGER},
+    set pk_id = #{record.pkId,jdbcType=INTEGER},
       workspace_id = #{record.workspaceId,jdbcType=INTEGER},
-      local_id = #{record.localId,jdbcType=INTEGER},
+      id = #{record.id,jdbcType=INTEGER},
       url = #{record.url,jdbcType=VARCHAR},
       title = #{record.title,jdbcType=VARCHAR},
-      order = #{record.order,jdbcType=INTEGER},
+      sort = #{record.sort,jdbcType=INTEGER},
       is_del = #{record.isDel,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -288,8 +288,8 @@
       <if test="workspaceId != null">
         workspace_id = #{workspaceId,jdbcType=INTEGER},
       </if>
-      <if test="localId != null">
-        local_id = #{localId,jdbcType=INTEGER},
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
       </if>
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
@@ -297,8 +297,8 @@
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="order != null">
-        order = #{order,jdbcType=INTEGER},
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
       </if>
       <if test="isDel != null">
         is_del = #{isDel,jdbcType=TINYINT},
@@ -310,30 +310,30 @@
         fav_icon_url = #{favIconUrl,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where pk_id = #{pkId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
     update wx_evertabs_tab
     set workspace_id = #{workspaceId,jdbcType=INTEGER},
-      local_id = #{localId,jdbcType=INTEGER},
+      id = #{id,jdbcType=INTEGER},
       url = #{url,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
-      order = #{order,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
       is_del = #{isDel,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       fav_icon_url = #{favIconUrl,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where pk_id = #{pkId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.lcsays.lcmall.db.model.WxEvertabsTab">
     update wx_evertabs_tab
     set workspace_id = #{workspaceId,jdbcType=INTEGER},
-      local_id = #{localId,jdbcType=INTEGER},
+      id = #{id,jdbcType=INTEGER},
       url = #{url,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
-      order = #{order,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
       is_del = #{isDel,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where pk_id = #{pkId,jdbcType=INTEGER}
   </update>
   <update id="logicalDeleteByExample" parameterType="map">
     update wx_evertabs_tab set is_del = 1
@@ -343,6 +343,6 @@
   </update>
   <update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
     update wx_evertabs_tab set is_del = 1
-    where id = #{id,jdbcType=INTEGER}
+    where pk_id = #{pkId,jdbcType=INTEGER}
   </update>
 </mapper>

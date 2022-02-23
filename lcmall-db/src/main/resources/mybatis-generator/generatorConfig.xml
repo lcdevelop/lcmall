@@ -71,7 +71,7 @@
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
         <table tableName="wx_evertabs_tab">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <generatedKey column="pk_id" sqlStatement="MySql" identity="true"/>
         </table>
         <table tableName="wx_evertabs_workspace">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>

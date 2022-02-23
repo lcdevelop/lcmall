@@ -1,6 +1,5 @@
 package com.lcsays.lcmall.api.models.evertabs;
 
-import com.lcsays.lcmall.db.model.EcProduct;
 import com.lcsays.lcmall.db.model.WxEvertabsTab;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,24 +15,24 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TabEx extends WxEvertabsTab {
+public class TabExOld extends WxEvertabsTab {
     private Integer localId;
 
     public void copyTo(WxEvertabsTab tab) {
         tab.setWorkspaceId(this.getWorkspaceId());
         tab.setCreateTime(this.getCreateTime());
         tab.setFavIconUrl(this.getFavIconUrl());
-        tab.setOrder(this.getOrder());
+        tab.setSort(this.getSort());
         tab.setTitle(this.getTitle());
         tab.setUrl(this.getUrl());
     }
 
-    public static List<WxEvertabsTab> toEverTabsTabList(List<TabEx> tabExes) {
+    public static List<WxEvertabsTab> toEverTabsTabList(List<TabExOld> tabExes) {
         List<WxEvertabsTab> tabs = new ArrayList<>();
-        for (TabEx tabEx: tabExes) {
+        for (TabExOld tabEx: tabExes) {
             WxEvertabsTab tab = new WxEvertabsTab();
             tabEx.copyTo(tab);
-            tab.setLocalId(tabEx.getId());
+//            tab.setLocalId(tabEx.getId());
             tabs.add(tab);
         }
         return tabs;

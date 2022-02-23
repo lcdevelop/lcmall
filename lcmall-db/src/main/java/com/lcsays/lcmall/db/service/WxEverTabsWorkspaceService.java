@@ -29,9 +29,11 @@ public class WxEverTabsWorkspaceService {
     public boolean addWorkspace(WxEvertabsWorkspace workspace, List<WxEvertabsTab> wxEvertabsTabs) {
         int ret = workspaceMapper.insertSelective(workspace);
         if (ret > 0) {
-            for (WxEvertabsTab tab: wxEvertabsTabs) {
-                tab.setWorkspaceId(workspace.getId());
-                tabMapper.insertSelective(tab);
+            if (null != wxEvertabsTabs) {
+                for (WxEvertabsTab tab : wxEvertabsTabs) {
+                    tab.setWorkspaceId(workspace.getId());
+                    tabMapper.insertSelective(tab);
+                }
             }
             return true;
         } else {
@@ -58,7 +60,7 @@ public class WxEverTabsWorkspaceService {
 
     public List<WxEvertabsTab> queryAllTabsByWorkspaceId(Integer workspaceId) {
         WxEvertabsTabExample example = new WxEvertabsTabExample();
-        example.createCriteria().andWorkspaceIdEqualTo(workspaceId);
+        example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);
         return tabMapper.selectByExample(example);
     }
 
@@ -78,5 +80,9 @@ public class WxEverTabsWorkspaceService {
 
     public int delete(WxEvertabsWorkspace workspace) {
         return workspaceMapper.logicalDeleteByPrimaryKey(workspace.getId());
+    }
+
+    public int updateTab(WxEvertabsTab tab) {
+        return tabMapper.updateByPrimaryKeySelective(tab);
     }
 }

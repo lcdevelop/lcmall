@@ -1,10 +1,10 @@
 package com.lcsays.lcmall.api.controller.evertabs;
 
 import com.lcsays.lcmall.api.enums.ErrorCode;
-import com.lcsays.lcmall.api.models.evertabs.TabEx;
 import com.lcsays.lcmall.api.models.evertabs.WorkspaceEx;
 import com.lcsays.lcmall.api.models.result.BaseModel;
 import com.lcsays.lcmall.api.utils.CookieTokenUtils;
+import com.lcsays.lcmall.db.model.WxEvertabsTab;
 import com.lcsays.lcmall.db.model.WxEvertabsWorkspace;
 import com.lcsays.lcmall.db.model.WxMaUser;
 import com.lcsays.lcmall.db.service.WxEverTabsWorkspaceService;
@@ -59,7 +59,7 @@ public class WorkspaceController {
 
         workspaceEx.setWxMaUserId(wxMaUser.getId());
 
-        if (everTabsWorkspaceService.addWorkspace(workspaceEx, TabEx.toEverTabsTabList(workspaceEx.getTabs()))) {
+        if (everTabsWorkspaceService.addWorkspace(workspaceEx, workspaceEx.getTabs())) {
             return BaseModel.success(workspaceEx);
         } else {
             return BaseModel.error(ErrorCode.DAO_ERROR);
@@ -83,6 +83,31 @@ public class WorkspaceController {
             workspaceEx.setTabsCount(workspaceTabsCountMap.get(workspace.getId()));
             return workspaceEx;
         }).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/tabList")
+    public BaseModel<List<WxEvertabsTab>> tabList(HttpServletRequest request, @RequestParam Integer workspaceId) {
+        WxMaUser wxMaUser = check(request);
+        if (null == wxMaUser) {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+
+        return BaseModel.success(everTabsWorkspaceService.queryAllTabsByWorkspaceId(workspaceId));
+    }
+
+    @PostMapping("/updateTab")
+    public BaseModel<WxEvertabsTab> updateTab(HttpServletRequest request,
+                                               @RequestBody WxEvertabsTab tab) {
+        WxMaUser wxMaUser = check(request);
+        if (null == wxMaUser) {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+
+        if (everTabsWorkspaceService.updateTab(tab) > 0) {
+            return BaseModel.success(tab);
+        } else {
+            return BaseModel.error(ErrorCode.DAO_ERROR);
+        }
     }
 
     @PostMapping("/transToWorkspace")

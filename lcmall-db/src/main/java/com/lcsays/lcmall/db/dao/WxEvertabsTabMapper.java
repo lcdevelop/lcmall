@@ -10,7 +10,7 @@ public interface WxEvertabsTabMapper {
 
     int deleteByExample(WxEvertabsTabExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer pkId);
 
     int insert(WxEvertabsTab record);
 
@@ -20,9 +20,9 @@ public interface WxEvertabsTabMapper {
 
     List<WxEvertabsTab> selectByExample(WxEvertabsTabExample example);
 
-    WxEvertabsTab selectByPrimaryKey(Integer id);
+    WxEvertabsTab selectByPrimaryKey(Integer pkId);
 
-    WxEvertabsTab selectByPrimaryKeyWithLogicalDelete(@Param("id") Integer id, @Param("andLogicalDeleted") boolean andLogicalDeleted);
+    WxEvertabsTab selectByPrimaryKeyWithLogicalDelete(@Param("pkId") Integer pkId, @Param("andLogicalDeleted") boolean andLogicalDeleted);
 
     int updateByExampleSelective(@Param("record") WxEvertabsTab record, @Param("example") WxEvertabsTabExample example);
 
@@ -38,5 +38,5 @@ public interface WxEvertabsTabMapper {
 
     int logicalDeleteByExample(@Param("example") WxEvertabsTabExample example);
 
-    int logicalDeleteByPrimaryKey(Integer id);
+    int logicalDeleteByPrimaryKey(Integer pkId);
 }

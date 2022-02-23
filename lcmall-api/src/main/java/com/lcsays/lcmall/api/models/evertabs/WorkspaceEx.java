@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkspaceEx extends WxEvertabsWorkspace {
-    private List<TabEx> tabs;
+    private List<WxEvertabsTab> tabs;
     private long tabsCount;
 
     public void copyFrom(WxEvertabsWorkspace workspace) {

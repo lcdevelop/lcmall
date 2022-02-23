@@ -8,17 +8,17 @@ public class WxEvertabsTab implements Serializable {
 
     public static final Byte NOT_DELETED = IsDel.NOT_DELETED.value();
 
-    private Integer id;
+    private Integer pkId;
 
     private Integer workspaceId;
 
-    private Integer localId;
+    private Integer id;
 
     private String url;
 
     private String title;
 
-    private Integer order;
+    private Integer sort;
 
     private Byte isDel;
 
@@ -28,12 +28,12 @@ public class WxEvertabsTab implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getPkId() {
+        return pkId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPkId(Integer pkId) {
+        this.pkId = pkId;
     }
 
     public Integer getWorkspaceId() {
@@ -44,12 +44,12 @@ public class WxEvertabsTab implements Serializable {
         this.workspaceId = workspaceId;
     }
 
-    public Integer getLocalId() {
-        return localId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setLocalId(Integer localId) {
-        this.localId = localId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUrl() {
@@ -68,12 +68,12 @@ public class WxEvertabsTab implements Serializable {
         this.title = title;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getSort() {
+        return sort;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     public void andLogicalDeleted(boolean deleted) {
@@ -112,12 +112,12 @@ public class WxEvertabsTab implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", IS_DELETED=").append(IS_DELETED);
         sb.append(", NOT_DELETED=").append(NOT_DELETED);
-        sb.append(", id=").append(id);
+        sb.append(", pkId=").append(pkId);
         sb.append(", workspaceId=").append(workspaceId);
-        sb.append(", localId=").append(localId);
+        sb.append(", id=").append(id);
         sb.append(", url=").append(url);
         sb.append(", title=").append(title);
-        sb.append(", order=").append(order);
+        sb.append(", sort=").append(sort);
         sb.append(", isDel=").append(isDel);
         sb.append(", createTime=").append(createTime);
         sb.append(", favIconUrl=").append(favIconUrl);
