@@ -171,4 +171,24 @@ public class WorkspaceController {
             return BaseModel.error(ErrorCode.DAO_ERROR);
         }
     }
+
+    @PostMapping("/changeWorkspaceName")
+    public BaseModel<String> changeWorkspaceName(HttpServletRequest request,
+                                                 @RequestParam Integer workspaceId,
+                                                 @RequestParam String name
+    ) {
+        WxMaUser wxMaUser = check(request);
+        if (null == wxMaUser) {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+
+        WxEvertabsWorkspace workspace = everTabsWorkspaceService.queryWorkspaceById(workspaceId);
+        if (null == workspace || !workspace.getWxMaUserId().equals(wxMaUser.getId())) {
+            return BaseModel.error(ErrorCode.NO_RESULT);
+        }
+
+        workspace.setName(name);
+        everTabsWorkspaceService.update(workspace);
+        return BaseModel.success();
+    }
 }
