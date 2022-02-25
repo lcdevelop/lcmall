@@ -110,6 +110,26 @@ public class WorkspaceController {
         }
     }
 
+    @PostMapping("/batchUpdateTabs")
+    public BaseModel<String> batchUpdateTabs(HttpServletRequest request,
+                                              @RequestParam Integer workspaceId,
+                                              @RequestBody List<WxEvertabsTab> tabs) {
+        WxMaUser wxMaUser = check(request);
+        if (null == wxMaUser) {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+
+        log.info(String.valueOf(workspaceId));
+        log.info(String.valueOf(tabs));
+        try {
+            everTabsWorkspaceService.replaceTabs(workspaceId, tabs);
+            return BaseModel.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BaseModel.error(ErrorCode.DAO_ERROR);
+        }
+    }
+
     @PostMapping("/transToWorkspace")
     public BaseModel<String> transToWorkspace(HttpServletRequest request,
                                               @RequestParam Integer workspaceId,

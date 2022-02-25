@@ -51,7 +51,7 @@ public class WxEverTabsWorkspaceService {
         Map<Integer, Long> ret = new HashMap<>();
         for (Integer workspaceId: workspaceIdList) {
             WxEvertabsTabExample example = new WxEvertabsTabExample();
-            example.createCriteria().andWorkspaceIdEqualTo(workspaceId);
+            example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);
             long count = tabMapper.countByExample(example);
             ret.put(workspaceId, count);
         }
@@ -84,5 +84,48 @@ public class WxEverTabsWorkspaceService {
 
     public int updateTab(WxEvertabsTab tab) {
         return tabMapper.updateByPrimaryKeySelective(tab);
+    }
+
+    public void replaceTabs(Integer workspaceId, List<WxEvertabsTab> newTabs) {
+        WxEvertabsTabExample example = new WxEvertabsTabExample();
+        example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);
+        List<WxEvertabsTab> oldTabs = tabMapper.selectByExample(example);
+        int index = 0;
+        for (WxEvertabsTab tab: oldTabs) {
+            if (newTabs.size() > index) {
+                WxEvertabsTab newTab = newTabs.get(index);
+                boolean needUpdate = false;
+                if (!newTab.getId().equals(tab.getId())) {
+                    tab.setId(newTab.getId());
+                    needUpdate = true;
+                }
+                if ((null == newTab.getFavIconUrl() && null != tab.getFavIconUrl())
+                        || (null != newTab.getFavIconUrl() && !newTab.getFavIconUrl().equals(tab.getFavIconUrl()))) {
+                    tab.setFavIconUrl(newTab.getFavIconUrl());
+                    needUpdate = true;
+                }
+                if (!newTab.getTitle().equals(tab.getTitle())) {
+                    tab.setTitle(newTab.getTitle());
+                    needUpdate = true;
+                }
+                if (!newTab.getUrl().equals(tab.getUrl())) {
+                    tab.setUrl(newTab.getUrl());
+                    needUpdate = true;
+                }
+                if (needUpdate) {
+                    tabMapper.updateByPrimaryKeySelective(tab);
+                }
+            } else {
+                tabMapper.logicalDeleteByPrimaryKey(tab.getPkId());
+            }
+            index++;
+        }
+
+        while (newTabs.size() > index) {
+            WxEvertabsTab newTab = newTabs.get(index);
+            newTab.setWorkspaceId(workspaceId);
+            tabMapper.insertSelective(newTab);
+            index++;
+        }
     }
 }
