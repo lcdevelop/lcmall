@@ -142,7 +142,6 @@ public class ManagerUserController {
     public BaseModel<WxMaUserEx>  currentUserT(HttpServletRequest request) {
         String tokenValue = CookieTokenUtils.getTokenValue(request);
         if (null != tokenValue) {
-            log.info(tokenValue);
             WxMaUser wxMaUser = wxMaUserService.queryUsersByToken(tokenValue);
             if (null != wxMaUser) {
                 WxMaUserEx wxMaUserEx = new WxMaUserEx();

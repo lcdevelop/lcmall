@@ -1,5 +1,6 @@
 package com.lcsays.lcmall.api.controller.evertabs;
 
+import com.lcsays.lcmall.api.config.logger.UserIdLogConverter;
 import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.evertabs.WorkspaceEx;
 import com.lcsays.lcmall.api.models.result.BaseModel;
@@ -46,7 +47,11 @@ public class WorkspaceController {
             return null;
         }
 
-        return wxMaUserService.queryUsersByToken(tokenValue);
+        WxMaUser wxMaUser = wxMaUserService.queryUsersByToken(tokenValue);
+        if (null != wxMaUser) {
+            UserIdLogConverter.LoggerConfigHolder.set(String.valueOf(wxMaUser.getId()));
+        }
+        return wxMaUser;
     }
 
     @PostMapping("/addWorkspace")
@@ -60,8 +65,10 @@ public class WorkspaceController {
         workspaceEx.setWxMaUserId(wxMaUser.getId());
 
         if (everTabsWorkspaceService.addWorkspace(workspaceEx, workspaceEx.getTabs())) {
+            log.info("addWorkspace success {}", workspaceEx);
             return BaseModel.success(workspaceEx);
         } else {
+            log.error("addWorkspace fail {}", workspaceEx);
             return BaseModel.error(ErrorCode.DAO_ERROR);
         }
     }
@@ -92,7 +99,9 @@ public class WorkspaceController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
 
-        return BaseModel.success(everTabsWorkspaceService.queryAllTabsByWorkspaceId(workspaceId));
+        List<WxEvertabsTab> tabs = everTabsWorkspaceService.queryAllTabsByWorkspaceId(workspaceId);
+        log.info("tabList workspaceId={} tabs.size={}", workspaceId, tabs.size());
+        return BaseModel.success(tabs);
     }
 
     @PostMapping("/updateTab")
@@ -104,8 +113,10 @@ public class WorkspaceController {
         }
 
         if (everTabsWorkspaceService.updateTab(tab) > 0) {
+            log.info("updateTab success {}", tab);
             return BaseModel.success(tab);
         } else {
+            log.error("updateTab fail {}", tab);
             return BaseModel.error(ErrorCode.DAO_ERROR);
         }
     }
@@ -119,13 +130,13 @@ public class WorkspaceController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
 
-        log.info(String.valueOf(workspaceId));
-        log.info(String.valueOf(tabs));
         try {
             everTabsWorkspaceService.replaceTabs(workspaceId, tabs);
+            log.info("batchUpdateTabs success workspaceId={} tabs={}", workspaceId, tabs);
             return BaseModel.success();
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("batchUpdateTabs fail workspaceId={} tabs={}", workspaceId, tabs);
             return BaseModel.error(ErrorCode.DAO_ERROR);
         }
     }
@@ -148,6 +159,7 @@ public class WorkspaceController {
         workspace.setName(name);
         workspace.setIsTemp(false);
         everTabsWorkspaceService.update(workspace);
+        log.info("transToWorkspace success {}", workspace);
         return BaseModel.success();
     }
 
@@ -162,12 +174,15 @@ public class WorkspaceController {
 
         WxEvertabsWorkspace workspace = everTabsWorkspaceService.queryWorkspaceById(workspaceId);
         if (null == workspace || !workspace.getWxMaUserId().equals(wxMaUser.getId())) {
+            log.error("delWorkspace fail workspaceId={}", workspaceId);
             return BaseModel.error(ErrorCode.NO_RESULT);
         }
 
         if (everTabsWorkspaceService.delete(workspace) > 0) {
+            log.info("delWorkspace success {}", workspace);
             return BaseModel.success();
         } else {
+            log.error("delWorkspace fail {}", workspace);
             return BaseModel.error(ErrorCode.DAO_ERROR);
         }
     }
@@ -184,11 +199,13 @@ public class WorkspaceController {
 
         WxEvertabsWorkspace workspace = everTabsWorkspaceService.queryWorkspaceById(workspaceId);
         if (null == workspace || !workspace.getWxMaUserId().equals(wxMaUser.getId())) {
+            log.error("changeWorkspaceName fail workspaceId={} name={}", workspaceId, name);
             return BaseModel.error(ErrorCode.NO_RESULT);
         }
 
         workspace.setName(name);
         everTabsWorkspaceService.update(workspace);
+        log.info("changeWorkspaceName success {}", workspace);
         return BaseModel.success();
     }
 }

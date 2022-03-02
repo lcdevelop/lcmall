@@ -27,4 +27,13 @@ public class WorkspaceEx extends WxEvertabsWorkspace {
         this.setIsTemp(workspace.getIsTemp());
         this.setCreateTime(workspace.getCreateTime());
     }
+
+    @Override
+    public String toString() {
+        return "WorkspaceEx{" +
+                super.toString() +
+                ", tabs=" + tabs +
+                ", tabsCount=" + tabsCount +
+                '}';
+    }
 }
