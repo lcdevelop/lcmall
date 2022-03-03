@@ -15,9 +15,12 @@ public class CookieTokenUtils {
     private static final String COOKIE_PATH = "/";
 
     public static String getTokenValue(HttpServletRequest request) {
-        for (Cookie cookie: request.getCookies()) {
-            if (TOKEN_KEY.equals(cookie.getName())) {
-                return cookie.getValue();
+        Cookie[] cookies = request.getCookies();
+        if (null != cookies) {
+            for (Cookie cookie : request.getCookies()) {
+                if (TOKEN_KEY.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
             }
         }
         return null;
