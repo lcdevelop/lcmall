@@ -55,3 +55,13 @@ services:
       - ./admin/logs:/var/log/nginx
       - ./admin/html/dist:/data/html
     restart: always
+  evertabs:
+    image: nginx:1.21.3
+    container_name: evertabs
+    ports:
+      - "8081:80"
+    volumes:
+      - ./evertabs/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./evertabs/logs:/var/log/nginx
+      - ./evertabs/html/dist:/data/html
+    restart: always
