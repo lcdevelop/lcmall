@@ -21,11 +21,17 @@ public class WxMaUserUtil {
 
     public static boolean checkAuthority(WxMaUser wxMaUser, WxAppService wxAppService) {
         WxApp wxApp = getSessionWxApp(wxMaUser, wxAppService);
-        return null != wxMaUser.getRole() && (
+        return (
+                // 如果是超级公众号，则说明是大家都可以用的2C的应用（比如evertabs），则都有权限，都可登录
+                null == wxMaUser.getRole() && wxMaUser.getSessionWxAppId().equals(1)
+                )
+                || (
+                        null != wxMaUser.getRole() && (
                 isAdmin(wxMaUser)
                         || wxApp.getAuth().equals(0)
                         || wxMaUser.getRole().equals(wxApp.getAppId()
                 )
+                        )
         );
     }
 

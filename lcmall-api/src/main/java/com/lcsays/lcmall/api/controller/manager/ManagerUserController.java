@@ -69,6 +69,8 @@ public class ManagerUserController {
     public BaseModel<WxMaUser> checkLogined(HttpSession session,
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
+        SessionUtils.updateLoggerVarUserId(session);
+
         String shortSid = SessionUtils.normalizeSessionId(session);
         WxMaUser wxMaUser = wxMaUserService.getWxMaUserBySessionKey(shortSid);
         log.info("checkLogined shortSid: " + shortSid + " wxMaUser: " + wxMaUser);
