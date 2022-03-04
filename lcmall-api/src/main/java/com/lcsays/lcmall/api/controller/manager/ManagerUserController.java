@@ -70,8 +70,8 @@ public class ManagerUserController {
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
         String shortSid = SessionUtils.normalizeSessionId(session);
-        log.debug("checkLogined shortSid: " + shortSid);
         WxMaUser wxMaUser = wxMaUserService.getWxMaUserBySessionKey(shortSid);
+        log.info("checkLogined shortSid: " + shortSid + " wxMaUser: " + wxMaUser);
         if (null != wxMaUser && null != WxMaUserUtil.getSessionWxApp(wxMaUser, wxAppService)) {
             if (WxMaUserUtil.checkAuthority(wxMaUser, wxAppService)) {
                 SessionUtils.saveWxUserToSession(session, wxMaUser);
