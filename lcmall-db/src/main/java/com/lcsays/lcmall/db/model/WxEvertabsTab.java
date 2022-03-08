@@ -18,13 +18,13 @@ public class WxEvertabsTab implements Serializable {
 
     private String title;
 
+    private String favIconUrl;
+
     private Integer sort;
 
     private Byte isDel;
 
     private Date createTime;
-
-    private String favIconUrl;
 
     private static final long serialVersionUID = 1L;
 
@@ -68,6 +68,14 @@ public class WxEvertabsTab implements Serializable {
         this.title = title;
     }
 
+    public String getFavIconUrl() {
+        return favIconUrl;
+    }
+
+    public void setFavIconUrl(String favIconUrl) {
+        this.favIconUrl = favIconUrl;
+    }
+
     public Integer getSort() {
         return sort;
     }
@@ -96,14 +104,6 @@ public class WxEvertabsTab implements Serializable {
         this.createTime = createTime;
     }
 
-    public String getFavIconUrl() {
-        return favIconUrl;
-    }
-
-    public void setFavIconUrl(String favIconUrl) {
-        this.favIconUrl = favIconUrl;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -117,10 +117,10 @@ public class WxEvertabsTab implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", url=").append(url);
         sb.append(", title=").append(title);
+        sb.append(", favIconUrl=").append(favIconUrl);
         sb.append(", sort=").append(sort);
         sb.append(", isDel=").append(isDel);
         sb.append(", createTime=").append(createTime);
-        sb.append(", favIconUrl=").append(favIconUrl);
         sb.append("]");
         return sb.toString();
     }

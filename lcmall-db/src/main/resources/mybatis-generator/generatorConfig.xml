@@ -72,6 +72,7 @@
         </table>
         <table tableName="wx_evertabs_tab">
             <generatedKey column="pk_id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="fav_icon_url" jdbcType="VARCHAR" />
         </table>
         <table tableName="wx_evertabs_workspace">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>

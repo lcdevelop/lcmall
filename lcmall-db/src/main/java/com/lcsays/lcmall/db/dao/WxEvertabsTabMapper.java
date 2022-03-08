@@ -16,8 +16,6 @@ public interface WxEvertabsTabMapper {
 
     int insertSelective(WxEvertabsTab record);
 
-    List<WxEvertabsTab> selectByExampleWithBLOBs(WxEvertabsTabExample example);
-
     List<WxEvertabsTab> selectByExample(WxEvertabsTabExample example);
 
     WxEvertabsTab selectByPrimaryKey(Integer pkId);
@@ -26,13 +24,9 @@ public interface WxEvertabsTabMapper {
 
     int updateByExampleSelective(@Param("record") WxEvertabsTab record, @Param("example") WxEvertabsTabExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") WxEvertabsTab record, @Param("example") WxEvertabsTabExample example);
-
     int updateByExample(@Param("record") WxEvertabsTab record, @Param("example") WxEvertabsTabExample example);
 
     int updateByPrimaryKeySelective(WxEvertabsTab record);
-
-    int updateByPrimaryKeyWithBLOBs(WxEvertabsTab record);
 
     int updateByPrimaryKey(WxEvertabsTab record);
 

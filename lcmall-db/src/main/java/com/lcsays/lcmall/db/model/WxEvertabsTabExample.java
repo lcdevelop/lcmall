@@ -425,6 +425,76 @@ public class WxEvertabsTabExample {
             return (Criteria) this;
         }
 
+        public Criteria andFavIconUrlIsNull() {
+            addCriterion("fav_icon_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlIsNotNull() {
+            addCriterion("fav_icon_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlEqualTo(String value) {
+            addCriterion("fav_icon_url =", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlNotEqualTo(String value) {
+            addCriterion("fav_icon_url <>", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlGreaterThan(String value) {
+            addCriterion("fav_icon_url >", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("fav_icon_url >=", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlLessThan(String value) {
+            addCriterion("fav_icon_url <", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlLessThanOrEqualTo(String value) {
+            addCriterion("fav_icon_url <=", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlLike(String value) {
+            addCriterion("fav_icon_url like", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlNotLike(String value) {
+            addCriterion("fav_icon_url not like", value, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlIn(List<String> values) {
+            addCriterion("fav_icon_url in", values, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlNotIn(List<String> values) {
+            addCriterion("fav_icon_url not in", values, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlBetween(String value1, String value2) {
+            addCriterion("fav_icon_url between", value1, value2, "favIconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFavIconUrlNotBetween(String value1, String value2) {
+            addCriterion("fav_icon_url not between", value1, value2, "favIconUrl");
+            return (Criteria) this;
+        }
+
         public Criteria andSortIsNull() {
             addCriterion("sort is null");
             return (Criteria) this;
