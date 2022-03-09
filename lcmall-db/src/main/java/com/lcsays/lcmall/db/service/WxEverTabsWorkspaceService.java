@@ -58,6 +58,10 @@ public class WxEverTabsWorkspaceService {
         return ret;
     }
 
+    public WxEvertabsWorkspace queryWorkspace(Integer workspaceId) {
+        return workspaceMapper.selectByPrimaryKeyWithLogicalDelete(workspaceId, false);
+    }
+
     public List<WxEvertabsTab> queryAllTabsByWorkspaceId(Integer workspaceId) {
         WxEvertabsTabExample example = new WxEvertabsTabExample();
         example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);

@@ -99,6 +99,10 @@ public class WorkspaceController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
 
+        if (null == everTabsWorkspaceService.queryWorkspace(workspaceId)) {
+            return BaseModel.error(ErrorCode.NO_RESULT);
+        }
+
         List<WxEvertabsTab> tabs = everTabsWorkspaceService.queryAllTabsByWorkspaceId(workspaceId);
         log.info("tabList workspaceId={} tabs.size={}", workspaceId, tabs.size());
         return BaseModel.success(tabs);
