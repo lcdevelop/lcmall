@@ -77,6 +77,10 @@
         <table tableName="wx_evertabs_workspace">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
+        <table tableName="wx_evertabs_feedback">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="content" jdbcType="VARCHAR" />
+        </table>
         <table tableName="wx_ma_user">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>

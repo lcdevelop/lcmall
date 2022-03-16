@@ -9,6 +9,7 @@ import com.lcsays.lcmall.db.model.WxEvertabsWorkspaceExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,5 +132,16 @@ public class WxEverTabsWorkspaceService {
             tabMapper.insertSelective(newTab);
             index++;
         }
+    }
+
+    public Map<Integer, List<WxEvertabsTab>> queryWorkspaceTabsMap(List<Integer> workspaceIdList) {
+        Map<Integer, List<WxEvertabsTab>> ret = new HashMap<>();
+        WxEvertabsTabExample example = new WxEvertabsTabExample();
+        example.createCriteria().andWorkspaceIdIn(workspaceIdList).andLogicalDeleted(false);
+        List<WxEvertabsTab> tabs = tabMapper.selectByExample(example);
+        for (WxEvertabsTab tab: tabs) {
+            ret.computeIfAbsent(tab.getWorkspaceId(), t -> new ArrayList<>()).add(tab);
+        }
+        return ret;
     }
 }

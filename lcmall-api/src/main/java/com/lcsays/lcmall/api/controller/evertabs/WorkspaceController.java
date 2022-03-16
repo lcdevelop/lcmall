@@ -5,9 +5,11 @@ import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.evertabs.WorkspaceEx;
 import com.lcsays.lcmall.api.models.result.BaseModel;
 import com.lcsays.lcmall.api.utils.CookieTokenUtils;
+import com.lcsays.lcmall.db.model.WxEvertabsFeedback;
 import com.lcsays.lcmall.db.model.WxEvertabsTab;
 import com.lcsays.lcmall.db.model.WxEvertabsWorkspace;
 import com.lcsays.lcmall.db.model.WxMaUser;
+import com.lcsays.lcmall.db.service.WxEverTabsFeedbackService;
 import com.lcsays.lcmall.db.service.WxEverTabsWorkspaceService;
 import com.lcsays.lcmall.db.service.WxMaUserService;
 import lombok.AllArgsConstructor;
@@ -37,6 +39,9 @@ public class WorkspaceController {
 
     @Resource
     WxEverTabsWorkspaceService everTabsWorkspaceService;
+
+    @Resource
+    WxEverTabsFeedbackService feedbackService;
 
     @Resource
     WxMaUserService wxMaUserService;
@@ -83,11 +88,17 @@ public class WorkspaceController {
         List<WxEvertabsWorkspace> workspaces = everTabsWorkspaceService.queryAllWorkspaces(wxMaUser.getId());
         List<Integer> workspaceIdList = workspaces.stream()
                 .map(WxEvertabsWorkspace::getId).collect(Collectors.toList());
-        Map<Integer, Long> workspaceTabsCountMap = everTabsWorkspaceService.workspaceTabsCount(workspaceIdList);
+
+        Map<Integer, List<WxEvertabsTab>> workspaceTabsMap =
+                everTabsWorkspaceService.queryWorkspaceTabsMap(workspaceIdList);
+
         return BaseModel.success(workspaces.stream().map(workspace -> {
             WorkspaceEx workspaceEx = new WorkspaceEx();
             workspaceEx.copyFrom(workspace);
-            workspaceEx.setTabsCount(workspaceTabsCountMap.get(workspace.getId()));
+            workspaceEx.setTabs(workspaceTabsMap.get(workspace.getId()));
+            if (null != workspaceEx.getTabs()) {
+                workspaceEx.setTabsCount(workspaceEx.getTabs().size());
+            }
             return workspaceEx;
         }).collect(Collectors.toList()));
     }
@@ -211,5 +222,24 @@ public class WorkspaceController {
         everTabsWorkspaceService.update(workspace);
         log.info("changeWorkspaceName success {}", workspace);
         return BaseModel.success();
+    }
+
+    @PostMapping("/addFeedback")
+    public BaseModel<String> addFeedback(HttpServletRequest request,
+                                               @RequestBody WxEvertabsFeedback feedback) {
+        WxMaUser wxMaUser = check(request);
+        if (null == wxMaUser) {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+
+        feedback.setWxMaUserId(wxMaUser.getId());
+
+        if (feedbackService.addFeedback(feedback)) {
+            log.info("addFeedback success {}", feedback);
+            return BaseModel.success();
+        } else {
+            log.error("addFeedback fail {}", feedback);
+            return BaseModel.error(ErrorCode.DAO_ERROR);
+        }
     }
 }
