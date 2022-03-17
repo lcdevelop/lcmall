@@ -54,7 +54,7 @@ public class MenuHandler extends AbstractHandler {
                 if ("testpay".equals(wxMessage.getEventKey())) {
                     // 测试支付1块钱
 
-                    int totalFee = 1; // 990
+                    int totalFee = 990; // 990
                     String outTradeNo = RequestNo.randomWithCurTime("wxpay");
                     String openid = wxMessage.getFromUser();
                     WxMaUser wxMaUser = userService.getWxMaUserByOpenid(wxApp, openid);
