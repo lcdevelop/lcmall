@@ -237,6 +237,8 @@ public class WxPayController {
                 String transactionId = result.getResult().getTransactionId();
                 String tradeState = result.getResult().getTradeState();
                 String successTime = result.getResult().getSuccessTime();
+                WxPayOrderNotifyV3Result.Amount amount = result.getResult().getAmount();
+                log.info("amount: " + amount.getPayerTotal() + " " + amount.getTotal());
 
                 return this.updateOrderStatus(outTradeNo, transactionId, successTime, tradeState);
             } catch (WxPayException e) {
