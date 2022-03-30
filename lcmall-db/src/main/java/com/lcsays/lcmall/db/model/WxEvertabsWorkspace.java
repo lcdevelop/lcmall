@@ -14,6 +14,8 @@ public class WxEvertabsWorkspace implements Serializable {
 
     private Boolean isTemp;
 
+    private String color;
+
     private Integer wxMaUserId;
 
     private Byte isDel;
@@ -44,6 +46,14 @@ public class WxEvertabsWorkspace implements Serializable {
 
     public void setIsTemp(Boolean isTemp) {
         this.isTemp = isTemp;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public Integer getWxMaUserId() {
@@ -85,6 +95,7 @@ public class WxEvertabsWorkspace implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
         sb.append(", isTemp=").append(isTemp);
+        sb.append(", color=").append(color);
         sb.append(", wxMaUserId=").append(wxMaUserId);
         sb.append(", isDel=").append(isDel);
         sb.append(", createTime=").append(createTime);

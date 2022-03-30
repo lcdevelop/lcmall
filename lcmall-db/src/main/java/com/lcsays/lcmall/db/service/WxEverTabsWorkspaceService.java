@@ -91,6 +91,10 @@ public class WxEverTabsWorkspaceService {
         return tabMapper.updateByPrimaryKeySelective(tab);
     }
 
+    public int createTab(WxEvertabsTab tab) {
+        return tabMapper.insertSelective(tab);
+    }
+
     public void replaceTabs(Integer workspaceId, List<WxEvertabsTab> newTabs) {
         WxEvertabsTabExample example = new WxEvertabsTabExample();
         example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);

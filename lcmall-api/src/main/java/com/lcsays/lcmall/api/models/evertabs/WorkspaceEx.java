@@ -23,6 +23,7 @@ public class WorkspaceEx extends WxEvertabsWorkspace {
         this.setId(workspace.getId());
         this.setName(workspace.getName());
         this.setWxMaUserId(workspace.getWxMaUserId());
+        this.setColor(workspace.getColor());
         this.setCreateTime(workspace.getCreateTime());
         this.setIsTemp(workspace.getIsTemp());
         this.setCreateTime(workspace.getCreateTime());

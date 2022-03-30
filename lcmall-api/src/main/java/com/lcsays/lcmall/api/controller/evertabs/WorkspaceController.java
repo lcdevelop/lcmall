@@ -4,6 +4,7 @@ import com.lcsays.lcmall.api.config.logger.UserIdLogConverter;
 import com.lcsays.lcmall.api.enums.ErrorCode;
 import com.lcsays.lcmall.api.models.evertabs.WorkspaceEx;
 import com.lcsays.lcmall.api.models.result.BaseModel;
+import com.lcsays.lcmall.api.utils.ColorUtils;
 import com.lcsays.lcmall.api.utils.CookieTokenUtils;
 import com.lcsays.lcmall.db.model.WxEvertabsFeedback;
 import com.lcsays.lcmall.db.model.WxEvertabsTab;
@@ -68,6 +69,7 @@ public class WorkspaceController {
         }
 
         workspaceEx.setWxMaUserId(wxMaUser.getId());
+        workspaceEx.setColor(ColorUtils.randomColor());
 
         if (everTabsWorkspaceService.addWorkspace(workspaceEx, workspaceEx.getTabs())) {
             log.info("addWorkspace success {}", workspaceEx);
@@ -117,6 +119,23 @@ public class WorkspaceController {
         List<WxEvertabsTab> tabs = everTabsWorkspaceService.queryAllTabsByWorkspaceId(workspaceId);
         log.info("tabList workspaceId={} tabs.size={}", workspaceId, tabs.size());
         return BaseModel.success(tabs);
+    }
+
+    @PostMapping("/createTab")
+    public BaseModel<WxEvertabsTab> createTab(HttpServletRequest request,
+                                              @RequestBody WxEvertabsTab tab) {
+        WxMaUser wxMaUser = check(request);
+        if (null == wxMaUser) {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+
+        if (everTabsWorkspaceService.createTab(tab) > 0) {
+            log.info("createTab success {}", tab);
+            return BaseModel.success(tab);
+        } else {
+            log.error("createTab fail {}", tab);
+            return BaseModel.error(ErrorCode.DAO_ERROR);
+        }
     }
 
     @PostMapping("/updateTab")

@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="is_temp" jdbcType="BIT" property="isTemp" />
+    <result column="color" jdbcType="VARCHAR" property="color" />
     <result column="wx_ma_user_id" jdbcType="INTEGER" property="wxMaUserId" />
     <result column="is_del" jdbcType="TINYINT" property="isDel" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, is_temp, wx_ma_user_id, is_del, create_time
+    id, name, is_temp, color, wx_ma_user_id, is_del, create_time
   </sql>
   <select id="selectByExample" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspaceExample" resultMap="BaseResultMap">
     select
@@ -119,10 +120,12 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into wx_evertabs_workspace (name, is_temp, wx_ma_user_id, 
-      is_del, create_time)
-    values (#{name,jdbcType=VARCHAR}, #{isTemp,jdbcType=BIT}, #{wxMaUserId,jdbcType=INTEGER}, 
-      #{isDel,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+    insert into wx_evertabs_workspace (name, is_temp, color, 
+      wx_ma_user_id, is_del, create_time
+      )
+    values (#{name,jdbcType=VARCHAR}, #{isTemp,jdbcType=BIT}, #{color,jdbcType=VARCHAR}, 
+      #{wxMaUserId,jdbcType=INTEGER}, #{isDel,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.lcsays.lcmall.db.model.WxEvertabsWorkspace">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -135,6 +138,9 @@
       </if>
       <if test="isTemp != null">
         is_temp,
+      </if>
+      <if test="color != null">
+        color,
       </if>
       <if test="wxMaUserId != null">
         wx_ma_user_id,
@@ -152,6 +158,9 @@
       </if>
       <if test="isTemp != null">
         #{isTemp,jdbcType=BIT},
+      </if>
+      <if test="color != null">
+        #{color,jdbcType=VARCHAR},
       </if>
       <if test="wxMaUserId != null">
         #{wxMaUserId,jdbcType=INTEGER},
@@ -182,6 +191,9 @@
       <if test="record.isTemp != null">
         is_temp = #{record.isTemp,jdbcType=BIT},
       </if>
+      <if test="record.color != null">
+        color = #{record.color,jdbcType=VARCHAR},
+      </if>
       <if test="record.wxMaUserId != null">
         wx_ma_user_id = #{record.wxMaUserId,jdbcType=INTEGER},
       </if>
@@ -201,6 +213,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       name = #{record.name,jdbcType=VARCHAR},
       is_temp = #{record.isTemp,jdbcType=BIT},
+      color = #{record.color,jdbcType=VARCHAR},
       wx_ma_user_id = #{record.wxMaUserId,jdbcType=INTEGER},
       is_del = #{record.isDel,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
@@ -216,6 +229,9 @@
       </if>
       <if test="isTemp != null">
         is_temp = #{isTemp,jdbcType=BIT},
+      </if>
+      <if test="color != null">
+        color = #{color,jdbcType=VARCHAR},
       </if>
       <if test="wxMaUserId != null">
         wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
@@ -233,6 +249,7 @@
     update wx_evertabs_workspace
     set name = #{name,jdbcType=VARCHAR},
       is_temp = #{isTemp,jdbcType=BIT},
+      color = #{color,jdbcType=VARCHAR},
       wx_ma_user_id = #{wxMaUserId,jdbcType=INTEGER},
       is_del = #{isDel,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
