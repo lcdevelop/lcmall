@@ -16,9 +16,15 @@ public class ColorUtils {
     }
 
     static {
-        for (int i = 0; i < 16777215; i += 559240) {
-            colors.add("#" + int2Color(i));
-        }
+        colors.add("#ED5565");
+        colors.add("#FC6E51");
+        colors.add("#FFCE54");
+        colors.add("#A0D468");
+        colors.add("#48CFAD");
+        colors.add("#4FC1E9");
+        colors.add("#5D9CEC");
+        colors.add("#AC92EC");
+        colors.add("#EC87C0");
     }
 
     public static String randomColor() {

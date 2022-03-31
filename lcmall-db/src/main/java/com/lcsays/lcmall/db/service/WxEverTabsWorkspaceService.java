@@ -140,11 +140,13 @@ public class WxEverTabsWorkspaceService {
 
     public Map<Integer, List<WxEvertabsTab>> queryWorkspaceTabsMap(List<Integer> workspaceIdList) {
         Map<Integer, List<WxEvertabsTab>> ret = new HashMap<>();
-        WxEvertabsTabExample example = new WxEvertabsTabExample();
-        example.createCriteria().andWorkspaceIdIn(workspaceIdList).andLogicalDeleted(false);
-        List<WxEvertabsTab> tabs = tabMapper.selectByExample(example);
-        for (WxEvertabsTab tab: tabs) {
-            ret.computeIfAbsent(tab.getWorkspaceId(), t -> new ArrayList<>()).add(tab);
+        if (workspaceIdList.size() > 0) {
+            WxEvertabsTabExample example = new WxEvertabsTabExample();
+            example.createCriteria().andWorkspaceIdIn(workspaceIdList).andLogicalDeleted(false);
+            List<WxEvertabsTab> tabs = tabMapper.selectByExample(example);
+            for (WxEvertabsTab tab : tabs) {
+                ret.computeIfAbsent(tab.getWorkspaceId(), t -> new ArrayList<>()).add(tab);
+            }
         }
         return ret;
     }
