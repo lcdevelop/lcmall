@@ -87,22 +87,7 @@ public class WorkspaceController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
 
-        List<WxEvertabsWorkspace> workspaces = everTabsWorkspaceService.queryAllWorkspaces(wxMaUser.getId());
-        List<Integer> workspaceIdList = workspaces.stream()
-                .map(WxEvertabsWorkspace::getId).collect(Collectors.toList());
-
-        Map<Integer, List<WxEvertabsTab>> workspaceTabsMap =
-                everTabsWorkspaceService.queryWorkspaceTabsMap(workspaceIdList);
-
-        return BaseModel.success(workspaces.stream().map(workspace -> {
-            WorkspaceEx workspaceEx = new WorkspaceEx();
-            workspaceEx.copyFrom(workspace);
-            workspaceEx.setTabs(workspaceTabsMap.get(workspace.getId()));
-            if (null != workspaceEx.getTabs()) {
-                workspaceEx.setTabsCount(workspaceEx.getTabs().size());
-            }
-            return workspaceEx;
-        }).collect(Collectors.toList()));
+        return BaseModel.success(getCurWorkspaceList(wxMaUser.getId()));
     }
 
     @GetMapping("/tabList")
@@ -155,8 +140,27 @@ public class WorkspaceController {
         }
     }
 
+    private List<WorkspaceEx> getCurWorkspaceList(Integer wxMaUserId) {
+        List<WxEvertabsWorkspace> workspaces = everTabsWorkspaceService.queryAllWorkspaces(wxMaUserId);
+        List<Integer> workspaceIdList = workspaces.stream()
+                .map(WxEvertabsWorkspace::getId).collect(Collectors.toList());
+
+        Map<Integer, List<WxEvertabsTab>> workspaceTabsMap =
+                everTabsWorkspaceService.queryWorkspaceTabsMap(workspaceIdList);
+
+        return workspaces.stream().map(workspace -> {
+            WorkspaceEx workspaceEx = new WorkspaceEx();
+            workspaceEx.copyFrom(workspace);
+            workspaceEx.setTabs(workspaceTabsMap.get(workspace.getId()));
+            if (null != workspaceEx.getTabs()) {
+                workspaceEx.setTabsCount(workspaceEx.getTabs().size());
+            }
+            return workspaceEx;
+        }).collect(Collectors.toList());
+    }
+
     @PostMapping("/batchUpdateTabs")
-    public BaseModel<String> batchUpdateTabs(HttpServletRequest request,
+    public BaseModel<List<WorkspaceEx>> batchUpdateTabs(HttpServletRequest request,
                                               @RequestParam Integer workspaceId,
                                               @RequestBody List<WxEvertabsTab> tabs) {
         WxMaUser wxMaUser = check(request);
@@ -167,7 +171,7 @@ public class WorkspaceController {
         try {
             everTabsWorkspaceService.replaceTabs(workspaceId, tabs);
             log.info("batchUpdateTabs success workspaceId={} tabs={}", workspaceId, tabs);
-            return BaseModel.success();
+            return BaseModel.success(getCurWorkspaceList(wxMaUser.getId()));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("batchUpdateTabs fail workspaceId={} tabs={}", workspaceId, tabs);
