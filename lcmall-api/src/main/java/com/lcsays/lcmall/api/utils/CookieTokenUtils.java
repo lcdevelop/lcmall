@@ -34,6 +34,13 @@ public class CookieTokenUtils {
         return token;
     }
 
+    public static String setTokenValue(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie(TOKEN_KEY, token);
+        cookie.setPath(COOKIE_PATH);
+        response.addCookie(cookie);
+        return token;
+    }
+
     public static void deleteTokenValue(HttpServletResponse response) {
         String token = "";
         Cookie cookie = new Cookie(TOKEN_KEY, token);

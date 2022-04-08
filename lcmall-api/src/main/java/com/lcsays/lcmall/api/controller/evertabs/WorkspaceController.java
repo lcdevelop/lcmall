@@ -106,19 +106,30 @@ public class WorkspaceController {
         return BaseModel.success(tabs);
     }
 
-    @PostMapping("/createTab")
-    public BaseModel<WxEvertabsTab> createTab(HttpServletRequest request,
-                                              @RequestBody WxEvertabsTab tab) {
-        WxMaUser wxMaUser = check(request);
-        if (null == wxMaUser) {
-            return BaseModel.error(ErrorCode.NEED_LOGIN);
-        }
+//    @PostMapping("/createTab")
+//    public BaseModel<WxEvertabsTab> createTab(HttpServletRequest request,
+//                                              @RequestBody WxEvertabsTab tab) {
+//        WxMaUser wxMaUser = check(request);
+//        if (null == wxMaUser) {
+//            return BaseModel.error(ErrorCode.NEED_LOGIN);
+//        }
+//
+//        if (everTabsWorkspaceService.createTab(tab) > 0) {
+//            log.info("createTab success {}", tab);
+//            return BaseModel.success(tab);
+//        } else {
+//            log.error("createTab fail {}", tab);
+//            return BaseModel.error(ErrorCode.DAO_ERROR);
+//        }
+//    }
 
-        if (everTabsWorkspaceService.createTab(tab) > 0) {
-            log.info("createTab success {}", tab);
+    private BaseModel<WxEvertabsTab> internalUpdateTabByPriKey(WxEvertabsTab tab) {
+        tab.setWorkspaceId(null); // 如果明确指定tab，则workspaceId不更新，避免更新错了
+        if (everTabsWorkspaceService.updateTab(tab) > 0) {
+            log.info("updateTab success {}", tab);
             return BaseModel.success(tab);
         } else {
-            log.error("createTab fail {}", tab);
+            log.error("updateTab fail {}", tab);
             return BaseModel.error(ErrorCode.DAO_ERROR);
         }
     }
@@ -131,13 +142,33 @@ public class WorkspaceController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
 
-        if (everTabsWorkspaceService.updateTab(tab) > 0) {
-            log.info("updateTab success {}", tab);
-            return BaseModel.success(tab);
+        if (null != tab.getPkId()) {
+            return internalUpdateTabByPriKey(tab);
         } else {
-            log.error("updateTab fail {}", tab);
-            return BaseModel.error(ErrorCode.DAO_ERROR);
+            List<WxEvertabsTab> tabs = everTabsWorkspaceService.queryTabsByUserIdAndTabId(wxMaUser.getId(), tab.getId());
+            if (null == tabs) {
+                if (everTabsWorkspaceService.createTab(tab) > 0) {
+                    log.info("createTab success {}", tab);
+                    return BaseModel.success(tab);
+                } else {
+                    log.error("createTab fail {}", tab);
+                    return BaseModel.error(ErrorCode.DAO_ERROR);
+                }
+            } else {
+                for (WxEvertabsTab t: tabs) {
+                    if (t.getUrl().equals(tab.getUrl())) {
+                        // 如果url相等认为更准确
+                        tab.setPkId(t.getPkId());
+                        return internalUpdateTabByPriKey(tab);
+                    }
+                }
+                if (tabs.size() > 0) {
+                    tab.setPkId(tabs.get(0).getPkId());
+                    return internalUpdateTabByPriKey(tab);
+                }
+            }
         }
+        return BaseModel.error(ErrorCode.NO_RESULT);
     }
 
     private List<WorkspaceEx> getCurWorkspaceList(Integer wxMaUserId) {

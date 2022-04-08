@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author: lichuang
@@ -91,6 +93,42 @@ public class WxEverTabsWorkspaceService {
         return tabMapper.updateByPrimaryKeySelective(tab);
     }
 
+    public List<WxEvertabsTab> queryTabsByUserIdAndTabId(int userId, int id) {
+        List<WxEvertabsTab> ret = new ArrayList<>();
+
+        WxEvertabsWorkspaceExample workspaceExample = new WxEvertabsWorkspaceExample();
+        workspaceExample.createCriteria().andWxMaUserIdEqualTo(userId).andLogicalDeleted(false);
+        List<WxEvertabsWorkspace> workspaces = workspaceMapper.selectByExample(workspaceExample);
+        if (null == workspaces) {
+            // 空间都没有还找啥tab
+            return null;
+        }
+
+        Set<Integer> workspaceIdSet = new HashSet<>();
+        for (WxEvertabsWorkspace workspace: workspaces) {
+            workspaceIdSet.add(workspace.getId());
+        }
+
+        WxEvertabsTabExample tabExample = new WxEvertabsTabExample();
+        tabExample.createCriteria().andIdEqualTo(id).andLogicalDeleted(false);
+        List<WxEvertabsTab> tabs = tabMapper.selectByExample(tabExample);
+        if (null != tabs) {
+            for (WxEvertabsTab tab: tabs) {
+                if (workspaceIdSet.contains(tab.getWorkspaceId())) {
+                    ret.add(tab);
+                }
+            }
+        } else {
+            return null;
+        }
+
+        if (ret.size() == 0) {
+            return null;
+        } else {
+            return ret;
+        }
+    }
+
     public int createTab(WxEvertabsTab tab) {
         return tabMapper.insertSelective(tab);
     }
@@ -117,7 +155,7 @@ public class WxEverTabsWorkspaceService {
                     tab.setTitle(newTab.getTitle());
                     needUpdate = true;
                 }
-                if (!newTab.getUrl().equals(tab.getUrl())) {
+                if (!newTab.getUrl().equals(tab.getUrl()) && !newTab.getUrl().equals("")) {
                     tab.setUrl(newTab.getUrl());
                     needUpdate = true;
                 }
@@ -132,6 +170,9 @@ public class WxEverTabsWorkspaceService {
 
         while (newTabs.size() > index) {
             WxEvertabsTab newTab = newTabs.get(index);
+            if (newTab.getUrl().equals("")) {
+                System.out.println("=============== replaceTabs Error url " + newTab);
+            }
             newTab.setWorkspaceId(workspaceId);
             tabMapper.insertSelective(newTab);
             index++;

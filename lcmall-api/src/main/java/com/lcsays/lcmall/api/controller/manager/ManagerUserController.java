@@ -141,8 +141,11 @@ public class ManagerUserController {
      * @return
      */
     @GetMapping("/currentUserT")
-    public BaseModel<WxMaUserEx>  currentUserT(HttpServletRequest request) {
-        String tokenValue = CookieTokenUtils.getTokenValue(request);
+    public BaseModel<WxMaUserEx>  currentUserT(HttpServletRequest request,
+                                               HttpServletResponse response,
+                                               String token) {
+//        String tokenValue = CookieTokenUtils.getTokenValue(request);
+        String tokenValue = token;
         if (null != tokenValue) {
             WxMaUser wxMaUser = wxMaUserService.queryUsersByToken(tokenValue);
             if (null != wxMaUser) {
@@ -150,6 +153,7 @@ public class ManagerUserController {
                 wxMaUserEx.copyFrom(wxMaUser);
                 WxApp wxApp = wxAppService.queryById(wxMaUser.getSessionWxAppId());
                 wxMaUserEx.setSessionWxApp(wxApp);
+                CookieTokenUtils.setTokenValue(response, token);
                 return BaseModel.success(wxMaUserEx);
             }
         }
