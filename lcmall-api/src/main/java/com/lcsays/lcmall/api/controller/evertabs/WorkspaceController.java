@@ -134,6 +134,38 @@ public class WorkspaceController {
         }
     }
 
+    /**
+     * 生成指定工作区里tab的顺序值
+     * @param newTab 新增的带sort值的tab
+     */
+    private void genTabsSortValue(Integer workspaceId, WxEvertabsTab newTab) {
+        if (null == newTab.getSort() || newTab.getSort().equals(0)) {
+            return;
+        }
+
+        List<WxEvertabsTab> tabs = everTabsWorkspaceService.queryAllTabsByWorkspaceId(workspaceId);
+        if (null == tabs || tabs.size() == 0) {
+            return;
+        }
+
+        // 重新排序，其中略过newTab
+        int sort = 1;
+        for (WxEvertabsTab tab: tabs) {
+            if (!tab.getPkId().equals(newTab.getPkId())) {
+                int oldSort = tab.getSort();
+                if (sort < newTab.getSort()) {
+                    tab.setSort(sort);
+                } else {
+                    tab.setSort(sort + 1);
+                }
+                if (oldSort != tab.getSort()) {
+                    everTabsWorkspaceService.updateTab(tab);
+                }
+                sort++;
+            }
+        }
+    }
+
     @PostMapping("/updateTab")
     public BaseModel<WxEvertabsTab> updateTab(HttpServletRequest request,
                                                @RequestBody WxEvertabsTab tab) {
@@ -149,6 +181,7 @@ public class WorkspaceController {
             if (null == tabs) {
                 if (everTabsWorkspaceService.createTab(tab) > 0) {
                     log.info("createTab success {}", tab);
+                    genTabsSortValue(tab.getWorkspaceId(), tab);
                     return BaseModel.success(tab);
                 } else {
                     log.error("createTab fail {}", tab);

@@ -68,6 +68,7 @@ public class WxEverTabsWorkspaceService {
     public List<WxEvertabsTab> queryAllTabsByWorkspaceId(Integer workspaceId) {
         WxEvertabsTabExample example = new WxEvertabsTabExample();
         example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);
+        example.setOrderByClause("sort asc");
         return tabMapper.selectByExample(example);
     }
 
@@ -184,6 +185,7 @@ public class WxEverTabsWorkspaceService {
         if (workspaceIdList.size() > 0) {
             WxEvertabsTabExample example = new WxEvertabsTabExample();
             example.createCriteria().andWorkspaceIdIn(workspaceIdList).andLogicalDeleted(false);
+            example.setOrderByClause("sort asc");
             List<WxEvertabsTab> tabs = tabMapper.selectByExample(example);
             for (WxEvertabsTab tab : tabs) {
                 ret.computeIfAbsent(tab.getWorkspaceId(), t -> new ArrayList<>()).add(tab);
