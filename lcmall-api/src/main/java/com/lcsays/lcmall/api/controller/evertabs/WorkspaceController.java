@@ -192,11 +192,19 @@ public class WorkspaceController {
                     if (t.getUrl().equals(tab.getUrl())) {
                         // 如果url相等认为更准确
                         tab.setPkId(t.getPkId());
+                        if (!t.getSort().equals(tab.getSort())) {
+                            // 说明sort有更新
+                            genTabsSortValue(tab.getWorkspaceId(), tab);
+                        }
                         return internalUpdateTabByPriKey(tab);
                     }
                 }
                 if (tabs.size() > 0) {
                     tab.setPkId(tabs.get(0).getPkId());
+                    if (!tabs.get(0).getSort().equals(tab.getSort())) {
+                        // 说明sort有更新
+                        genTabsSortValue(tab.getWorkspaceId(), tab);
+                    }
                     return internalUpdateTabByPriKey(tab);
                 }
             }
