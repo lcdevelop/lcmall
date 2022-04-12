@@ -212,6 +212,21 @@ public class WorkspaceController {
         return BaseModel.error(ErrorCode.NO_RESULT);
     }
 
+    @PostMapping("/updateTabForce")
+    public BaseModel<WxEvertabsTab> updateTabForce(HttpServletRequest request,
+                                              @RequestBody WxEvertabsTab tab) {
+        WxMaUser wxMaUser = check(request);
+        if (null == wxMaUser) {
+            return BaseModel.error(ErrorCode.NEED_LOGIN);
+        }
+
+        if (everTabsWorkspaceService.updateTab(tab) > 0) {
+            return BaseModel.success(tab);
+        } else {
+            return BaseModel.error(ErrorCode.DAO_ERROR);
+        }
+    }
+
     private List<WorkspaceEx> getCurWorkspaceList(Integer wxMaUserId) {
         List<WxEvertabsWorkspace> workspaces = everTabsWorkspaceService.queryAllWorkspaces(wxMaUserId);
         List<Integer> workspaceIdList = workspaces.stream()
