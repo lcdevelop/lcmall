@@ -223,6 +223,7 @@ public class WorkspaceController {
         if (everTabsWorkspaceService.updateTab(tab) > 0) {
             return BaseModel.success(tab);
         } else {
+            log.error(wxMaUser + " " + tab.toString());
             return BaseModel.error(ErrorCode.DAO_ERROR);
         }
     }
