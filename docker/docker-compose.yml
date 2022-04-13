@@ -1,32 +1,5 @@
 version: "3"
 services:
-  mysql57:
-    image: mysql:5.7
-    container_name: mysql
-    ports:
-      - "3306:3306"
-    command:
-      --character-set-server=utf8
-      --collation-server=utf8_general_ci
-      --default-authentication-plugin=mysql_native_password
-    volumes:
-      - ./db/conf.d:/etc/mysql/conf.d
-      - ./db/data:/var/lib/mysql
-      - ./db/init-sql:/docker-entrypoint-initdb.d
-    environment:
-      MYSQL_ROOT_PASSWORD: lcmall123456
-      restart: always
-  redis:
-    image: redis:6.2.5
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./redis/conf.d/redis.conf:/usr/local/etc/redis/redis.conf:rw
-      - ./redis/data:/data:rw
-    command:
-      /bin/bash -c "redis-server /usr/local/etc/redis/redis.conf "
-    restart: always
   lcmall:
     build:
       context: lcmall
