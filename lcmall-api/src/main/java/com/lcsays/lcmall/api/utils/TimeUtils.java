@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * @Author lichuang
@@ -25,6 +26,14 @@ public class TimeUtils {
         today.set(Calendar.SECOND, 0);
         today.set(Calendar.MILLISECOND, 0);
         return today;
+    }
+
+    public static Date nSecondLater(int n) {
+        Date now = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+        calendar.add(Calendar.SECOND, n);
+        return calendar.getTime();
     }
 
     public static long getBeginOfTodayTimestamp() {

@@ -17,6 +17,7 @@ public enum ErrorCode {
     DAO_ERROR(502, "database operation error"),
     UNKNOWN_ERROR(503, "unknown error"),
     ENCRYPT_ERROR(504, "encrypt error"),
+    CODE_ERROR(601, "code is wrong"),
     NEED_LOGIN(700, "need login"),
     SUCCESS(200, "success");
 

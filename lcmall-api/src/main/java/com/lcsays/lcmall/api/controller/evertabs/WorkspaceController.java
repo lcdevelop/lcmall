@@ -192,6 +192,7 @@ public class WorkspaceController {
                     if (t.getUrl().equals(tab.getUrl())) {
                         // 如果url相等认为更准确
                         tab.setPkId(t.getPkId());
+                        tab.setWorkspaceId(t.getWorkspaceId());
                         if (!t.getSort().equals(tab.getSort())) {
                             // 说明sort有更新
                             genTabsSortValue(tab.getWorkspaceId(), tab);
@@ -201,6 +202,7 @@ public class WorkspaceController {
                 }
                 if (tabs.size() > 0) {
                     tab.setPkId(tabs.get(0).getPkId());
+                    tab.setWorkspaceId(tabs.get(0).getWorkspaceId());
                     if (!tabs.get(0).getSort().equals(tab.getSort())) {
                         // 说明sort有更新
                         genTabsSortValue(tab.getWorkspaceId(), tab);

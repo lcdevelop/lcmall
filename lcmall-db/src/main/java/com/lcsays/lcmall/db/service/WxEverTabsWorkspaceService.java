@@ -67,7 +67,10 @@ public class WxEverTabsWorkspaceService {
 
     public List<WxEvertabsTab> queryAllTabsByWorkspaceId(Integer workspaceId) {
         WxEvertabsTabExample example = new WxEvertabsTabExample();
-        example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);
+        example.createCriteria()
+                .andWorkspaceIdEqualTo(workspaceId)
+                .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
+                .andLogicalDeleted(false);
         example.setOrderByClause("sort asc");
         return tabMapper.selectByExample(example);
     }
@@ -111,7 +114,10 @@ public class WxEverTabsWorkspaceService {
         }
 
         WxEvertabsTabExample tabExample = new WxEvertabsTabExample();
-        tabExample.createCriteria().andIdEqualTo(id).andLogicalDeleted(false);
+        tabExample.createCriteria()
+                .andIdEqualTo(id)
+                .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
+                .andLogicalDeleted(false);
         List<WxEvertabsTab> tabs = tabMapper.selectByExample(tabExample);
         if (null != tabs) {
             for (WxEvertabsTab tab: tabs) {
@@ -136,7 +142,10 @@ public class WxEverTabsWorkspaceService {
 
     public void replaceTabs(Integer workspaceId, List<WxEvertabsTab> newTabs) {
         WxEvertabsTabExample example = new WxEvertabsTabExample();
-        example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);
+        example.createCriteria()
+                .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
+                .andWorkspaceIdEqualTo(workspaceId)
+                .andLogicalDeleted(false);
         List<WxEvertabsTab> oldTabs = tabMapper.selectByExample(example);
         int index = 0;
         for (WxEvertabsTab tab: oldTabs) {
@@ -184,7 +193,10 @@ public class WxEverTabsWorkspaceService {
         Map<Integer, List<WxEvertabsTab>> ret = new HashMap<>();
         if (workspaceIdList.size() > 0) {
             WxEvertabsTabExample example = new WxEvertabsTabExample();
-            example.createCriteria().andWorkspaceIdIn(workspaceIdList).andLogicalDeleted(false);
+            example.createCriteria()
+                    .andWorkspaceIdIn(workspaceIdList)
+                    .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
+                    .andLogicalDeleted(false);
             example.setOrderByClause("sort asc");
             List<WxEvertabsTab> tabs = tabMapper.selectByExample(example);
             for (WxEvertabsTab tab : tabs) {

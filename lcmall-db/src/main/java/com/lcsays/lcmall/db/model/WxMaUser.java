@@ -10,6 +10,8 @@ public class WxMaUser implements Serializable {
 
     private String phoneNumber;
 
+    private String myTempNote;
+
     private String userPhone;
 
     private String userPhoneEncrypt;
@@ -42,6 +44,14 @@ public class WxMaUser implements Serializable {
 
     private String token;
 
+    private String email;
+
+    private String code;
+
+    private Date codeExpire;
+
+    private String password;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -66,6 +76,14 @@ public class WxMaUser implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getMyTempNote() {
+        return myTempNote;
+    }
+
+    public void setMyTempNote(String myTempNote) {
+        this.myTempNote = myTempNote;
     }
 
     public String getUserPhone() {
@@ -196,6 +214,38 @@ public class WxMaUser implements Serializable {
         this.token = token;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Date getCodeExpire() {
+        return codeExpire;
+    }
+
+    public void setCodeExpire(Date codeExpire) {
+        this.codeExpire = codeExpire;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -205,6 +255,7 @@ public class WxMaUser implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", wxAppId=").append(wxAppId);
         sb.append(", phoneNumber=").append(phoneNumber);
+        sb.append(", myTempNote=").append(myTempNote);
         sb.append(", userPhone=").append(userPhone);
         sb.append(", userPhoneEncrypt=").append(userPhoneEncrypt);
         sb.append(", createTime=").append(createTime);
@@ -221,6 +272,10 @@ public class WxMaUser implements Serializable {
         sb.append(", country=").append(country);
         sb.append(", city=").append(city);
         sb.append(", token=").append(token);
+        sb.append(", email=").append(email);
+        sb.append(", code=").append(code);
+        sb.append(", codeExpire=").append(codeExpire);
+        sb.append(", password=").append(password);
         sb.append("]");
         return sb.toString();
     }

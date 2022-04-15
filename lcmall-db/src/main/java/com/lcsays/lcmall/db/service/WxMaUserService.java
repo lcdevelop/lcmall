@@ -128,4 +128,25 @@ public class WxMaUserService {
             return null;
         }
     }
+
+    public WxMaUser queryUserByEmail(String email) {
+        WxMaUserExample example = new WxMaUserExample();
+        example.createCriteria().andEmailEqualTo(email);
+        List<WxMaUser> users = wxMaUserMapper.selectByExample(example);
+        if (null != users && users.size() > 0) {
+            return users.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public WxMaUser createUserWithEmail(String email) {
+        WxMaUser user = new WxMaUser();
+        user.setEmail(email);
+        if (wxMaUserMapper.insertSelective(user) > 0) {
+            return user;
+        } else {
+            return null;
+        }
+    }
 }

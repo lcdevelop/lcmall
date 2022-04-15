@@ -295,6 +295,76 @@ public class WxMaUserExample {
             return (Criteria) this;
         }
 
+        public Criteria andMyTempNoteIsNull() {
+            addCriterion("my_temp_note is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteIsNotNull() {
+            addCriterion("my_temp_note is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteEqualTo(String value) {
+            addCriterion("my_temp_note =", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteNotEqualTo(String value) {
+            addCriterion("my_temp_note <>", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteGreaterThan(String value) {
+            addCriterion("my_temp_note >", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteGreaterThanOrEqualTo(String value) {
+            addCriterion("my_temp_note >=", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteLessThan(String value) {
+            addCriterion("my_temp_note <", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteLessThanOrEqualTo(String value) {
+            addCriterion("my_temp_note <=", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteLike(String value) {
+            addCriterion("my_temp_note like", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteNotLike(String value) {
+            addCriterion("my_temp_note not like", value, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteIn(List<String> values) {
+            addCriterion("my_temp_note in", values, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteNotIn(List<String> values) {
+            addCriterion("my_temp_note not in", values, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteBetween(String value1, String value2) {
+            addCriterion("my_temp_note between", value1, value2, "myTempNote");
+            return (Criteria) this;
+        }
+
+        public Criteria andMyTempNoteNotBetween(String value1, String value2) {
+            addCriterion("my_temp_note not between", value1, value2, "myTempNote");
+            return (Criteria) this;
+        }
+
         public Criteria andUserPhoneIsNull() {
             addCriterion("user_phone is null");
             return (Criteria) this;
@@ -1382,6 +1452,276 @@ public class WxMaUserExample {
 
         public Criteria andTokenNotBetween(String value1, String value2) {
             addCriterion("token not between", value1, value2, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIsNull() {
+            addCriterion("email is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIsNotNull() {
+            addCriterion("email is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailEqualTo(String value) {
+            addCriterion("email =", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotEqualTo(String value) {
+            addCriterion("email <>", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailGreaterThan(String value) {
+            addCriterion("email >", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailGreaterThanOrEqualTo(String value) {
+            addCriterion("email >=", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLessThan(String value) {
+            addCriterion("email <", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLessThanOrEqualTo(String value) {
+            addCriterion("email <=", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLike(String value) {
+            addCriterion("email like", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotLike(String value) {
+            addCriterion("email not like", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIn(List<String> values) {
+            addCriterion("email in", values, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotIn(List<String> values) {
+            addCriterion("email not in", values, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailBetween(String value1, String value2) {
+            addCriterion("email between", value1, value2, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotBetween(String value1, String value2) {
+            addCriterion("email not between", value1, value2, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeIsNull() {
+            addCriterion("code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeIsNotNull() {
+            addCriterion("code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeEqualTo(String value) {
+            addCriterion("code =", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeNotEqualTo(String value) {
+            addCriterion("code <>", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeGreaterThan(String value) {
+            addCriterion("code >", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("code >=", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeLessThan(String value) {
+            addCriterion("code <", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeLessThanOrEqualTo(String value) {
+            addCriterion("code <=", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeLike(String value) {
+            addCriterion("code like", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeNotLike(String value) {
+            addCriterion("code not like", value, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeIn(List<String> values) {
+            addCriterion("code in", values, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeNotIn(List<String> values) {
+            addCriterion("code not in", values, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeBetween(String value1, String value2) {
+            addCriterion("code between", value1, value2, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeNotBetween(String value1, String value2) {
+            addCriterion("code not between", value1, value2, "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireIsNull() {
+            addCriterion("code_expire is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireIsNotNull() {
+            addCriterion("code_expire is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireEqualTo(Date value) {
+            addCriterion("code_expire =", value, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireNotEqualTo(Date value) {
+            addCriterion("code_expire <>", value, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireGreaterThan(Date value) {
+            addCriterion("code_expire >", value, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireGreaterThanOrEqualTo(Date value) {
+            addCriterion("code_expire >=", value, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireLessThan(Date value) {
+            addCriterion("code_expire <", value, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireLessThanOrEqualTo(Date value) {
+            addCriterion("code_expire <=", value, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireIn(List<Date> values) {
+            addCriterion("code_expire in", values, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireNotIn(List<Date> values) {
+            addCriterion("code_expire not in", values, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireBetween(Date value1, Date value2) {
+            addCriterion("code_expire between", value1, value2, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeExpireNotBetween(Date value1, Date value2) {
+            addCriterion("code_expire not between", value1, value2, "codeExpire");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordIsNull() {
+            addCriterion("password is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordIsNotNull() {
+            addCriterion("password is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordEqualTo(String value) {
+            addCriterion("password =", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordNotEqualTo(String value) {
+            addCriterion("password <>", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordGreaterThan(String value) {
+            addCriterion("password >", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordGreaterThanOrEqualTo(String value) {
+            addCriterion("password >=", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordLessThan(String value) {
+            addCriterion("password <", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordLessThanOrEqualTo(String value) {
+            addCriterion("password <=", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordLike(String value) {
+            addCriterion("password like", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordNotLike(String value) {
+            addCriterion("password not like", value, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordIn(List<String> values) {
+            addCriterion("password in", values, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordNotIn(List<String> values) {
+            addCriterion("password not in", values, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordBetween(String value1, String value2) {
+            addCriterion("password between", value1, value2, "password");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordNotBetween(String value1, String value2) {
+            addCriterion("password not between", value1, value2, "password");
             return (Criteria) this;
         }
     }

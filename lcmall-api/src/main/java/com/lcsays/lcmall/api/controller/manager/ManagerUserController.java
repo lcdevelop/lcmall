@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @Author: lichuang
@@ -69,6 +68,15 @@ public class ManagerUserController {
     public BaseModel<WxMaUser> checkLogined(HttpSession session,
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
+        // evertabs的登录验证逻辑
+        String tokenValue = CookieTokenUtils.getTokenValue(request);
+        log.info("tokenValue=" + tokenValue);
+        WxMaUser user = wxMaUserService.queryUsersByToken(tokenValue);
+        if (null != user) {
+            SessionUtils.updateLoggerVarUserId(user);
+            return BaseModel.success(user);
+        }
+
         SessionUtils.updateLoggerVarUserId(session);
 
         String shortSid = SessionUtils.normalizeSessionId(session);
