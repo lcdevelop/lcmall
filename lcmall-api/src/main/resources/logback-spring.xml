@@ -45,6 +45,17 @@
         </filter>
     </appender>
 
+    <appender name="trackLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/track.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/track-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d %userId %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <root level="ERROR">
         <appender-ref ref="console" />
         <appender-ref ref="file" />
@@ -53,4 +64,8 @@
     <logger name="org.mybatis" level="ERROR" />
     <logger name="org.springframework" level="ERROR" />
     <logger name="com.lcsays" level="INFO" />
+
+    <logger name="trackLogger" level="info" addtivity="false">
+        <appender-ref ref="trackLogFile" />
+    </logger>
 </configuration>
