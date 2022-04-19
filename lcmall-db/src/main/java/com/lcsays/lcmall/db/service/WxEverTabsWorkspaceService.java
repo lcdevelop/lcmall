@@ -153,12 +153,22 @@ public class WxEverTabsWorkspaceService {
         }
 
         WxEvertabsTabExample tabExample = new WxEvertabsTabExample();
-        tabExample.createCriteria()
-                .andTitleEqualTo(title)
-                .andUrlEqualTo(url)
-                .andFavIconUrlEqualTo(favIconUrl)
-                .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
-                .andLogicalDeleted(false);
+
+        if (null == favIconUrl) {
+            tabExample.createCriteria()
+                    .andTitleEqualTo(title)
+                    .andUrlEqualTo(url)
+                    .andFavIconUrlIsNull()
+                    .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
+                    .andLogicalDeleted(false);
+        } else {
+            tabExample.createCriteria()
+                    .andTitleEqualTo(title)
+                    .andUrlEqualTo(url)
+                    .andFavIconUrlEqualTo(favIconUrl)
+                    .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
+                    .andLogicalDeleted(false);
+        }
         List<WxEvertabsTab> tabs = tabMapper.selectByExample(tabExample);
         if (null != tabs) {
             for (WxEvertabsTab tab: tabs) {

@@ -178,11 +178,11 @@ public class WorkspaceController {
             return internalUpdateTabByPriKey(tab);
         } else {
             List<WxEvertabsTab> tabs = everTabsWorkspaceService.queryTabsByUserIdAndTabId(wxMaUser.getId(), tab.getId());
-            if (null == tabs) {
-                // 补充查文本内容
-                tabs = everTabsWorkspaceService.queryTabsByUserIdAndTextValues(wxMaUser.getId(), tab.getTitle(),
-                        tab.getUrl(), tab.getFavIconUrl());
-            }
+//            if (null == tabs) {
+//                // 补充查文本内容
+//                tabs = everTabsWorkspaceService.queryTabsByUserIdAndTextValues(wxMaUser.getId(), tab.getTitle(),
+//                        tab.getUrl(), tab.getFavIconUrl());
+//            }
             if (null == tabs) {
                 if (everTabsWorkspaceService.createTab(tab) > 0) {
                     log.info("createTab success {}", tab);
