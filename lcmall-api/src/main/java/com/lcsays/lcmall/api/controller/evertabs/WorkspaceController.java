@@ -15,6 +15,7 @@ import com.lcsays.lcmall.db.service.WxEverTabsWorkspaceService;
 import com.lcsays.lcmall.db.service.WxMaUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.lcsays.lcmall.api.constant.Names.REDIS_FAVICON_KEY;
 
 /**
  * @Author: lichuang
@@ -46,6 +50,9 @@ public class WorkspaceController {
 
     @Resource
     WxMaUserService wxMaUserService;
+
+    @Resource
+    RedisTemplate<String, Object> redisTemplate;
 
     private WxMaUser check(HttpServletRequest request) {
         String tokenValue = CookieTokenUtils.getTokenValue(request);
@@ -106,28 +113,12 @@ public class WorkspaceController {
         return BaseModel.success(tabs);
     }
 
-//    @PostMapping("/createTab")
-//    public BaseModel<WxEvertabsTab> createTab(HttpServletRequest request,
-//                                              @RequestBody WxEvertabsTab tab) {
-//        WxMaUser wxMaUser = check(request);
-//        if (null == wxMaUser) {
-//            return BaseModel.error(ErrorCode.NEED_LOGIN);
-//        }
-//
-//        if (everTabsWorkspaceService.createTab(tab) > 0) {
-//            log.info("createTab success {}", tab);
-//            return BaseModel.success(tab);
-//        } else {
-//            log.error("createTab fail {}", tab);
-//            return BaseModel.error(ErrorCode.DAO_ERROR);
-//        }
-//    }
-
     private BaseModel<WxEvertabsTab> internalUpdateTabByPriKey(WxEvertabsTab tab) {
         tab.setWorkspaceId(null); // 如果明确指定tab，则workspaceId不更新，避免更新错了
         if (everTabsWorkspaceService.updateTab(tab) > 0) {
             log.info("updateTab success {}", tab);
-            return BaseModel.success(tab);
+            // 这里重新查一下，补充全信息
+            return BaseModel.success(everTabsWorkspaceService.queryTabByPkId(tab.getPkId()));
         } else {
             log.error("updateTab fail {}", tab);
             return BaseModel.error(ErrorCode.DAO_ERROR);
@@ -174,15 +165,20 @@ public class WorkspaceController {
             return BaseModel.error(ErrorCode.NEED_LOGIN);
         }
 
+        // 加入待抓取队列
+        if (null != tab.getFavIconUrl()) {
+            Object value = redisTemplate.opsForValue().get(tab.getFavIconUrl());
+            if (null == value) {
+                redisTemplate.opsForList().leftPush(REDIS_FAVICON_KEY, tab.getFavIconUrl());
+            } else {
+                tab.setFavIconUrl(String.valueOf(value));
+            }
+        }
+
         if (null != tab.getPkId()) {
             return internalUpdateTabByPriKey(tab);
         } else {
             List<WxEvertabsTab> tabs = everTabsWorkspaceService.queryTabsByUserIdAndTabId(wxMaUser.getId(), tab.getId());
-//            if (null == tabs) {
-//                // 补充查文本内容
-//                tabs = everTabsWorkspaceService.queryTabsByUserIdAndTextValues(wxMaUser.getId(), tab.getTitle(),
-//                        tab.getUrl(), tab.getFavIconUrl());
-//            }
             if (null == tabs) {
                 if (everTabsWorkspaceService.createTab(tab) > 0) {
                     log.info("createTab success {}", tab);
@@ -246,7 +242,20 @@ public class WorkspaceController {
         return workspaces.stream().map(workspace -> {
             WorkspaceEx workspaceEx = new WorkspaceEx();
             workspaceEx.copyFrom(workspace);
-            workspaceEx.setTabs(workspaceTabsMap.get(workspace.getId()));
+            List<WxEvertabsTab> tabs = workspaceTabsMap.get(workspace.getId());
+            if (null != tabs) {
+                for (WxEvertabsTab tab : tabs) {
+                    // 异步发起抓取后再次刷新页面时读redis里的favIcon并更新
+                    if (null != tab.getFavIconUrl()) {
+                        Object value = redisTemplate.opsForValue().get(tab.getFavIconUrl());
+                        if (null != value) {
+                            tab.setFavIconUrl(String.valueOf(value));
+                            everTabsWorkspaceService.updateTab(tab);
+                        }
+                    }
+                }
+            }
+            workspaceEx.setTabs(tabs);
             if (null != workspaceEx.getTabs()) {
                 workspaceEx.setTabsCount(workspaceEx.getTabs().size());
             }

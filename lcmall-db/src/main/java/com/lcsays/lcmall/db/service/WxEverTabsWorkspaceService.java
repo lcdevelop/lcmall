@@ -50,17 +50,6 @@ public class WxEverTabsWorkspaceService {
         return workspaceMapper.selectByExample(example);
     }
 
-    public Map<Integer, Long> workspaceTabsCount(List<Integer> workspaceIdList) {
-        Map<Integer, Long> ret = new HashMap<>();
-        for (Integer workspaceId: workspaceIdList) {
-            WxEvertabsTabExample example = new WxEvertabsTabExample();
-            example.createCriteria().andWorkspaceIdEqualTo(workspaceId).andLogicalDeleted(false);
-            long count = tabMapper.countByExample(example);
-            ret.put(workspaceId, count);
-        }
-        return ret;
-    }
-
     public WxEvertabsWorkspace queryWorkspace(Integer workspaceId) {
         return workspaceMapper.selectByPrimaryKeyWithLogicalDelete(workspaceId, false);
     }
@@ -97,6 +86,10 @@ public class WxEverTabsWorkspaceService {
         return tabMapper.updateByPrimaryKeySelective(tab);
     }
 
+    public WxEvertabsTab queryTabByPkId(int pkId) {
+        return tabMapper.selectByPrimaryKey(pkId);
+    }
+
     public List<WxEvertabsTab> queryTabsByUserIdAndTabId(int userId, int id) {
         List<WxEvertabsTab> ret = new ArrayList<>();
 
@@ -118,57 +111,6 @@ public class WxEverTabsWorkspaceService {
                 .andIdEqualTo(id)
                 .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
                 .andLogicalDeleted(false);
-        List<WxEvertabsTab> tabs = tabMapper.selectByExample(tabExample);
-        if (null != tabs) {
-            for (WxEvertabsTab tab: tabs) {
-                if (workspaceIdSet.contains(tab.getWorkspaceId())) {
-                    ret.add(tab);
-                }
-            }
-        } else {
-            return null;
-        }
-
-        if (ret.size() == 0) {
-            return null;
-        } else {
-            return ret;
-        }
-    }
-
-    public List<WxEvertabsTab> queryTabsByUserIdAndTextValues(int userId, String title, String url, String favIconUrl) {
-        List<WxEvertabsTab> ret = new ArrayList<>();
-
-        WxEvertabsWorkspaceExample workspaceExample = new WxEvertabsWorkspaceExample();
-        workspaceExample.createCriteria().andWxMaUserIdEqualTo(userId).andLogicalDeleted(false);
-        List<WxEvertabsWorkspace> workspaces = workspaceMapper.selectByExample(workspaceExample);
-        if (null == workspaces) {
-            // 空间都没有还找啥tab
-            return null;
-        }
-
-        Set<Integer> workspaceIdSet = new HashSet<>();
-        for (WxEvertabsWorkspace workspace: workspaces) {
-            workspaceIdSet.add(workspace.getId());
-        }
-
-        WxEvertabsTabExample tabExample = new WxEvertabsTabExample();
-
-        if (null == favIconUrl) {
-            tabExample.createCriteria()
-                    .andTitleEqualTo(title)
-                    .andUrlEqualTo(url)
-                    .andFavIconUrlIsNull()
-                    .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
-                    .andLogicalDeleted(false);
-        } else {
-            tabExample.createCriteria()
-                    .andTitleEqualTo(title)
-                    .andUrlEqualTo(url)
-                    .andFavIconUrlEqualTo(favIconUrl)
-                    .andUrlNotEqualTo("https://evertabs.codemeteors.com/background")
-                    .andLogicalDeleted(false);
-        }
         List<WxEvertabsTab> tabs = tabMapper.selectByExample(tabExample);
         if (null != tabs) {
             for (WxEvertabsTab tab: tabs) {

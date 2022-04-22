@@ -90,6 +90,9 @@ public class WxMaUserService {
     }
 
     public WxMaUser queryUsersByToken(String token) {
+        if (null == token) {
+            return null;
+        }
         WxMaUserExample example = new WxMaUserExample();
         WxMaUserExample.Criteria criteria = example.createCriteria();
         criteria.andTokenEqualTo(token);
