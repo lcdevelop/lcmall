@@ -166,10 +166,11 @@ public class WorkspaceController {
         }
 
         // 加入待抓取队列
-        if (null != tab.getFavIconUrl()) {
-            Object value = redisTemplate.opsForValue().get(tab.getFavIconUrl());
+        String favIconUrl = tab.getFavIconUrl();
+        if (null != favIconUrl && !favIconUrl.startsWith("https://codemeteors.")) {
+            Object value = redisTemplate.opsForValue().get(favIconUrl);
             if (null == value) {
-                redisTemplate.opsForList().leftPush(REDIS_FAVICON_KEY, tab.getFavIconUrl());
+                redisTemplate.opsForList().leftPush(REDIS_FAVICON_KEY, favIconUrl);
             } else {
                 tab.setFavIconUrl(String.valueOf(value));
             }
