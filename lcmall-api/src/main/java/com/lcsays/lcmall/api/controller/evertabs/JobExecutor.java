@@ -92,7 +92,7 @@ public class JobExecutor {
                     ossConfiguration.getKeyId(),
                     ossConfiguration.getKeySecret(),
                     ossConfiguration.getBucketName(),
-                    ossConfiguration.getFileHost(),
+                    ossConfiguration.getFileHost() + "/evertabs/favicon",
                     fileName
             );
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class JobExecutor {
                     ossConfiguration.getKeyId(),
                     ossConfiguration.getKeySecret(),
                     ossConfiguration.getBucketName(),
-                    ossConfiguration.getFileHost(),
+                    ossConfiguration.getFileHost() + "/evertabs/favicon",
                     fileName
             );
         } catch (Exception e) {
@@ -139,7 +139,7 @@ public class JobExecutor {
                     ossConfiguration.getKeyId(),
                     ossConfiguration.getKeySecret(),
                     ossConfiguration.getBucketName(),
-                    ossConfiguration.getFileHost(),
+                    ossConfiguration.getFileHost() + "/evertabs/favicon",
                     fileName
             );
         } catch (Exception e) {
