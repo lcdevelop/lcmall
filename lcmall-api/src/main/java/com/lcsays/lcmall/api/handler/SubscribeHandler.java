@@ -132,7 +132,7 @@ public class SubscribeHandler extends AbstractHandler {
         }
 
         try {
-            return new TextBuilder().build("感谢关注", wxMpXmlMessage, wxMpService);
+            return new TextBuilder().build("感谢关注，加技术交流群，请加微信warmheartli，并备注evertabs", wxMpXmlMessage, wxMpService);
         } catch (Exception e) {
             this.logger.error(e.getMessage(), e);
         }

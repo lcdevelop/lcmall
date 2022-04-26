@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.time.Duration;
+import java.util.Set;
 
 /**
  * @Author: lichuang
@@ -25,5 +26,14 @@ public class RedisValueTest {
     @Test
     public void delKey() {
         redisTemplate.delete("https://github.githubassets.com/favicons/favicon-dark.svg");
+    }
+
+    @Test
+    public void listKey() {
+        Set<String> keys = redisTemplate.keys("*");
+        assert keys != null;
+        for (String key: keys) {
+            System.out.println(key);
+        }
     }
 }
